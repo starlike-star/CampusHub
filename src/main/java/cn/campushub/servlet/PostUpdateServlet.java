@@ -1,0 +1,88 @@
+package cn.campushub.servlet;
+
+import cn.campushub.model.Post;
+import cn.campushub.model.SessionUser;
+import cn.campushub.service.PostService;
+import cn.campushub.service.ServiceResult;
+import cn.campushub.util.JsonUtils;
+import cn.campushub.util.SessionUtils;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Map;
+
+public class PostUpdateServlet extends HttpServlet {
+    private final PostService postService = new PostService();
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        SessionUser user = SessionUtils.currentUser(request);
+        if (user == null) {
+            PostJsonSupport.writeNeedLogin(response);
+            return;
+        }
+        Long postId = PostJsonSupport.parsePostId(request);
+        if (postId == null) {
+            PostJsonSupport.writeError(
+                    response,
+                    HttpServletResponse.SC_BAD_REQUEST,
+                    "帖子参数无效"
+            );
+            return;
+        }
+        try {
+            ServiceResult<Post> result = postService.update(
+                    postId,
+                    user.id(),
+                    request.getParameter("title"),
+                    request.getParameter("content"),
+                    request.getParameter("topic"),
+                    request.getParameter("categoryId")
+            );
+            if (!result.success()) {
+                PostJsonSupport.writeError(
+                        response,
+                        HttpServletResponse.SC_FORBIDDEN,
+                        result.message()
+                );
+                return;
+            }
+            Post post = result.data();
+            JsonUtils.write(
+                    response,
+                    HttpServletResponse.SC_OK,
+                    Map.of(
+                            "success", true,
+                            "post", Map.of(
+                                    "id", post.getId(),
+                                    "title", post.getTitle(),
+                                    "content", post.getContent(),
+                                    "summary", post.getSummary(),
+                                    "topic", post.getTopic() == null
+                                            ? ""
+                                            : "#" + post.getTopic(),
+                                    "topicValue", PostJsonSupport.valueOrEmpty(
+                                            post.getTopic()
+                                    ),
+                                    "categoryId", post.getCategoryId(),
+                                    "categoryName", PostJsonSupport.valueOrEmpty(
+                                            post.getCategoryName()
+                                    )
+                            )
+                    )
+            );
+        } catch (SQLException exception) {
+            log("更新帖子失败", exception);
+            PostJsonSupport.writeError(
+                    response,
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "更新帖子失败"
+            );
+        }
+    }
+}

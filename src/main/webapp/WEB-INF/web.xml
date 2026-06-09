@@ -30,7 +30,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <url-pattern>/publish/*</url-pattern>
+        <url-pattern>/post/publish</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
@@ -65,12 +65,84 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.HomeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>HomeDataServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.HomeDataServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HomeDataServlet</servlet-name>
         <url-pattern>/api/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostServlet</servlet-name>
+        <url-pattern>/post/publish</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostDetailServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostDetailServlet</servlet-name>
+        <url-pattern>/post/detail</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostCommentServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostCommentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostCommentServlet</servlet-name>
+        <url-pattern>/post/comment</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostLikeServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostLikeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostLikeServlet</servlet-name>
+        <url-pattern>/post/like</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostFavoriteServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostFavoriteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostFavoriteServlet</servlet-name>
+        <url-pattern>/post/favorite</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostUpdateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostUpdateServlet</servlet-name>
+        <url-pattern>/post/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>PostDeleteServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.PostDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PostDeleteServlet</servlet-name>
+        <url-pattern>/post/delete</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>
