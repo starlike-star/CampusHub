@@ -80,34 +80,66 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (checkinButton) {
-        checkinButton.addEventListener("click", function (event) {
+        checkinButton.addEventListener("click", async function (event) {
             stopInteraction(event);
             if (checkinButton.classList.contains("checked")) {
                 return;
             }
-            checkinButton.classList.add("checked");
-            checkinButton.textContent = "已签到";
-            checkinButton.disabled = true;
-            document.getElementById("checkinStatus").textContent = "今日已签到";
-            document.getElementById("streakDays").textContent = "4 天";
-            document.getElementById("checkinProgress").style.width = "57%";
-            showToast("签到成功，积分 +5");
+            setButtonBusy(checkinButton, true);
+            try {
+                const response = await fetch(contextPath + "/checkin/do", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                    }
+                });
+                const result = await response.json();
+                if (result.needLogin) {
+                    window.location.assign(contextPath + "/login");
+                    return;
+                }
+                if (result.checkedIn) {
+                    checkinButton.classList.add("checked");
+                    checkinButton.textContent = "已签到";
+                    checkinButton.disabled = true;
+                    document.getElementById("checkinStatus").textContent = "今日已签到";
+                }
+                if (!response.ok || !result.success) {
+                    showToast(result.message || "签到失败", true);
+                    return;
+                }
+                document.getElementById("checkinPoints").textContent =
+                    "+" + result.points;
+                document.getElementById("streakDays").textContent =
+                    result.continuousDays + " 天";
+                document.getElementById("checkinProgress").style.width =
+                    Math.min(result.continuousDays * 100 / 7, 100) + "%";
+                showToast(result.message + "，积分 +" + result.points);
+            } catch (error) {
+                showToast("签到失败，请稍后重试", true);
+            } finally {
+                const checked = checkinButton.classList.contains("checked");
+                setButtonBusy(checkinButton, false);
+                checkinButton.disabled = checked;
+            }
         });
     }
 
-    document.querySelectorAll(".post-click-area").forEach(function (area) {
-        function openDetail(event) {
-            if (event) {
-                event.preventDefault();
-            }
+    document.addEventListener("click", function (event) {
+        const area = event.target.closest(".post-click-area");
+        if (!area) {
+            return;
+        }
+        event.preventDefault();
+        window.location.assign(area.dataset.detailUrl);
+    });
+
+    document.addEventListener("keydown", function (event) {
+        const area = event.target.closest(".post-click-area");
+        if (area && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault();
             window.location.assign(area.dataset.detailUrl);
         }
-        area.addEventListener("click", openDetail);
-        area.addEventListener("keydown", function (event) {
-            if (event.key === "Enter" || event.key === " ") {
-                openDetail(event);
-            }
-        });
     });
 
     document.addEventListener("click", async function (event) {

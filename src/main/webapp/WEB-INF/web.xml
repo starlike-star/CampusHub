@@ -74,12 +74,30 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ContentServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ContentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ContentServlet</servlet-name>
+        <url-pattern>/content</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>HomeDataServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.HomeDataServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>HomeDataServlet</servlet-name>
         <url-pattern>/api/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CheckinServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.CheckinServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckinServlet</servlet-name>
+        <url-pattern>/checkin/do</url-pattern>
     </servlet-mapping>
 
     <servlet>

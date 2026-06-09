@@ -496,6 +496,37 @@ svg {
     top: 96px;
 }
 
+.right-sidebar {
+    position: sticky;
+    top: 96px;
+}
+
+.main-content {
+    min-width: 0;
+    min-height: 620px;
+    transition: opacity .16s ease;
+}
+
+.main-content.is-loading {
+    opacity: .58;
+    pointer-events: none;
+}
+
+.main-content.fade-in {
+    animation: content-fade-in .2s ease;
+}
+
+@keyframes content-fade-in {
+    from {
+        opacity: .35;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .side-nav {
     display: flex;
     flex-direction: column;
@@ -1639,6 +1670,13 @@ svg {
     flex-direction: column;
 }
 
+.sidebar-empty {
+    margin: 0;
+    padding: 8px 0 2px;
+    color: #a0a8b5;
+    font-size: 10px;
+}
+
 .notice-list a {
     display: flex;
     align-items: flex-start;
@@ -2004,6 +2042,176 @@ svg {
     color: var(--muted);
 }
 
+.square-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+}
+
+.square-eyebrow {
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.square-header h1 {
+    margin: 6px 0 5px;
+    font-size: 25px;
+}
+
+.square-header p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.square-search {
+    display: flex;
+    align-items: center;
+    flex: 0 1 330px;
+    height: 43px;
+    padding-left: 13px;
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.square-search:focus-within {
+    border-color: rgba(37, 99, 235, .42);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+}
+
+.square-search svg {
+    flex: 0 0 auto;
+    width: 18px;
+    color: #8a94a6;
+}
+
+.square-search input {
+    min-width: 0;
+    flex: 1;
+    padding: 0 10px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+}
+
+.square-search button {
+    align-self: stretch;
+    padding: 0 16px;
+    color: #fff;
+    border: 0;
+    border-radius: 0 11px 11px 0;
+    background: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.square-search button:hover {
+    background: var(--primary-dark);
+}
+
+.square-tabs {
+    display: flex;
+    gap: 5px;
+    margin-top: 15px;
+    padding: 7px;
+    overflow-x: auto;
+}
+
+.square-tabs a {
+    flex: 1 0 max-content;
+    padding: 10px 13px;
+    color: #748096;
+    border-radius: 9px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    transition: .18s ease;
+}
+
+.square-tabs a:hover {
+    color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.square-tabs a.active {
+    color: #fff;
+    background: var(--primary);
+    box-shadow: 0 5px 12px rgba(37, 99, 235, .18);
+}
+
+.square-list {
+    min-width: 0;
+}
+
+.notice-card {
+    margin-top: 15px;
+    padding: 21px 23px;
+}
+
+.notice-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notice-card-meta time {
+    margin-left: auto;
+    color: #98a1b0;
+    font-size: 11px;
+}
+
+.top-badge {
+    padding: 3px 7px;
+    color: #dc2626;
+    border-radius: 6px;
+    background: #fff1f2;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.notice-card h2 {
+    margin: 13px 0 8px;
+    font-size: 18px;
+}
+
+.notice-card p {
+    margin: 0;
+    color: #596579;
+    line-height: 1.8;
+}
+
+.empty-state,
+.development-state {
+    margin-top: 15px;
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.empty-state h2,
+.development-state h1 {
+    margin: 0 0 9px;
+}
+
+.empty-state p,
+.development-state p {
+    margin: 0 0 20px;
+    color: var(--muted);
+}
+
+.development-state span {
+    display: inline-block;
+    margin-bottom: 9px;
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+}
+
 @media (max-width: 1220px) {
     .topbar-inner,
     .page-shell {
@@ -2093,6 +2301,16 @@ svg {
     .left-sidebar {
         position: static;
         margin-bottom: 12px;
+    }
+
+    .square-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .square-search {
+        flex-basis: auto;
+        width: 100%;
     }
 
     .side-nav {
