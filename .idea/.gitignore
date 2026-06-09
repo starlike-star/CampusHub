@@ -1,0 +1,22 @@
+# 默认忽略的文件
+/shelf/
+/workspace.xml
+# 基于编辑器的 HTTP 客户端请求
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# 忽略编译输出目录
+target/
+out/
+
+# 忽略 IDEA 本地配置文件
+.idea/
+*.iml
+
+# 忽略 Tomcat 相关产生的临时文件
+*.log
+
+# 忽略 Mac 系统文件（如果是混合开发）
+.DS_Store
