@@ -163,6 +163,60 @@
         <url-pattern>/post/delete</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GoodsCreateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.GoodsCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoodsCreateServlet</servlet-name>
+        <url-pattern>/goods/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GoodsDetailServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.GoodsDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoodsDetailServlet</servlet-name>
+        <url-pattern>/goods/detail</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GoodsFavoriteServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.GoodsFavoriteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoodsFavoriteServlet</servlet-name>
+        <url-pattern>/goods/favorite</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GoodsUpdateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.GoodsUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoodsUpdateServlet</servlet-name>
+        <url-pattern>/goods/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GoodsStatusServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.GoodsStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoodsStatusServlet</servlet-name>
+        <url-pattern>/goods/status</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>GoodsDeleteServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.GoodsDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GoodsDeleteServlet</servlet-name>
+        <url-pattern>/goods/delete</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

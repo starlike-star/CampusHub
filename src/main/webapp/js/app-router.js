@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const requestController = new AbortController();
         activeRequest = requestController;
         const query = new URLSearchParams(params);
-        query.set("page", page);
+        query.set("page", page === "my-goods" ? "myGoods" : page);
         mainContent.classList.add("is-loading");
         mainContent.setAttribute("aria-busy", "true");
 
@@ -111,6 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         window.location.hash = hash;
     }
+
+    window.CampusHubRouter = {
+        parseHash: parseHash,
+        navigate: navigate,
+        reload: function () {
+            handleRoute(true);
+        }
+    };
 
     document.addEventListener("click", function (event) {
         const link = event.target.closest("[data-route]");

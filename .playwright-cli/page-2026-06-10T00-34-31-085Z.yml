@@ -1,0 +1,218 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - link "CampusHub 首页" [ref=e5] [cursor=pointer]:
+        - /url: "#home"
+        - img "CampusHub Logo" [ref=e7]
+        - generic [ref=e8]:
+          - strong [ref=e9]: CampusHub
+          - generic [ref=e10]: 校园综合社区
+      - generic [ref=e11]:
+        - img [ref=e12]
+        - searchbox "搜索校园动态" [ref=e14]
+        - generic [ref=e15]: Ctrl K
+      - generic [ref=e16]:
+        - link "+ 发布" [ref=e17] [cursor=pointer]:
+          - /url: /CampusHub/post/publish
+          - generic [ref=e18]: +
+          - text: 发布
+        - generic [ref=e19]:
+          - link "登录" [ref=e20] [cursor=pointer]:
+            - /url: /CampusHub/login
+          - link "注册" [ref=e21] [cursor=pointer]:
+            - /url: /CampusHub/register
+  - generic [ref=e22]:
+    - complementary [ref=e23]:
+      - navigation "主导航" [ref=e24]:
+        - link "首页" [ref=e25] [cursor=pointer]:
+          - /url: "#home"
+          - img [ref=e26]
+          - generic [ref=e28]: 首页
+        - link "校园广场" [ref=e29] [cursor=pointer]:
+          - /url: "#square"
+          - img [ref=e30]
+          - generic [ref=e32]: 校园广场
+        - link "二手市场" [ref=e33] [cursor=pointer]:
+          - /url: "#market"
+          - img [ref=e34]
+          - generic [ref=e36]: 二手市场
+        - link "失物招领" [ref=e37] [cursor=pointer]:
+          - /url: "#lostfound"
+          - img [ref=e38]
+          - generic [ref=e40]: 失物招领
+        - link "校园活动" [ref=e41] [cursor=pointer]:
+          - /url: "#activity"
+          - img [ref=e42]
+          - generic [ref=e44]: 校园活动
+        - link "公告通知" [ref=e45] [cursor=pointer]:
+          - /url: "#square?tab=notice"
+          - img [ref=e46]
+          - generic [ref=e48]: 公告通知
+        - link "我的收藏" [ref=e50] [cursor=pointer]:
+          - /url: "#favorites"
+          - img [ref=e51]
+          - generic [ref=e53]: 我的收藏
+        - link "个人中心" [ref=e54] [cursor=pointer]:
+          - /url: "#profile"
+          - img [ref=e55]
+          - generic [ref=e57]: 个人中心
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - heading "校园地图" [level=2] [ref=e60]
+          - link "查看大图" [ref=e61] [cursor=pointer]:
+            - /url: "#"
+        - generic "校园地图示意图" [ref=e62]:
+          - generic [ref=e66]: 教学楼
+          - generic [ref=e67]: 图书馆
+          - generic [ref=e68]: 食堂
+          - generic [ref=e69]: 操场
+        - generic [ref=e74]:
+          - button "图书馆" [ref=e75] [cursor=pointer]: 图书馆
+          - button "教学楼" [ref=e77] [cursor=pointer]: 教学楼
+          - button "食堂" [ref=e79] [cursor=pointer]: 食堂
+          - button "操场" [ref=e81] [cursor=pointer]: 操场
+    - main:
+      - generic:
+        - generic:
+          - text: CAMPUS MARKET
+          - heading "二手市场" [level=1]
+          - paragraph: 发现校园闲置好物，让物品继续发光
+        - button "+ 发布商品"
+      - generic:
+        - generic:
+          - img
+          - searchbox "搜索商品名称、描述、交易地点..."
+          - button "搜索"
+        - generic:
+          - generic: 分类
+          - generic:
+            - button "全部"
+            - button "电子数码"
+            - button "教材资料"
+            - button "生活用品"
+            - button "运动器材" [disabled]
+            - button "免费赠送" [disabled]
+        - generic:
+          - generic: 状态
+          - generic:
+            - button "全部"
+            - button "在售"
+            - button "已预订"
+            - button "已售出"
+          - generic:
+            - generic: 排序
+            - combobox "排序":
+              - option "最新发布"
+              - option "价格从低到高" [selected]
+              - option "价格从高到低"
+              - option "热门收藏"
+      - generic:
+        - article:
+          - link "蓝牙耳机 在售 电子数码":
+            - /url: /CampusHub/goods/detail?id=2
+            - img "蓝牙耳机"
+            - generic: 在售
+            - generic: 电子数码
+          - generic:
+            - generic:
+              - link "蓝牙耳机":
+                - /url: /CampusHub/goods/detail?id=2
+              - button "收藏商品":
+                - img
+                - generic: "0"
+            - strong: ¥69.00
+            - generic:
+              - generic: 八成新
+              - generic: 宿舍区门口
+            - generic:
+              - generic:
+                - strong: 周一鸣
+                - generic: 2026-06-09 15:21
+            - generic:
+              - link "查看详情":
+                - /url: /CampusHub/goods/detail?id=2
+    - complementary [ref=e83]:
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - text: DAILY CHECK-IN
+            - heading "每日签到" [level=2] [ref=e87]
+            - paragraph [ref=e88]: 登录后签到
+          - generic [ref=e89]:
+            - strong [ref=e90]: "+5"
+            - generic [ref=e91]: 积分
+        - generic [ref=e93]:
+          - text: 连续签到
+          - strong [ref=e94]: 0 天
+        - button "登录后签到" [ref=e96] [cursor=pointer]
+      - generic [ref=e97]:
+        - generic [ref=e98]:
+          - heading "校园公告" [level=2] [ref=e99]
+          - link "更多 >" [ref=e100] [cursor=pointer]:
+            - /url: "#square?tab=notice"
+        - generic [ref=e101]:
+          - link "生活 本周六部分区域停水通知 06-09 15:21" [ref=e102] [cursor=pointer]:
+            - /url: "#square?tab=notice"
+            - generic [ref=e103]: 生活
+            - generic [ref=e104]:
+              - strong [ref=e105]: 本周六部分区域停水通知
+              - generic [ref=e106]: 06-09 15:21
+          - link "活动 校运会安排及报名通知 06-09 15:21" [ref=e107] [cursor=pointer]:
+            - /url: "#square?tab=notice"
+            - generic [ref=e108]: 活动
+            - generic [ref=e109]:
+              - strong [ref=e110]: 校运会安排及报名通知
+              - generic [ref=e111]: 06-09 15:21
+          - link "教务 关于期末考试安排的通知 06-09 15:21" [ref=e112] [cursor=pointer]:
+            - /url: "#square?tab=notice"
+            - generic [ref=e113]: 教务
+            - generic [ref=e114]:
+              - strong [ref=e115]: 关于期末考试安排的通知
+              - generic [ref=e116]: 06-09 15:21
+      - generic [ref=e117]:
+        - generic [ref=e118]:
+          - heading "活动推荐" [level=2] [ref=e119]
+          - link "全部活动" [ref=e120] [cursor=pointer]:
+            - /url: "#activity"
+        - generic [ref=e121]:
+          - link "01 校园摄影大赛 06-15 00:00 线上投稿 · 58/200 人" [ref=e122] [cursor=pointer]:
+            - /url: "#activity"
+            - generic [ref=e123]: "01"
+            - generic [ref=e124]:
+              - strong [ref=e125]: 校园摄影大赛
+              - generic [ref=e126]: 06-15 00:00
+              - generic [ref=e127]: 线上投稿 · 58/200 人
+          - link "02 编程之美挑战赛 06-20 14:00 教学楼 A101 · 36/100 人" [ref=e128] [cursor=pointer]:
+            - /url: "#activity"
+            - generic [ref=e129]: "02"
+            - generic [ref=e130]:
+              - strong [ref=e131]: 编程之美挑战赛
+              - generic [ref=e132]: 06-20 14:00
+              - generic [ref=e133]: 教学楼 A101 · 36/100 人
+          - link "03 羽毛球友谊赛 06-22 09:00 体育馆 · 21/64 人" [ref=e134] [cursor=pointer]:
+            - /url: "#activity"
+            - generic [ref=e135]: "03"
+            - generic [ref=e136]:
+              - strong [ref=e137]: 羽毛球友谊赛
+              - generic [ref=e138]: 06-22 09:00
+              - generic [ref=e139]: 体育馆 · 21/64 人
+      - generic [ref=e140]:
+        - generic [ref=e141]:
+          - heading "失物速递" [level=2] [ref=e142]
+          - link "查看更多" [ref=e143] [cursor=pointer]:
+            - /url: "#lostfound"
+        - generic [ref=e144]:
+          - link "招 图书馆捡到一张校园卡 图书馆三楼 · 06-09 15:21 招领" [ref=e145] [cursor=pointer]:
+            - /url: "#lostfound"
+            - generic [ref=e146]: 招
+            - generic [ref=e147]:
+              - strong [ref=e148]: 图书馆捡到一张校园卡
+              - generic [ref=e149]: 图书馆三楼 · 06-09 15:21
+            - emphasis [ref=e150]: 招领
+          - link "招 食堂门口捡到一串钥匙 一食堂门口 · 06-09 15:21 招领" [ref=e151] [cursor=pointer]:
+            - /url: "#lostfound"
+            - generic [ref=e152]: 招
+            - generic [ref=e153]:
+              - strong [ref=e154]: 食堂门口捡到一串钥匙
+              - generic [ref=e155]: 一食堂门口 · 06-09 15:21
+            - emphasis [ref=e156]: 招领

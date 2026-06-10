@@ -140,6 +140,11 @@
                 </a>
                 <span class="nav-divider"></span>
                 <a class="nav-item"
+                   href="#my-goods"
+                   data-route="my-goods">
+                    <svg><use href="#icon-bag"></use></svg><span>我的商品</span>
+                </a>
+                <a class="nav-item"
                    href="#favorites"
                    data-route="favorites">
                     <svg><use href="#icon-bookmark"></use></svg><span>我的收藏</span>
@@ -409,5 +414,6 @@
 <script src="<%= contextPath %>/js/textarea-autosize.js"></script>
 <script src="<%= contextPath %>/js/index.js"></script>
 <script src="<%= contextPath %>/js/app-router.js"></script>
+<script src="<%= contextPath %>/js/market.js"></script>
 </body>
 </html>

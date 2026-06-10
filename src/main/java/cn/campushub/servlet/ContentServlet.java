@@ -1,6 +1,7 @@
 package cn.campushub.servlet;
 
 import cn.campushub.model.SessionUser;
+import cn.campushub.service.GoodsService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.SquareService;
 import cn.campushub.util.SessionUtils;
@@ -16,17 +17,16 @@ import java.util.Set;
 
 public class ContentServlet extends HttpServlet {
     private static final Set<String> DEVELOPMENT_PAGES =
-            Set.of("market", "lostfound", "activity", "favorites", "profile");
+            Set.of("lostfound", "activity", "profile");
     private static final Map<String, String> DEVELOPMENT_TITLES = Map.of(
-            "market", "二手市场",
             "lostfound", "失物招领",
             "activity", "校园活动",
-            "favorites", "我的收藏",
             "profile", "个人中心"
     );
 
     private final PostService postService = new PostService();
     private final SquareService squareService = new SquareService();
+    private final GoodsService goodsService = new GoodsService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,6 +61,76 @@ public class ContentServlet extends HttpServlet {
                     );
                 }
                 forward(request, response, "square.jsp");
+                return;
+            }
+            if ("market".equals(page)) {
+                String keyword =
+                        goodsService.normalizeKeyword(
+                                request.getParameter("keyword")
+                        );
+                Long categoryId =
+                        goodsService.normalizeCategoryId(
+                                request.getParameter("categoryId")
+                        );
+                String status =
+                        goodsService.normalizeListStatus(
+                                request.getParameter("status")
+                        );
+                String tradeMethod =
+                        goodsService.normalizeTradeMethodFilter(
+                                request.getParameter("tradeMethod")
+                        );
+                String sort =
+                        goodsService.normalizeSort(request.getParameter("sort"));
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("selectedCategoryId", categoryId);
+                request.setAttribute("selectedStatus", status);
+                request.setAttribute("selectedTradeMethod", tradeMethod);
+                request.setAttribute("selectedSort", sort);
+                request.setAttribute(
+                        "goodsCategories",
+                        goodsService.listCategories()
+                );
+                request.setAttribute(
+                        "goodsList",
+                        goodsService.list(
+                                userId,
+                                keyword,
+                                categoryId == null
+                                        ? null
+                                        : categoryId.toString(),
+                                status,
+                                tradeMethod,
+                                sort
+                        )
+                );
+                forward(request, response, "market.jsp");
+                return;
+            }
+            if ("myGoods".equals(page)) {
+                request.setAttribute("loginRequired", user == null);
+                request.setAttribute(
+                        "goodsCategories",
+                        goodsService.listCategories()
+                );
+                request.setAttribute(
+                        "goodsList",
+                        user == null
+                                ? java.util.List.of()
+                                : goodsService.listOwnGoods(user.id())
+                );
+                forward(request, response, "my-goods.jsp");
+                return;
+            }
+            if ("favorites".equals(page)) {
+                request.setAttribute("loginRequired", user == null);
+                request.setAttribute(
+                        "goodsList",
+                        user == null
+                                ? java.util.List.of()
+                                : goodsService.listFavoriteGoods(user.id())
+                );
+                forward(request, response, "favorites.jsp");
                 return;
             }
             if (page != null && DEVELOPMENT_PAGES.contains(page)) {

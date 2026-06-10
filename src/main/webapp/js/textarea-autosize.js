@@ -1,6 +1,9 @@
 (function () {
     function resizeTextarea(textarea) {
-        if (!textarea || textarea.hidden || textarea.classList.contains("post-raw-content")) {
+        if (!textarea
+                || textarea.hidden
+                || textarea.offsetParent === null
+                || textarea.classList.contains("post-raw-content")) {
             return;
         }
         textarea.classList.add("auto-resize");

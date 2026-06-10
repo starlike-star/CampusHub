@@ -111,6 +111,7 @@ CREATE TABLE goods (
     condition_level VARCHAR(50) COMMENT '全新/九成新/八成新等',
     images TEXT,
     trade_place VARCHAR(150),
+    trade_method ENUM('offline', 'online', 'both') DEFAULT 'offline',
     contact VARCHAR(100),
     status ENUM('on_sale', 'reserved', 'sold', 'off_shelf') DEFAULT 'on_sale',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
