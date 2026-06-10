@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/messages.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
 </head>
 <body>
 <svg class="svg-sprite" aria-hidden="true">
@@ -433,5 +434,6 @@
 <script src="<%= contextPath %>/js/market.js"></script>
 <script src="<%= contextPath %>/js/profile-actions.js"></script>
 <script src="<%= contextPath %>/js/message-actions.js"></script>
+<script src="<%= contextPath %>/js/lostfound-actions.js"></script>
 </body>
 </html>

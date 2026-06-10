@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.model.FavoriteItemVO" %>
+<%@ page import="cn.campushub.model.LostFound" %>
 <%@ page import="cn.campushub.model.ProfileOverviewVO" %>
 <%@ page import="cn.campushub.model.User" %>
 <%@ page import="cn.campushub.model.UserCheckinStatsVO" %>
@@ -122,6 +123,10 @@
            data-route="profile"
            data-tab="goods"
            class="<%= "goods".equals(activeTab) ? "active" : "" %>">我的商品</a>
+        <a href="#profile?tab=lostfound"
+           data-route="profile"
+           data-tab="lostfound"
+           class="<%= "lostfound".equals(activeTab) ? "active" : "" %>">我的失物招领</a>
         <a href="#profile?tab=checkins"
            data-route="profile"
            data-tab="checkins"
@@ -317,6 +322,67 @@
     <% } else if ("goods".equals(activeTab)) { %>
     <section class="profile-section profile-embedded-module">
         <jsp:include page="my-goods.jsp"/>
+    </section>
+    <% } else if ("lostfound".equals(activeTab)) {
+        List<LostFound> profileLostFound =
+                (List<LostFound>) request.getAttribute("profileLostFound");
+    %>
+    <section class="profile-section card">
+        <div class="profile-section-heading">
+            <div><span>MY LOST &amp; FOUND</span><h2>我的失物招领</h2></div>
+            <p><%= profileLostFound == null ? 0 : profileLostFound.size() %> 条</p>
+        </div>
+        <div class="profile-list">
+            <% if (profileLostFound == null || profileLostFound.isEmpty()) { %>
+            <div class="profile-inline-empty">还没有发布失物招领信息。</div>
+            <% } else {
+                for (LostFound item : profileLostFound) {
+                    String profileLfStatus = "待认领";
+                    if ("claiming".equals(item.getStatus())) {
+                        profileLfStatus = "认领中";
+                    } else if ("completed".equals(item.getStatus())) {
+                        profileLfStatus = "已找回";
+                    } else if ("closed".equals(item.getStatus())) {
+                        profileLfStatus = "已关闭";
+                    }
+            %>
+            <article class="profile-card">
+                <div class="profile-card-main">
+                    <div class="profile-card-labels">
+                        <span class="favorite-type-badge"><%=
+                                "lost".equals(item.getType()) ? "失物" : "招领"
+                        %></span>
+                        <span><%= HtmlUtils.escape(item.getCategoryName()) %></span>
+                        <span><%= profileLfStatus %></span>
+                    </div>
+                    <a class="profile-card-title"
+                       href="<%= profileContextPath %>/lostfound/detail?id=<%=
+                                item.getId()
+                       %>"><%= HtmlUtils.escape(item.getTitle()) %></a>
+                    <p><%= HtmlUtils.escape(item.getItemName()) %> · <%=
+                            HtmlUtils.escape(item.getPlace() == null
+                                    ? "地点未填写" : item.getPlace())
+                    %></p>
+                    <small><%= item.getCreatedAt() == null
+                            ? ""
+                            : item.getCreatedAt().format(
+                                    profileDateTimeFormatter
+                            ) %></small>
+                </div>
+                <div class="profile-card-actions">
+                    <a class="profile-action-link"
+                       href="<%= profileContextPath %>/lostfound/detail?id=<%=
+                                item.getId()
+                       %>">查看详情</a>
+                    <button type="button"
+                            data-lostfound-status
+                            data-id="<%= item.getId() %>"
+                            data-status="closed">关闭信息</button>
+                </div>
+            </article>
+            <%  }
+               } %>
+        </div>
     </section>
     <% } else if ("checkins".equals(activeTab)) {
         UserCheckinStatsVO checkins =

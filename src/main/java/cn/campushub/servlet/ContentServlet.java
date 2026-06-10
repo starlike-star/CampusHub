@@ -2,6 +2,7 @@ package cn.campushub.servlet;
 
 import cn.campushub.model.SessionUser;
 import cn.campushub.service.GoodsService;
+import cn.campushub.service.LostFoundService;
 import cn.campushub.service.MessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ProfileService;
@@ -19,15 +20,15 @@ import java.util.Set;
 
 public class ContentServlet extends HttpServlet {
     private static final Set<String> DEVELOPMENT_PAGES =
-            Set.of("lostfound", "activity");
+            Set.of("activity");
     private static final Map<String, String> DEVELOPMENT_TITLES = Map.of(
-            "lostfound", "失物招领",
             "activity", "校园活动"
     );
 
     private final PostService postService = new PostService();
     private final SquareService squareService = new SquareService();
     private final GoodsService goodsService = new GoodsService();
+    private final LostFoundService lostFoundService = new LostFoundService();
     private final ProfileService profileService = new ProfileService();
     private final MessageService messageService = new MessageService();
 
@@ -110,6 +111,46 @@ public class ContentServlet extends HttpServlet {
                 forward(request, response, "market.jsp");
                 return;
             }
+            if ("lostfound".equals(page)) {
+                String type = lostFoundService.normalizeTypeValue(
+                        request.getParameter("type")
+                );
+                String status = lostFoundService.normalizeStatusValue(
+                        request.getParameter("status")
+                );
+                String keyword = lostFoundService.normalizeKeyword(
+                        request.getParameter("keyword")
+                );
+                String sort = lostFoundService.normalizeSort(
+                        request.getParameter("sort")
+                );
+                Long categoryId = lostFoundService.normalizeCategoryId(
+                        request.getParameter("categoryId")
+                );
+                request.setAttribute("selectedType", type);
+                request.setAttribute("selectedStatus", status);
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("selectedSort", sort);
+                request.setAttribute("selectedCategoryId", categoryId);
+                request.setAttribute(
+                        "lostFoundCategories",
+                        lostFoundService.listCategories()
+                );
+                request.setAttribute(
+                        "lostFoundItems",
+                        lostFoundService.list(
+                                type,
+                                status,
+                                keyword,
+                                categoryId == null
+                                        ? null
+                                        : categoryId.toString(),
+                                sort
+                        )
+                );
+                forward(request, response, "lostfound.jsp");
+                return;
+            }
             if ("myGoods".equals(page)) {
                 request.setAttribute("loginRequired", user == null);
                 request.setAttribute(
@@ -177,6 +218,10 @@ public class ContentServlet extends HttpServlet {
                                     goodsService.listOwnGoods(user.id())
                             );
                         }
+                        case "lostfound" -> request.setAttribute(
+                                "profileLostFound",
+                                lostFoundService.listOwn(user.id())
+                        );
                         case "checkins" -> request.setAttribute(
                                 "profileCheckins",
                                 profileService.checkins(user.id())

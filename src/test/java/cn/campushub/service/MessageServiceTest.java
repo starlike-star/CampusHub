@@ -49,6 +49,13 @@ class MessageServiceTest {
         );
     }
 
+    @Test
+    void claimIsAValidMessageFilter() {
+        MessageService service = new MessageService(new FakeMessageDao());
+
+        assertEquals("claim", service.normalizeTab("claim"));
+    }
+
     private static class FakeMessageDao implements MessageDao {
         private Message created;
         private Optional<NotificationTarget> postTarget = Optional.empty();

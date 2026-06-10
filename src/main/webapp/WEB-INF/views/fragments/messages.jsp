@@ -74,6 +74,10 @@
            data-route="messages"
            data-tab="favorite"
            class="<%= "favorite".equals(activeTab) ? "active" : "" %>">收藏</a>
+        <a href="#messages?tab=claim"
+           data-route="messages"
+           data-tab="claim"
+           class="<%= "claim".equals(activeTab) ? "active" : "" %>">认领</a>
         <a href="#messages?tab=system"
            data-route="messages"
            data-tab="system"
@@ -88,15 +92,23 @@
         </div>
         <% } else {
             for (Message message : messages) {
-                String typeText = switch (message.getType()) {
-                    case "comment" -> "评论";
-                    case "like" -> "点赞";
-                    case "favorite" -> "收藏";
-                    case "system" -> "系统";
-                    case "activity" -> "活动";
-                    case "claim" -> "认领";
-                    default -> "通知";
-                };
+                String messageType = message.getType();
+                String typeText = "通知";
+                if ("comment".equals(messageType)) {
+                    typeText = "评论";
+                } else if ("like".equals(messageType)) {
+                    typeText = "点赞";
+                } else if ("favorite".equals(messageType)) {
+                    typeText = "收藏";
+                } else if ("claim".equals(messageType)) {
+                    typeText = "认领";
+                } else if ("system".equals(messageType)) {
+                    typeText = "系统";
+                } else if ("activity".equals(messageType)) {
+                    typeText = "活动";
+                } else if ("claim".equals(messageType)) {
+                    typeText = "认领";
+                }
         %>
         <article class="message-card card <%=
                 message.isRead() ? "message-read" : "message-unread"
@@ -106,7 +118,7 @@
             <span class="unread-dot" aria-hidden="true"></span>
             <div class="message-card-content">
                 <div class="message-card-heading">
-                    <span class="message-type-badge <%= message.getType() %>"><%=
+                    <span class="message-type-badge <%= messageType %>"><%=
                             typeText
                     %></span>
                     <time><%= message.getCreatedAt() == null

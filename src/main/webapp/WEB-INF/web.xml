@@ -262,6 +262,69 @@
         <url-pattern>/goods/delete</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>LostFoundCreateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.LostFoundCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LostFoundCreateServlet</servlet-name>
+        <url-pattern>/lostfound/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LostFoundDetailServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.LostFoundDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LostFoundDetailServlet</servlet-name>
+        <url-pattern>/lostfound/detail</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LostFoundUpdateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.LostFoundUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LostFoundUpdateServlet</servlet-name>
+        <url-pattern>/lostfound/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LostFoundStatusServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.LostFoundStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LostFoundStatusServlet</servlet-name>
+        <url-pattern>/lostfound/status</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LostFoundDeleteServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.LostFoundDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LostFoundDeleteServlet</servlet-name>
+        <url-pattern>/lostfound/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ClaimRequestCreateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ClaimRequestCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClaimRequestCreateServlet</servlet-name>
+        <url-pattern>/claim/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ClaimRequestHandleServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ClaimRequestHandleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClaimRequestHandleServlet</servlet-name>
+        <url-pattern>/claim/handle</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

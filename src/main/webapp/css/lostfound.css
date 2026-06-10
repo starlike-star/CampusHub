@@ -1,0 +1,99 @@
+.lostfound-page { display: grid; gap: 18px; }
+.lostfound-header { display: flex; align-items: center; justify-content: space-between; padding: 26px; }
+.lostfound-header span, .lostfound-modal-heading span { color: #2563eb; font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+.lostfound-header h1 { margin: 5px 0; font-size: 30px; }
+.lostfound-header p { margin: 0; color: #64748b; }
+.lostfound-toolbar { padding: 18px; display: grid; gap: 14px; }
+.lostfound-search { display: flex; gap: 10px; }
+.lostfound-search input { flex: 1; }
+.lostfound-search button, .lostfound-actions button, .lostfound-actions a {
+    border: 0; border-radius: 10px; padding: 9px 14px; background: #eff6ff;
+    color: #1d4ed8; font-weight: 700; cursor: pointer; text-decoration: none;
+}
+.lostfound-filter-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.lostfound-filter-row label, .lostfound-modal label { display: grid; gap: 6px; color: #475569; font-size: 13px; font-weight: 700; }
+.lostfound-toolbar input, .lostfound-toolbar select, .lostfound-modal input,
+.lostfound-modal select, .lostfound-modal textarea, .lostfound-actions select {
+    border: 1px solid #dbe4f0; border-radius: 10px; padding: 10px 12px;
+    background: #fff; color: #0f172a; font: inherit;
+}
+.lostfound-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.lostfound-card { overflow: hidden; }
+.lostfound-image { position: relative; display: block; height: 210px; background: #eaf2ff; }
+.lostfound-image img { width: 100%; height: 100%; object-fit: cover; }
+.lostfound-type-badge, .lostfound-status { position: absolute; top: 14px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+.lostfound-type-badge { left: 14px; color: #fff; }
+.lostfound-type-badge.lost { background: #f97316; }
+.lostfound-type-badge.found { background: #0ea5e9; }
+.lostfound-status { right: 14px; }
+.lostfound-status.pending { background: #dcfce7; color: #15803d; }
+.lostfound-status.claiming { background: #ffedd5; color: #c2410c; }
+.lostfound-status.completed { background: #dbeafe; color: #1d4ed8; }
+.lostfound-status.closed { background: #e2e8f0; color: #64748b; }
+.lostfound-card-body { padding: 18px; display: grid; gap: 13px; }
+.lostfound-card-heading { display: flex; justify-content: space-between; gap: 16px; }
+.lostfound-card-heading small { color: #2563eb; font-weight: 700; }
+.lostfound-card-heading h2 { margin: 4px 0 0; font-size: 19px; }
+.lostfound-card-heading strong { color: #0f766e; white-space: nowrap; }
+.lostfound-card-body > p { margin: 0; color: #64748b; line-height: 1.65; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lostfound-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px 14px; color: #64748b; font-size: 13px; }
+.lostfound-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.lostfound-empty { grid-column: 1 / -1; text-align: center; padding: 50px 24px; }
+.lostfound-modal { position: fixed; inset: 0; z-index: 1200; display: grid; place-items: center; padding: 20px; }
+.lostfound-modal[hidden] { display: none; }
+.lostfound-modal-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, .56); }
+.lostfound-modal-dialog { position: relative; width: min(720px, 100%); max-height: 90vh; overflow: auto; background: #fff; border-radius: 18px; padding: 24px; box-shadow: 0 24px 70px rgba(15, 23, 42, .25); }
+.claim-modal { width: min(520px, 100%); }
+.lostfound-modal-heading { display: flex; justify-content: space-between; align-items: start; margin-bottom: 18px; }
+.lostfound-modal-heading h2 { margin: 4px 0 0; }
+.lostfound-modal-heading > button { border: 0; background: none; font-size: 26px; cursor: pointer; }
+.lostfound-modal form { display: grid; gap: 14px; }
+.lostfound-form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.lostfound-modal textarea { resize: vertical; }
+.lostfound-form-error { margin: 0; color: #dc2626; }
+.lostfound-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.lostfound-modal-actions button { border: 0; border-radius: 10px; padding: 10px 16px; cursor: pointer; }
+@media (max-width: 800px) {
+    .lostfound-header { align-items: flex-start; gap: 18px; flex-direction: column; }
+    .lostfound-grid, .lostfound-filter-row, .lostfound-form-row { grid-template-columns: 1fr; }
+}
+.lostfound-detail-body { background: #f4f7fb; }
+.lostfound-detail-shell { width: min(1100px, calc(100% - 32px)); margin: 28px auto 60px; display: grid; gap: 18px; }
+.lostfound-detail-back { color: #2563eb; font-weight: 700; text-decoration: none; }
+.lostfound-detail { display: grid; grid-template-columns: 46% 1fr; overflow: hidden; }
+.lostfound-detail-image { min-height: 390px; background: #eaf2ff; }
+.lostfound-detail-image img { width: 100%; height: 100%; object-fit: cover; }
+.lostfound-detail-info { padding: 28px; display: grid; align-content: center; gap: 16px; }
+.lostfound-detail-badges { display: flex; gap: 8px; }
+.lostfound-detail-badges .lostfound-type-badge,
+.lostfound-detail-badges .lostfound-status { position: static; }
+.lostfound-detail-info h1 { margin: 0; font-size: 32px; }
+.lostfound-detail-info > strong { color: #0f766e; font-size: 18px; }
+.lostfound-detail-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0; }
+.lostfound-detail-meta div { background: #f8fafc; border-radius: 12px; padding: 12px; }
+.lostfound-detail-meta dt { color: #64748b; font-size: 12px; }
+.lostfound-detail-meta dd { margin: 5px 0 0; font-weight: 700; }
+.lostfound-detail-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.lostfound-detail-actions button, .lostfound-detail-actions a,
+.claim-request-actions button { border: 0; border-radius: 10px; padding: 10px 14px; background: #eff6ff; color: #1d4ed8; font-weight: 700; text-decoration: none; cursor: pointer; }
+.lostfound-detail-section { padding: 24px; }
+.lostfound-detail-section h2 { margin-top: 0; }
+.lostfound-detail-section > p { color: #475569; line-height: 1.8; white-space: pre-wrap; }
+.lostfound-publisher { display: flex; gap: 14px; align-items: center; }
+.lostfound-publisher > span { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; background: #dbeafe; color: #1d4ed8; font-size: 20px; font-weight: 800; }
+.lostfound-publisher p { margin: 4px 0; color: #64748b; }
+.lostfound-request-heading { display: flex; justify-content: space-between; align-items: center; }
+.claim-request-list { display: grid; gap: 12px; }
+.claim-request-card { display: flex; justify-content: space-between; gap: 18px; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; }
+.claim-request-card p { color: #475569; }
+.claim-request-actions { display: flex; align-items: center; gap: 8px; }
+.claim-request-actions > span { border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 800; }
+.claim-request-actions .pending { background: #ffedd5; color: #c2410c; }
+.claim-request-actions .approved { background: #dcfce7; color: #15803d; }
+.claim-request-actions .rejected { background: #fee2e2; color: #b91c1c; }
+@media (max-width: 800px) {
+    .lostfound-detail { grid-template-columns: 1fr; }
+    .lostfound-detail-image { min-height: 260px; }
+    .lostfound-detail-meta { grid-template-columns: 1fr; }
+    .claim-request-card { flex-direction: column; }
+}

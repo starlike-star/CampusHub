@@ -57,6 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
         if (page === "messages" && !query.has("tab")) {
             query.set("tab", "all");
         }
+        if (page === "lostfound") {
+            if (!query.has("type")) {
+                query.set("type", "all");
+            }
+            if (!query.has("status")) {
+                query.set("status", "all");
+            }
+        }
         query.set("page", page === "my-goods" ? "myGoods" : page);
         mainContent.classList.add("is-loading");
         mainContent.setAttribute("aria-busy", "true");

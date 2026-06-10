@@ -17,7 +17,8 @@ import java.util.Set;
 
 public class ProfileService {
     private static final Set<String> TABS = Set.of(
-            "overview", "posts", "comments", "favorites", "goods", "checkins"
+            "overview", "posts", "comments", "favorites", "goods",
+            "lostfound", "checkins"
     );
 
     private final ProfileDao profileDao;
