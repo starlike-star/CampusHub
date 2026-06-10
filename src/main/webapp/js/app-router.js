@@ -54,6 +54,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (page === "profile" && !query.has("tab")) {
             query.set("tab", "overview");
         }
+        if (page === "messages" && !query.has("tab")) {
+            query.set("tab", "all");
+        }
         query.set("page", page === "my-goods" ? "myGoods" : page);
         mainContent.classList.add("is-loading");
         mainContent.setAttribute("aria-busy", "true");

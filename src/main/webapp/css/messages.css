@@ -1,0 +1,257 @@
+.messages-page {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.messages-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px;
+}
+
+.messages-header > div > span,
+.messages-empty > span {
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.messages-header h1 {
+    margin: 6px 0 5px;
+    font-size: 25px;
+}
+
+.messages-header p,
+.messages-empty p {
+    margin: 0;
+    color: #7b8498;
+}
+
+.mark-all-read-btn {
+    padding: 10px 15px;
+    color: #2563eb;
+    border: 0;
+    border-radius: 10px;
+    background: #eff6ff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.mark-all-read-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.messages-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.messages-stats article {
+    padding: 18px 20px;
+}
+
+.messages-stats span {
+    color: #8a94a6;
+    font-size: 11px;
+}
+
+.messages-stats strong {
+    display: block;
+    margin-top: 5px;
+    color: #1f2a44;
+    font-size: 24px;
+}
+
+.messages-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px;
+}
+
+.messages-tabs a {
+    flex: 1 0 auto;
+    padding: 10px 14px;
+    color: #667085;
+    border-radius: 9px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.messages-tabs a:hover,
+.messages-tabs a.active {
+    color: #fff;
+    background: #2563eb;
+}
+
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    transition: opacity .2s ease, border-color .2s ease;
+}
+
+.message-unread {
+    border-left: 4px solid #2563eb;
+}
+
+.message-read {
+    opacity: .72;
+}
+
+.unread-dot {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2563eb;
+}
+
+.message-read .unread-dot {
+    background: #d6dce5;
+}
+
+.message-card-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.message-card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.message-card-heading time {
+    color: #98a2b3;
+    font-size: 9px;
+}
+
+.message-type-badge {
+    padding: 4px 8px;
+    border-radius: 7px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.message-type-badge.comment {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.message-type-badge.like {
+    color: #be123c;
+    background: #ffe4e6;
+}
+
+.message-type-badge.favorite {
+    color: #7c3aed;
+    background: #ede9fe;
+}
+
+.message-type-badge.system,
+.message-type-badge.activity,
+.message-type-badge.claim {
+    color: #047857;
+    background: #d1fae5;
+}
+
+.message-card h2 {
+    margin: 9px 0 5px;
+    font-size: 15px;
+}
+
+.message-unread h2 {
+    font-weight: 750;
+}
+
+.message-card p {
+    margin: 0;
+    color: #667085;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+.message-read-btn {
+    flex: 0 0 auto;
+    padding: 8px 10px;
+    color: #2563eb;
+    border: 0;
+    border-radius: 8px;
+    background: #eff6ff;
+    cursor: pointer;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.messages-empty {
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.messages-empty h1,
+.messages-empty h2 {
+    margin: 8px 0;
+    color: #1f2a44;
+}
+
+.messages-empty .primary-btn {
+    margin-top: 20px;
+}
+
+.notification-button {
+    position: relative;
+}
+
+.message-unread-badge {
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    display: grid;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    place-items: center;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    background: #ef4444;
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.message-unread-badge[hidden] {
+    display: none;
+}
+
+@media (max-width: 680px) {
+    .messages-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .message-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .message-read-btn {
+        margin-left: 22px;
+    }
+}

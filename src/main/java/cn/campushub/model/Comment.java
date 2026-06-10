@@ -14,6 +14,7 @@ public class Comment {
     private String authorNickname;
     private String authorCollege;
     private String authorGrade;
+    private boolean liked;
 
     public Long getId() {
         return id;
@@ -101,6 +102,14 @@ public class Comment {
 
     public void setAuthorGrade(String authorGrade) {
         this.authorGrade = authorGrade;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     public String getAuthorInitial() {

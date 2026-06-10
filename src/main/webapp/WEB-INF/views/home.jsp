@@ -30,6 +30,7 @@
     <title>CampusHub - 校园综合社区</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/messages.css">
 </head>
 <body>
 <svg class="svg-sprite" aria-hidden="true">
@@ -75,6 +76,15 @@
                     <span>+</span> 发布
                 </a>
                 <% if (loginUser != null) { %>
+                <a class="icon-button notification-button"
+                   href="#messages"
+                   data-route="messages"
+                   aria-label="消息中心">
+                    <svg><use href="#icon-bell"></use></svg>
+                    <span class="message-unread-badge"
+                          data-unread-badge
+                          hidden>0</span>
+                </a>
                 <div class="account-wrap">
                     <button class="user-entry"
                             id="accountMenuButton"
@@ -154,6 +164,11 @@
                    href="#profile"
                    data-route="profile">
                     <svg><use href="#icon-user"></use></svg><span>个人中心</span>
+                </a>
+                <a class="nav-item"
+                   href="#messages"
+                   data-route="messages">
+                    <svg><use href="#icon-bell"></use></svg><span>消息中心</span>
                 </a>
             </nav>
             <section class="campus-map card">
@@ -417,5 +432,6 @@
 <script src="<%= contextPath %>/js/app-router.js"></script>
 <script src="<%= contextPath %>/js/market.js"></script>
 <script src="<%= contextPath %>/js/profile-actions.js"></script>
+<script src="<%= contextPath %>/js/message-actions.js"></script>
 </body>
 </html>

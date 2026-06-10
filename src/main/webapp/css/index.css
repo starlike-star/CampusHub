@@ -3132,7 +3132,7 @@ svg {
 
     .side-nav {
         display: grid;
-        grid-template-columns: repeat(9, 43px);
+        grid-template-columns: repeat(10, 43px);
         overflow-x: auto;
         padding-bottom: 4px;
     }

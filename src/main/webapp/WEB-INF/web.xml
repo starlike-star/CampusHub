@@ -92,6 +92,33 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>MessageUnreadCountServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.MessageUnreadCountServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MessageUnreadCountServlet</servlet-name>
+        <url-pattern>/messages/unread-count</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MessageReadServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.MessageReadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MessageReadServlet</servlet-name>
+        <url-pattern>/messages/read</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MessageReadAllServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.MessageReadAllServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MessageReadAllServlet</servlet-name>
+        <url-pattern>/messages/read-all</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>HomeDataServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.HomeDataServlet</servlet-class>
     </servlet>
@@ -143,6 +170,15 @@
     <servlet-mapping>
         <servlet-name>PostLikeServlet</servlet-name>
         <url-pattern>/post/like</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CommentLikeServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.CommentLikeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CommentLikeServlet</servlet-name>
+        <url-pattern>/comment/like</url-pattern>
     </servlet-mapping>
 
     <servlet>

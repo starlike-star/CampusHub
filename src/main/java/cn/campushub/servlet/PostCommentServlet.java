@@ -3,6 +3,7 @@ package cn.campushub.servlet;
 import cn.campushub.model.Comment;
 import cn.campushub.model.CommentCreateResult;
 import cn.campushub.model.SessionUser;
+import cn.campushub.service.MessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ServiceResult;
 import cn.campushub.util.JsonUtils;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 public class PostCommentServlet extends HttpServlet {
     private final PostService postService = new PostService();
+    private final MessageService messageService = new MessageService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -39,8 +41,9 @@ public class PostCommentServlet extends HttpServlet {
         }
 
         try {
+            String content = request.getParameter("content");
             ServiceResult<CommentCreateResult> result =
-                    postService.comment(postId, user.id(), request.getParameter("content"));
+                    postService.comment(postId, user.id(), content);
             if (!result.success()) {
                 PostJsonSupport.writeError(
                         response,
@@ -50,6 +53,16 @@ public class PostCommentServlet extends HttpServlet {
                 return;
             }
             Comment comment = result.data().comment();
+            try {
+                messageService.notifyPostComment(
+                        postId,
+                        user.id(),
+                        user.nickname(),
+                        content
+                );
+            } catch (SQLException notificationError) {
+                log("创建帖子评论通知失败", notificationError);
+            }
             JsonUtils.write(
                     response,
                     HttpServletResponse.SC_OK,

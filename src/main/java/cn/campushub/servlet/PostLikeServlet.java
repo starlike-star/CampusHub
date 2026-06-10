@@ -2,6 +2,7 @@ package cn.campushub.servlet;
 
 import cn.campushub.model.SessionUser;
 import cn.campushub.model.PostToggleResult;
+import cn.campushub.service.MessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ServiceResult;
 import cn.campushub.util.JsonUtils;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 public class PostLikeServlet extends HttpServlet {
     private final PostService postService = new PostService();
+    private final MessageService messageService = new MessageService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -47,6 +49,17 @@ public class PostLikeServlet extends HttpServlet {
                         result.message()
                 );
                 return;
+            }
+            if (result.data().active()) {
+                try {
+                    messageService.notifyPostLike(
+                            postId,
+                            user.id(),
+                            user.nickname()
+                    );
+                } catch (SQLException notificationError) {
+                    log("创建帖子点赞通知失败", notificationError);
+                }
             }
             JsonUtils.write(
                     response,

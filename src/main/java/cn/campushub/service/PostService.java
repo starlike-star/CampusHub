@@ -43,12 +43,17 @@ public class PostService {
         return postDao.findActivePostById(postId);
     }
 
-    public List<Comment> listComments(long postId) throws SQLException {
-        return postDao.findActiveComments(postId);
+    public List<Comment> listComments(long postId, Long currentUserId)
+            throws SQLException {
+        return postDao.findActiveComments(postId, currentUserId);
     }
 
     public boolean isLiked(long postId, long userId) throws SQLException {
         return postDao.hasPostLike(postId, userId);
+    }
+
+    public boolean isFavorited(long postId, long userId) throws SQLException {
+        return postDao.hasPostFavorite(postId, userId);
     }
 
     public ServiceResult<Long> publish(
@@ -131,6 +136,20 @@ public class PostService {
         PostToggleResult result = postDao.togglePostFavorite(postId, userId);
         return ServiceResult.success(
                 result.active() ? "收藏成功" : "已取消收藏",
+                result
+        );
+    }
+
+    public ServiceResult<PostToggleResult> toggleCommentLike(
+            long commentId,
+            long userId
+    ) throws SQLException {
+        if (commentId <= 0) {
+            return ServiceResult.failure("评论参数无效");
+        }
+        PostToggleResult result = postDao.toggleCommentLike(commentId, userId);
+        return ServiceResult.success(
+                result.active() ? "点赞成功" : "已取消点赞",
                 result
         );
     }

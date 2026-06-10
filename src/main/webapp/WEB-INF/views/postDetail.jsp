@@ -11,6 +11,7 @@
     Post post = (Post) request.getAttribute("post");
     List<Comment> comments = (List<Comment>) request.getAttribute("comments");
     boolean liked = Boolean.TRUE.equals(request.getAttribute("liked"));
+    boolean favorited = Boolean.TRUE.equals(request.getAttribute("favorited"));
     SessionUser loginUser =
             (SessionUser) session.getAttribute(SessionConstants.LOGIN_USER);
     String postMessage = (String) session.getAttribute("postMessage");
@@ -82,7 +83,19 @@
                 · <span class="detail-like-count"><%= post.getLikeCount() %></span>
             </button>
             <span>评论 <strong><%= post.getCommentCount() %></strong></span>
-            <span>收藏 <strong><%= post.getFavoriteCount() %></strong></span>
+            <button class="interaction-button detail-favorite-btn <%=
+                            favorited ? "saved" : ""
+                    %>"
+                    type="button"
+                    data-post-id="<%= post.getId() %>"
+                    aria-pressed="<%= favorited %>">
+                <span class="detail-favorite-label"><%=
+                        favorited ? "取消收藏" : "收藏"
+                %></span>
+                · <span class="detail-favorite-count"><%=
+                        post.getFavoriteCount()
+                %></span>
+            </button>
             <span>浏览 <strong><%= post.getViewCount() %></strong></span>
         </div>
     </article>
@@ -127,7 +140,16 @@
                         <time><%= comment.getCreatedAt() == null ? "" : comment.getCreatedAt().format(dateFormatter) %></time>
                     </header>
                     <p><%= HtmlUtils.escape(comment.getContent()) %></p>
-                    <small>点赞 <%= comment.getLikeCount() %></small>
+                    <button type="button"
+                            class="comment-like-btn <%=
+                                    comment.isLiked() ? "active" : ""
+                            %>"
+                            data-comment-like
+                            data-comment-id="<%= comment.getId() %>"
+                            aria-pressed="<%= comment.isLiked() %>">
+                        <span>点赞</span>
+                        <strong><%= comment.getLikeCount() %></strong>
+                    </button>
                 </div>
             </article>
             <%  }

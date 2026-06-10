@@ -23,7 +23,8 @@ public interface PostDao {
 
     boolean incrementViewCount(long postId) throws SQLException;
 
-    List<Comment> findActiveComments(long postId) throws SQLException;
+    List<Comment> findActiveComments(long postId, Long currentUserId)
+            throws SQLException;
 
     CommentCreateResult addComment(long postId, long userId, String content)
             throws SQLException;
@@ -33,6 +34,11 @@ public interface PostDao {
     boolean hasPostLike(long postId, long userId) throws SQLException;
 
     PostToggleResult togglePostFavorite(long postId, long userId) throws SQLException;
+
+    boolean hasPostFavorite(long postId, long userId) throws SQLException;
+
+    PostToggleResult toggleCommentLike(long commentId, long userId)
+            throws SQLException;
 
     Optional<Post> updateOwnedPost(Post post) throws SQLException;
 

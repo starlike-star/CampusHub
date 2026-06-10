@@ -164,12 +164,18 @@ public class JdbcPostDao implements PostDao {
     }
 
     @Override
-    public List<Comment> findActiveComments(long postId) throws SQLException {
+    public List<Comment> findActiveComments(long postId, Long currentUserId)
+            throws SQLException {
         String sql = """
                 SELECT c.id, c.post_id, c.user_id, c.content, c.like_count,
                        c.status, c.created_at,
                        u.avatar AS author_avatar, u.nickname AS author_nickname,
-                       u.college AS author_college, u.grade AS author_grade
+                       u.college AS author_college, u.grade AS author_grade,
+                       EXISTS(
+                           SELECT 1 FROM likes cl
+                           WHERE cl.user_id = ? AND cl.target_id = c.id
+                             AND cl.target_type = 'comment'
+                       ) AS liked
                 FROM comments c
                 JOIN users u ON u.id = c.user_id
                 WHERE c.post_id = ? AND c.status = 1
@@ -178,7 +184,8 @@ public class JdbcPostDao implements PostDao {
         List<Comment> comments = new ArrayList<>();
         try (Connection connection = JdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, postId);
+            statement.setLong(1, currentUserId == null ? 0L : currentUserId);
+            statement.setLong(2, postId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     comments.add(mapComment(resultSet));
@@ -302,6 +309,13 @@ public class JdbcPostDao implements PostDao {
     }
 
     @Override
+    public boolean hasPostFavorite(long postId, long userId) throws SQLException {
+        try (Connection connection = JdbcUtils.getConnection()) {
+            return hasPostFavorite(connection, postId, userId);
+        }
+    }
+
+    @Override
     public PostToggleResult togglePostFavorite(long postId, long userId)
             throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -351,6 +365,65 @@ public class JdbcPostDao implements PostDao {
                 int favoriteCount = findPostCount(connection, postId, "favorite_count");
                 connection.commit();
                 return new PostToggleResult(!favorited, favoriteCount);
+            } catch (SQLException exception) {
+                connection.rollback();
+                throw exception;
+            } finally {
+                connection.setAutoCommit(true);
+            }
+        }
+    }
+
+    @Override
+    public PostToggleResult toggleCommentLike(long commentId, long userId)
+            throws SQLException {
+        try (Connection connection = JdbcUtils.getConnection()) {
+            connection.setAutoCommit(false);
+            try {
+                if (!lockActiveComment(connection, commentId)) {
+                    connection.rollback();
+                    throw new SQLException("评论不存在或不可操作");
+                }
+                boolean liked = hasCommentLike(connection, commentId, userId);
+                if (liked) {
+                    try (PreparedStatement delete = connection.prepareStatement("""
+                            DELETE FROM likes
+                            WHERE user_id = ? AND target_id = ?
+                              AND target_type = 'comment'
+                            """)) {
+                        delete.setLong(1, userId);
+                        delete.setLong(2, commentId);
+                        delete.executeUpdate();
+                    }
+                    try (PreparedStatement update = connection.prepareStatement("""
+                            UPDATE comments
+                            SET like_count = GREATEST(COALESCE(like_count, 0) - 1, 0)
+                            WHERE id = ?
+                            """)) {
+                        update.setLong(1, commentId);
+                        update.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement insert = connection.prepareStatement("""
+                            INSERT INTO likes (user_id, target_id, target_type)
+                            VALUES (?, ?, 'comment')
+                            """)) {
+                        insert.setLong(1, userId);
+                        insert.setLong(2, commentId);
+                        insert.executeUpdate();
+                    }
+                    try (PreparedStatement update = connection.prepareStatement("""
+                            UPDATE comments
+                            SET like_count = COALESCE(like_count, 0) + 1
+                            WHERE id = ?
+                            """)) {
+                        update.setLong(1, commentId);
+                        update.executeUpdate();
+                    }
+                }
+                int count = findCommentLikeCount(connection, commentId);
+                connection.commit();
+                return new PostToggleResult(!liked, count);
             } catch (SQLException exception) {
                 connection.rollback();
                 throw exception;
@@ -425,6 +498,57 @@ public class JdbcPostDao implements PostDao {
             statement.setLong(2, postId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.next();
+            }
+        }
+    }
+
+    private boolean lockActiveComment(Connection connection, long commentId)
+            throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("""
+                SELECT id
+                FROM comments
+                WHERE id = ? AND status = 1
+                FOR UPDATE
+                """)) {
+            statement.setLong(1, commentId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+
+    private boolean hasCommentLike(
+            Connection connection,
+            long commentId,
+            long userId
+    ) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("""
+                SELECT 1
+                FROM likes
+                WHERE user_id = ? AND target_id = ? AND target_type = 'comment'
+                LIMIT 1
+                """)) {
+            statement.setLong(1, userId);
+            statement.setLong(2, commentId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next();
+            }
+        }
+    }
+
+    private int findCommentLikeCount(Connection connection, long commentId)
+            throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("""
+                SELECT COALESCE(like_count, 0)
+                FROM comments
+                WHERE id = ?
+                """)) {
+            statement.setLong(1, commentId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    throw new SQLException("评论不存在");
+                }
+                return resultSet.getInt(1);
             }
         }
     }
@@ -528,6 +652,11 @@ public class JdbcPostDao implements PostDao {
         comment.setAuthorNickname(resultSet.getString("author_nickname"));
         comment.setAuthorCollege(resultSet.getString("author_college"));
         comment.setAuthorGrade(resultSet.getString("author_grade"));
+        try {
+            comment.setLiked(resultSet.getBoolean("liked"));
+        } catch (SQLException ignored) {
+            comment.setLiked(false);
+        }
         return comment;
     }
 

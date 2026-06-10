@@ -33,10 +33,17 @@ public class PostDetailServlet extends HttpServlet {
             }
             SessionUser user = SessionUtils.currentUser(request);
             request.setAttribute("post", post.get());
-            request.setAttribute("comments", postService.listComments(postId));
+            request.setAttribute(
+                    "comments",
+                    postService.listComments(postId, user == null ? null : user.id())
+            );
             request.setAttribute(
                     "liked",
                     user != null && postService.isLiked(postId, user.id())
+            );
+            request.setAttribute(
+                    "favorited",
+                    user != null && postService.isFavorited(postId, user.id())
             );
             request.getRequestDispatcher("/WEB-INF/views/postDetail.jsp")
                     .forward(request, response);

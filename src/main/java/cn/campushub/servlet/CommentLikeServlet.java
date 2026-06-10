@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class PostFavoriteServlet extends HttpServlet {
+public class CommentLikeServlet extends HttpServlet {
     private final PostService postService = new PostService();
     private final MessageService messageService = new MessageService();
 
@@ -28,35 +28,29 @@ public class PostFavoriteServlet extends HttpServlet {
             PostJsonSupport.writeNeedLogin(response);
             return;
         }
-        Long postId = PostJsonSupport.parsePostId(request);
-        if (postId == null) {
+        Long commentId = MessageJsonSupport.parsePositiveId(
+                request.getParameter("commentId")
+        );
+        if (commentId == null) {
             PostJsonSupport.writeError(
                     response,
                     HttpServletResponse.SC_BAD_REQUEST,
-                    "帖子参数无效"
+                    "评论参数无效"
             );
             return;
         }
         try {
             ServiceResult<PostToggleResult> result =
-                    postService.toggleFavorite(postId, user.id());
-            if (!result.success()) {
-                PostJsonSupport.writeError(
-                        response,
-                        HttpServletResponse.SC_BAD_REQUEST,
-                        result.message()
-                );
-                return;
-            }
+                    postService.toggleCommentLike(commentId, user.id());
             if (result.data().active()) {
                 try {
-                    messageService.notifyPostFavorite(
-                            postId,
+                    messageService.notifyCommentLike(
+                            commentId,
                             user.id(),
                             user.nickname()
                     );
                 } catch (SQLException notificationError) {
-                    log("创建帖子收藏通知失败", notificationError);
+                    log("创建评论点赞通知失败", notificationError);
                 }
             }
             JsonUtils.write(
@@ -64,16 +58,16 @@ public class PostFavoriteServlet extends HttpServlet {
                     HttpServletResponse.SC_OK,
                     Map.of(
                             "success", true,
-                            "favorited", result.data().active(),
-                            "favoriteCount", result.data().count()
+                            "liked", result.data().active(),
+                            "likeCount", result.data().count()
                     )
             );
         } catch (SQLException exception) {
-            log("切换帖子收藏状态失败", exception);
+            log("切换评论点赞状态失败", exception);
             PostJsonSupport.writeError(
                     response,
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    "收藏操作失败"
+                    HttpServletResponse.SC_BAD_REQUEST,
+                    "评论不存在或不可点赞"
             );
         }
     }

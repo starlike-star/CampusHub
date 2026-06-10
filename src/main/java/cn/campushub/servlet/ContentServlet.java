@@ -2,6 +2,7 @@ package cn.campushub.servlet;
 
 import cn.campushub.model.SessionUser;
 import cn.campushub.service.GoodsService;
+import cn.campushub.service.MessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ProfileService;
 import cn.campushub.service.SquareService;
@@ -28,6 +29,7 @@ public class ContentServlet extends HttpServlet {
     private final SquareService squareService = new SquareService();
     private final GoodsService goodsService = new GoodsService();
     private final ProfileService profileService = new ProfileService();
+    private final MessageService messageService = new MessageService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -184,6 +186,29 @@ public class ContentServlet extends HttpServlet {
                     }
                 }
                 forward(request, response, "profile.jsp");
+                return;
+            }
+            if ("messages".equals(page)) {
+                String tab = messageService.normalizeTab(
+                        request.getParameter("tab")
+                );
+                request.setAttribute("activeTab", tab);
+                request.setAttribute("loginRequired", user == null);
+                if (user != null) {
+                    request.setAttribute(
+                            "messages",
+                            messageService.listMessages(user.id(), tab)
+                    );
+                    request.setAttribute(
+                            "messageCount",
+                            messageService.countMessages(user.id())
+                    );
+                    request.setAttribute(
+                            "unreadCount",
+                            messageService.countUnread(user.id())
+                    );
+                }
+                forward(request, response, "messages.jsp");
                 return;
             }
             if (page != null && DEVELOPMENT_PAGES.contains(page)) {

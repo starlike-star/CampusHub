@@ -52,6 +52,63 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const favoriteButton = document.querySelector(".detail-favorite-btn");
+    if (favoriteButton) {
+        favoriteButton.addEventListener("click", async function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            favoriteButton.disabled = true;
+            try {
+                const result = await postForm("/post/favorite", {
+                    postId: favoriteButton.dataset.postId
+                });
+                if (!result) {
+                    return;
+                }
+                favoriteButton.classList.toggle("saved", result.favorited);
+                favoriteButton.setAttribute(
+                    "aria-pressed",
+                    String(result.favorited)
+                );
+                favoriteButton.querySelector(
+                    ".detail-favorite-label"
+                ).textContent = result.favorited ? "取消收藏" : "收藏";
+                favoriteButton.querySelector(
+                    ".detail-favorite-count"
+                ).textContent = result.favoriteCount;
+            } catch (error) {
+                window.alert(error.message);
+            } finally {
+                favoriteButton.disabled = false;
+            }
+        });
+    }
+
+    document.addEventListener("click", async function (event) {
+        const button = event.target.closest("[data-comment-like]");
+        if (!button) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        button.disabled = true;
+        try {
+            const result = await postForm("/comment/like", {
+                commentId: button.dataset.commentId
+            });
+            if (!result) {
+                return;
+            }
+            button.classList.toggle("active", result.liked);
+            button.setAttribute("aria-pressed", String(result.liked));
+            button.querySelector("strong").textContent = result.likeCount;
+        } catch (error) {
+            window.alert(error.message);
+        } finally {
+            button.disabled = false;
+        }
+    });
+
     const commentForm = document.querySelector(".detail-comment-form");
     if (commentForm) {
         commentForm.addEventListener("submit", async function (event) {

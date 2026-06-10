@@ -128,7 +128,10 @@ class PostServiceTest {
         }
 
         @Override
-        public List<Comment> findActiveComments(long postId) {
+        public List<Comment> findActiveComments(
+                long postId,
+                Long currentUserId
+        ) {
             return List.of();
         }
 
@@ -154,6 +157,16 @@ class PostServiceTest {
         @Override
         public PostToggleResult togglePostFavorite(long postId, long userId) {
             return new PostToggleResult(true, 1);
+        }
+
+        @Override
+        public boolean hasPostFavorite(long postId, long userId) {
+            return false;
+        }
+
+        @Override
+        public PostToggleResult toggleCommentLike(long commentId, long userId) {
+            return new PostToggleResult(nextLikedState, nextLikedState ? 1 : 0);
         }
 
         @Override

@@ -1,10 +1,7 @@
 package cn.campushub.servlet;
 
-import cn.campushub.model.PostToggleResult;
 import cn.campushub.model.SessionUser;
-import cn.campushub.service.GoodsService;
 import cn.campushub.service.MessageService;
-import cn.campushub.service.ServiceResult;
 import cn.campushub.util.JsonUtils;
 import cn.campushub.util.SessionUtils;
 import javax.servlet.ServletException;
@@ -16,8 +13,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class GoodsFavoriteServlet extends HttpServlet {
-    private final GoodsService goodsService = new GoodsService();
+public class MessageReadServlet extends HttpServlet {
     private final MessageService messageService = new MessageService();
 
     @Override
@@ -25,47 +21,42 @@ public class GoodsFavoriteServlet extends HttpServlet {
             throws ServletException, IOException {
         SessionUser user = SessionUtils.currentUser(request);
         if (user == null) {
-            GoodsJsonSupport.writeNeedLogin(response);
+            MessageJsonSupport.writeNeedLogin(response);
             return;
         }
-        Long goodsId = GoodsJsonSupport.parseGoodsId(request);
-        if (goodsId == null) {
-            GoodsJsonSupport.writeError(
+        Long messageId =
+                MessageJsonSupport.parsePositiveId(request.getParameter("messageId"));
+        if (messageId == null) {
+            MessageJsonSupport.writeError(
                     response,
                     HttpServletResponse.SC_BAD_REQUEST,
-                    "商品参数无效"
+                    "消息参数无效"
             );
             return;
         }
         try {
-            ServiceResult<PostToggleResult> result =
-                    goodsService.toggleFavorite(goodsId, user.id());
-            if (result.data().active()) {
-                try {
-                    messageService.notifyGoodsFavorite(
-                            goodsId,
-                            user.id(),
-                            user.nickname()
-                    );
-                } catch (SQLException notificationError) {
-                    log("创建商品收藏通知失败", notificationError);
-                }
+            if (!messageService.markRead(user.id(), messageId)) {
+                MessageJsonSupport.writeError(
+                        response,
+                        HttpServletResponse.SC_NOT_FOUND,
+                        "消息不存在"
+                );
+                return;
             }
             JsonUtils.write(
                     response,
                     HttpServletResponse.SC_OK,
                     Map.of(
                             "success", true,
-                            "favorited", result.data().active(),
-                            "favoriteCount", result.data().count()
+                            "unreadCount", messageService.countUnread(user.id())
                     )
             );
         } catch (SQLException exception) {
-            log("切换商品收藏状态失败", exception);
-            GoodsJsonSupport.writeError(
+            log("标记消息已读失败", exception);
+            MessageJsonSupport.writeError(
                     response,
                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    "收藏操作失败"
+                    "消息状态更新失败"
             );
         }
     }
