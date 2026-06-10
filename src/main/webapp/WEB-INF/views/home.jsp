@@ -28,10 +28,13 @@
     <meta name="description" content="CampusHub 校园综合社区首页">
     <meta name="context-path" content="<%= contextPath %>">
     <title>CampusHub - 校园综合社区</title>
-    <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
+    <link rel="stylesheet"
+          href="<%= contextPath %>/css/index.css?v=20260610-activity-sidebar-2">
     <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/messages.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
+    <link rel="stylesheet"
+          href="<%= contextPath %>/css/activity.css?v=20260610-activity-sidebar-2">
 </head>
 <body>
 <svg class="svg-sprite" aria-hidden="true">
@@ -309,29 +312,56 @@
                         int activityIndex = 1;
                         for (HomeSidebarVO.ActivityItem activity
                                 : sidebar.activities()) {
+                            int activityNumber = activityIndex++;
+                            int activityProgress = activity.maxMembers() <= 0
+                                    ? 0
+                                    : Math.min(
+                                            100,
+                                            activity.currentMembers() * 100
+                                                    / activity.maxMembers()
+                                    );
+                            String homeActivityCover =
+                                    activity.coverImage() == null
+                                            || activity.coverImage().isBlank()
+                                            ? "images/default-activity.png"
+                                            : activity.coverImage();
                     %>
-                    <a href="#activity"
-                       data-route="activity"
-                       class="activity-item">
-                        <span class="activity-cover coding"><%=
-                                String.format("%02d", activityIndex++)
-                        %></span>
-                        <div>
+                    <a href="<%= contextPath %>/activity/detail?id=<%=
+                            activity.id()
+                       %>"
+                       class="home-activity-item">
+                        <span class="home-activity-thumb">
+                            <img src="<%= contextPath %>/<%=
+                                    HtmlUtils.escape(homeActivityCover)
+                            %>"
+                                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-activity.png';"
+                                 alt="">
+                            <b><%= String.format("%02d", activityNumber) %></b>
+                        </span>
+                        <div class="home-activity-main">
                             <strong><%=
                                     HtmlUtils.escape(activity.title())
                             %></strong>
-                            <small><%= activity.startTime() == null
-                                    ? "时间待定"
-                                    : activity.startTime().format(
-                                            sidebarDateFormatter
-                                    ) %></small>
-                            <span><%= HtmlUtils.escape(
-                                    activity.location() == null
-                                            ? "地点待定"
-                                            : activity.location()
-                            ) %> · <%= activity.currentMembers() %>/<%=
-                                    activity.maxMembers()
-                            %> 人</span>
+                            <div class="home-activity-meta">
+                                <span><%= activity.startTime() == null
+                                        ? "时间待定"
+                                        : activity.startTime().format(
+                                                sidebarDateFormatter
+                                        ) %></span>
+                                <span><%= HtmlUtils.escape(
+                                        activity.location() == null
+                                                ? "地点待定"
+                                                : activity.location()
+                                ) %></span>
+                            </div>
+                            <div class="home-activity-progress">
+                                <i><b style="width:<%= activityProgress %>%"></b></i>
+                                <em><%= activity.currentMembers() %>/<%=
+                                        activity.maxMembers() == 0
+                                                ? "不限"
+                                                : activity.maxMembers()
+                                %></em>
+                            </div>
                         </div>
                     </a>
                     <%  }
@@ -435,5 +465,6 @@
 <script src="<%= contextPath %>/js/profile-actions.js"></script>
 <script src="<%= contextPath %>/js/message-actions.js"></script>
 <script src="<%= contextPath %>/js/lostfound-actions.js"></script>
+<script src="<%= contextPath %>/js/activity-actions.js"></script>
 </body>
 </html>

@@ -54,6 +54,7 @@ class MessageServiceTest {
         MessageService service = new MessageService(new FakeMessageDao());
 
         assertEquals("claim", service.normalizeTab("claim"));
+        assertEquals("activity", service.normalizeTab("activity"));
     }
 
     private static class FakeMessageDao implements MessageDao {

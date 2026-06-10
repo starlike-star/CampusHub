@@ -35,6 +35,7 @@ public record HomeSidebarVO(
     public record ActivityItem(
             long id,
             String title,
+            String coverImage,
             String location,
             LocalDateTime startTime,
             int currentMembers,

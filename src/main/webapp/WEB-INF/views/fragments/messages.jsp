@@ -78,6 +78,10 @@
            data-route="messages"
            data-tab="claim"
            class="<%= "claim".equals(activeTab) ? "active" : "" %>">认领</a>
+        <a href="#messages?tab=activity"
+           data-route="messages"
+           data-tab="activity"
+           class="<%= "activity".equals(activeTab) ? "active" : "" %>">活动</a>
         <a href="#messages?tab=system"
            data-route="messages"
            data-tab="system"

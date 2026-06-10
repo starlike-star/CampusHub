@@ -1802,6 +1802,134 @@ svg {
     font-style: normal;
 }
 
+.right-sidebar .home-activity-item {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 0;
+    color: inherit;
+    border-bottom: 1px solid #f1f3f6;
+    text-decoration: none;
+}
+
+.right-sidebar .home-activity-item:first-child {
+    padding-top: 0;
+}
+
+.right-sidebar .home-activity-item:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.right-sidebar .home-activity-thumb {
+    position: relative;
+    display: flex;
+    width: 66px;
+    height: 66px;
+    min-height: 66px;
+    flex: 0 0 66px;
+    overflow: hidden;
+    border-radius: 11px;
+    background: linear-gradient(145deg, #dbeafe, #dcfce7);
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, .12);
+}
+
+.right-sidebar .home-activity-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.right-sidebar .home-activity-thumb b {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    display: grid;
+    width: 20px;
+    height: 20px;
+    place-items: center;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, .85);
+    border-radius: 50%;
+    background: #2563eb;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, .2);
+    font-size: 7px;
+}
+
+.right-sidebar .home-activity-main {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+}
+
+.right-sidebar .home-activity-main > strong {
+    overflow: hidden;
+    color: #27364d;
+    font-size: 11px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color .18s ease;
+}
+
+.right-sidebar .home-activity-item:hover .home-activity-main > strong {
+    color: var(--primary);
+}
+
+.right-sidebar .home-activity-meta {
+    display: flex;
+    min-width: 0;
+    justify-content: space-between;
+    gap: 6px;
+    color: #98a1b0;
+    font-size: 8px;
+}
+
+.right-sidebar .home-activity-meta span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.right-sidebar .home-activity-meta span:last-child {
+    max-width: 45%;
+}
+
+.right-sidebar .home-activity-progress {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.right-sidebar .home-activity-progress i {
+    display: block;
+    min-width: 0;
+    height: 4px;
+    overflow: hidden;
+    flex: 1;
+    border-radius: 999px;
+    background: #e7edf5;
+}
+
+.right-sidebar .home-activity-progress b {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #3b82f6, #22c55e);
+}
+
+.right-sidebar .home-activity-progress em {
+    flex: 0 0 auto;
+    color: #64748b;
+    font-size: 8px;
+    font-style: normal;
+}
+
 .lost-list a {
     display: flex;
     align-items: center;

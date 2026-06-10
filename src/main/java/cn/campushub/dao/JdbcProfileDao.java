@@ -3,6 +3,7 @@ package cn.campushub.dao;
 import cn.campushub.model.FavoriteItemVO;
 import cn.campushub.model.Post;
 import cn.campushub.model.ProfileOverviewVO;
+import cn.campushub.model.ProfileActivityVO;
 import cn.campushub.model.User;
 import cn.campushub.model.UserCheckinStatsVO;
 import cn.campushub.model.UserCommentVO;
@@ -109,6 +110,17 @@ public class JdbcProfileDao implements ProfileDao {
             WHERE user_id = ?
             ORDER BY checkin_date DESC
             LIMIT 30
+            """;
+
+    private static final String ACTIVITIES_SQL = """
+            SELECT a.id, a.title, a.cover_image, a.location, a.start_time,
+                   a.end_time, a.deadline, a.status, a.current_members,
+                   a.max_members, ar.status AS registration_status,
+                   ar.created_at AS registered_at
+            FROM activity_registrations ar
+            JOIN activities a ON ar.activity_id = a.id
+            WHERE ar.user_id = ?
+            ORDER BY ar.created_at DESC
             """;
 
     private static final String UPDATE_PROFILE_SQL = """
@@ -280,6 +292,36 @@ public class JdbcProfileDao implements ProfileDao {
                 continuousDays,
                 List.copyOf(records)
         );
+    }
+
+    @Override
+    public List<ProfileActivityVO> findActivities(long userId)
+            throws SQLException {
+        List<ProfileActivityVO> activities = new ArrayList<>();
+        try (Connection connection = JdbcUtils.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(ACTIVITIES_SQL)) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    activities.add(new ProfileActivityVO(
+                            resultSet.getLong("id"),
+                            resultSet.getString("title"),
+                            resultSet.getString("cover_image"),
+                            resultSet.getString("location"),
+                            toLocalDateTime(resultSet.getTimestamp("start_time")),
+                            toLocalDateTime(resultSet.getTimestamp("end_time")),
+                            toLocalDateTime(resultSet.getTimestamp("deadline")),
+                            resultSet.getString("status"),
+                            resultSet.getInt("current_members"),
+                            resultSet.getInt("max_members"),
+                            resultSet.getString("registration_status"),
+                            toLocalDateTime(resultSet.getTimestamp("registered_at"))
+                    ));
+                }
+            }
+        }
+        return activities;
     }
 
     @Override

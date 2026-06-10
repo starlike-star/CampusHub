@@ -65,6 +65,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 query.set("status", "all");
             }
         }
+        if (page === "activity") {
+            if (!query.has("status")) {
+                query.set("status", "all");
+            }
+            if (!query.has("sort")) {
+                query.set("sort", "latest");
+            }
+        }
         query.set("page", page === "my-goods" ? "myGoods" : page);
         mainContent.classList.add("is-loading");
         mainContent.setAttribute("aria-busy", "true");

@@ -5,6 +5,7 @@ import cn.campushub.dao.ProfileDao;
 import cn.campushub.model.FavoriteItemVO;
 import cn.campushub.model.Post;
 import cn.campushub.model.ProfileOverviewVO;
+import cn.campushub.model.ProfileActivityVO;
 import cn.campushub.model.User;
 import cn.campushub.model.UserCheckinStatsVO;
 import cn.campushub.model.UserCommentVO;
@@ -18,7 +19,7 @@ import java.util.Set;
 public class ProfileService {
     private static final Set<String> TABS = Set.of(
             "overview", "posts", "comments", "favorites", "goods",
-            "lostfound", "checkins"
+            "lostfound", "activities", "checkins"
     );
 
     private final ProfileDao profileDao;
@@ -53,6 +54,10 @@ public class ProfileService {
 
     public UserCheckinStatsVO checkins(long userId) throws SQLException {
         return profileDao.findCheckins(userId);
+    }
+
+    public List<ProfileActivityVO> activities(long userId) throws SQLException {
+        return profileDao.findActivities(userId);
     }
 
     public ServiceResult<User> update(

@@ -1,0 +1,64 @@
+package cn.campushub.servlet;
+
+import cn.campushub.model.ActivityVO;
+import cn.campushub.model.SessionUser;
+import cn.campushub.service.ActivityRegistrationService;
+import cn.campushub.service.ActivityService;
+import cn.campushub.util.SessionUtils;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Optional;
+
+public class ActivityDetailServlet extends HttpServlet {
+    private final ActivityService activityService = new ActivityService();
+    private final ActivityRegistrationService registrationService =
+            new ActivityRegistrationService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Long id = ActivityJsonSupport.parseId(request);
+        if (id == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "活动参数无效");
+            return;
+        }
+        SessionUser user = SessionUtils.currentUser(request);
+        try {
+            Optional<ActivityVO> optional = activityService.detail(id);
+            if (optional.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "活动不存在");
+                return;
+            }
+            ActivityVO activity = optional.get();
+            boolean owner = user != null
+                    && activity.activity().getCreatedBy() != null
+                    && activity.activity().getCreatedBy() == user.id();
+            boolean canManage = owner || ActivityJsonSupport.isAdmin(user);
+            request.setAttribute("activity", activity);
+            request.setAttribute(
+                    "registered",
+                    user != null && registrationService.isRegistered(id, user.id())
+            );
+            request.setAttribute("canManageActivity", canManage);
+            if (canManage) {
+                request.setAttribute(
+                        "activityRegistrations",
+                        registrationService.registrations(id)
+                );
+            }
+            request.getRequestDispatcher("/WEB-INF/views/activityDetail.jsp")
+                    .forward(request, response);
+        } catch (SQLException exception) {
+            log("加载活动详情失败", exception);
+            response.sendError(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "活动详情加载失败"
+            );
+        }
+    }
+}

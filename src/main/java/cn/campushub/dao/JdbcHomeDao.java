@@ -27,7 +27,8 @@ public class JdbcHomeDao implements HomeDao {
             """;
 
     public static final String ACTIVITY_SQL = """
-            SELECT id, title, location, start_time, current_members, max_members
+            SELECT id, title, cover_image, location, start_time,
+                   current_members, max_members
             FROM activities
             WHERE status = 'signup'
             ORDER BY current_members DESC, created_at DESC
@@ -83,6 +84,7 @@ public class JdbcHomeDao implements HomeDao {
                 activities.add(new HomeSidebarVO.ActivityItem(
                         resultSet.getLong("id"),
                         resultSet.getString("title"),
+                        resultSet.getString("cover_image"),
                         resultSet.getString("location"),
                         toLocalDateTime(resultSet.getTimestamp("start_time")),
                         resultSet.getInt("current_members"),

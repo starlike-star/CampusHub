@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class MessageService {
     private static final Set<String> FILTER_TYPES =
-            Set.of("comment", "like", "favorite", "claim", "system");
+            Set.of("comment", "like", "favorite", "claim", "activity", "system");
     private static final Set<String> MESSAGE_TYPES =
             Set.of("comment", "like", "favorite", "claim", "activity", "system");
 

@@ -2,6 +2,7 @@ package cn.campushub.dao;
 
 import cn.campushub.model.FavoriteItemVO;
 import cn.campushub.model.Post;
+import cn.campushub.model.ProfileActivityVO;
 import cn.campushub.model.ProfileOverviewVO;
 import cn.campushub.model.User;
 import cn.campushub.model.UserCheckinStatsVO;
@@ -21,6 +22,11 @@ public interface ProfileDao {
     List<FavoriteItemVO> findFavorites(long userId) throws SQLException;
 
     UserCheckinStatsVO findCheckins(long userId) throws SQLException;
+
+    default List<ProfileActivityVO> findActivities(long userId)
+            throws SQLException {
+        return List.of();
+    }
 
     Optional<User> updateProfile(User user) throws SQLException;
 }

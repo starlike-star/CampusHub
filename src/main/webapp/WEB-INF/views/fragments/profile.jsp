@@ -2,6 +2,7 @@
 <%@ page import="cn.campushub.model.FavoriteItemVO" %>
 <%@ page import="cn.campushub.model.LostFound" %>
 <%@ page import="cn.campushub.model.ProfileOverviewVO" %>
+<%@ page import="cn.campushub.model.ProfileActivityVO" %>
 <%@ page import="cn.campushub.model.User" %>
 <%@ page import="cn.campushub.model.UserCheckinStatsVO" %>
 <%@ page import="cn.campushub.model.UserCommentVO" %>
@@ -127,6 +128,10 @@
            data-route="profile"
            data-tab="lostfound"
            class="<%= "lostfound".equals(activeTab) ? "active" : "" %>">我的失物招领</a>
+        <a href="#profile?tab=activities"
+           data-route="profile"
+           data-tab="activities"
+           class="<%= "activities".equals(activeTab) ? "active" : "" %>">我的活动</a>
         <a href="#profile?tab=checkins"
            data-route="profile"
            data-tab="checkins"
@@ -378,6 +383,73 @@
                             data-lostfound-status
                             data-id="<%= item.getId() %>"
                             data-status="closed">关闭信息</button>
+                </div>
+            </article>
+            <%  }
+               } %>
+        </div>
+    </section>
+    <% } else if ("activities".equals(activeTab)) {
+        List<ProfileActivityVO> profileActivities =
+                (List<ProfileActivityVO>) request.getAttribute(
+                        "profileActivities"
+                );
+    %>
+    <section class="profile-section card">
+        <div class="profile-section-heading">
+            <div><span>MY ACTIVITIES</span><h2>我的活动</h2></div>
+            <p><%= profileActivities == null ? 0 : profileActivities.size() %> 条</p>
+        </div>
+        <div class="profile-list">
+            <% if (profileActivities == null || profileActivities.isEmpty()) { %>
+            <div class="profile-inline-empty">还没有报名过校园活动。</div>
+            <% } else {
+                for (ProfileActivityVO item : profileActivities) {
+                    String activityStatus = "已结束";
+                    if ("signup".equals(item.status())) {
+                        activityStatus = "报名中";
+                    } else if ("closed".equals(item.status())) {
+                        activityStatus = "已截止";
+                    } else if ("ongoing".equals(item.status())) {
+                        activityStatus = "进行中";
+                    }
+            %>
+            <article class="profile-card">
+                <div class="profile-card-main">
+                    <div class="profile-card-labels">
+                        <span class="favorite-type-badge"><%= activityStatus %></span>
+                        <span><%= "registered".equals(item.registrationStatus())
+                                ? "已报名" : "已取消"
+                        %></span>
+                    </div>
+                    <a class="profile-card-title"
+                       href="<%= profileContextPath %>/activity/detail?id=<%=
+                                item.id()
+                       %>"><%= HtmlUtils.escape(item.title()) %></a>
+                    <p><%= HtmlUtils.escape(item.location()) %> · <%=
+                            item.startTime() == null
+                                    ? "时间待定"
+                                    : item.startTime().format(
+                                            profileDateTimeFormatter
+                                    )
+                    %></p>
+                    <small>报名于 <%= item.registeredAt() == null
+                            ? ""
+                            : item.registeredAt().format(
+                                    profileDateTimeFormatter
+                            ) %></small>
+                </div>
+                <div class="profile-card-actions">
+                    <a class="profile-action-link"
+                       href="<%= profileContextPath %>/activity/detail?id=<%=
+                                item.id()
+                       %>">查看详情</a>
+                    <% if ("registered".equals(item.registrationStatus())
+                            && "signup".equals(item.status())) { %>
+                    <button type="button"
+                            data-activity-cancel
+                            data-id="<%= item.id() %>">取消报名</button>
+                    <% } %>
                 </div>
             </article>
             <%  }

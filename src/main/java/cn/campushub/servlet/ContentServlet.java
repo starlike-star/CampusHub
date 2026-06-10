@@ -7,6 +7,8 @@ import cn.campushub.service.MessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ProfileService;
 import cn.campushub.service.SquareService;
+import cn.campushub.service.ActivityRegistrationService;
+import cn.campushub.service.ActivityService;
 import cn.campushub.util.SessionUtils;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +33,9 @@ public class ContentServlet extends HttpServlet {
     private final LostFoundService lostFoundService = new LostFoundService();
     private final ProfileService profileService = new ProfileService();
     private final MessageService messageService = new MessageService();
+    private final ActivityService activityService = new ActivityService();
+    private final ActivityRegistrationService activityRegistrationService =
+            new ActivityRegistrationService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -151,6 +156,34 @@ public class ContentServlet extends HttpServlet {
                 forward(request, response, "lostfound.jsp");
                 return;
             }
+            if ("activity".equals(page)) {
+                String status = activityService.normalizeStatusValue(
+                        request.getParameter("status")
+                );
+                String keyword = activityService.normalizeKeyword(
+                        request.getParameter("keyword")
+                );
+                String sort = activityService.normalizeSort(
+                        request.getParameter("sort")
+                );
+                request.setAttribute("selectedStatus", status);
+                request.setAttribute("keyword", keyword);
+                request.setAttribute("selectedSort", sort);
+                request.setAttribute(
+                        "activities",
+                        activityService.list(status, keyword, sort)
+                );
+                request.setAttribute(
+                        "registeredActivityIds",
+                        user == null
+                                ? java.util.Set.of()
+                                : activityRegistrationService
+                                        .registeredActivityIds(user.id())
+                );
+                request.setAttribute("activityLoggedIn", user != null);
+                forward(request, response, "activity.jsp");
+                return;
+            }
             if ("myGoods".equals(page)) {
                 request.setAttribute("loginRequired", user == null);
                 request.setAttribute(
@@ -225,6 +258,10 @@ public class ContentServlet extends HttpServlet {
                         case "checkins" -> request.setAttribute(
                                 "profileCheckins",
                                 profileService.checkins(user.id())
+                        );
+                        case "activities" -> request.setAttribute(
+                                "profileActivities",
+                                profileService.activities(user.id())
                         );
                         default -> {
                         }

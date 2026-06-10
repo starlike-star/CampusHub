@@ -325,6 +325,69 @@
         <url-pattern>/claim/handle</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ActivityCreateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityCreateServlet</servlet-name>
+        <url-pattern>/activity/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivityDetailServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityDetailServlet</servlet-name>
+        <url-pattern>/activity/detail</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivityUpdateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityUpdateServlet</servlet-name>
+        <url-pattern>/activity/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivityStatusServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityStatusServlet</servlet-name>
+        <url-pattern>/activity/status</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivityDeleteServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityDeleteServlet</servlet-name>
+        <url-pattern>/activity/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivityRegisterServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityRegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityRegisterServlet</servlet-name>
+        <url-pattern>/activity/register</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActivityCancelRegisterServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ActivityCancelRegisterServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivityCancelRegisterServlet</servlet-name>
+        <url-pattern>/activity/cancel</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
