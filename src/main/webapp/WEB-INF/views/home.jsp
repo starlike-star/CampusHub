@@ -29,6 +29,7 @@
     <meta name="context-path" content="<%= contextPath %>">
     <title>CampusHub - 校园综合社区</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
 </head>
 <body>
 <svg class="svg-sprite" aria-hidden="true">
@@ -415,5 +416,6 @@
 <script src="<%= contextPath %>/js/index.js"></script>
 <script src="<%= contextPath %>/js/app-router.js"></script>
 <script src="<%= contextPath %>/js/market.js"></script>
+<script src="<%= contextPath %>/js/profile-actions.js"></script>
 </body>
 </html>

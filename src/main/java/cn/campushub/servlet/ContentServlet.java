@@ -3,6 +3,7 @@ package cn.campushub.servlet;
 import cn.campushub.model.SessionUser;
 import cn.campushub.service.GoodsService;
 import cn.campushub.service.PostService;
+import cn.campushub.service.ProfileService;
 import cn.campushub.service.SquareService;
 import cn.campushub.util.SessionUtils;
 import javax.servlet.ServletException;
@@ -17,16 +18,16 @@ import java.util.Set;
 
 public class ContentServlet extends HttpServlet {
     private static final Set<String> DEVELOPMENT_PAGES =
-            Set.of("lostfound", "activity", "profile");
+            Set.of("lostfound", "activity");
     private static final Map<String, String> DEVELOPMENT_TITLES = Map.of(
             "lostfound", "失物招领",
-            "activity", "校园活动",
-            "profile", "个人中心"
+            "activity", "校园活动"
     );
 
     private final PostService postService = new PostService();
     private final SquareService squareService = new SquareService();
     private final GoodsService goodsService = new GoodsService();
+    private final ProfileService profileService = new ProfileService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -131,6 +132,58 @@ public class ContentServlet extends HttpServlet {
                                 : goodsService.listFavoriteGoods(user.id())
                 );
                 forward(request, response, "favorites.jsp");
+                return;
+            }
+            if ("profile".equals(page)) {
+                String tab = profileService.normalizeTab(
+                        request.getParameter("tab")
+                );
+                request.setAttribute("activeTab", tab);
+                request.setAttribute("loginRequired", user == null);
+                if (user != null) {
+                    request.setAttribute(
+                            "profileOverview",
+                            profileService.overview(user.id()).orElse(null)
+                    );
+                    switch (tab) {
+                        case "posts" -> {
+                            request.setAttribute(
+                                    "posts",
+                                    profileService.posts(user.id())
+                            );
+                            request.setAttribute("emptyTitle", "还没有发布帖子");
+                            request.setAttribute(
+                                    "emptyMessage",
+                                    "发布第一条校园动态，记录你的校园生活。"
+                            );
+                        }
+                        case "comments" -> request.setAttribute(
+                                "profileComments",
+                                profileService.comments(user.id())
+                        );
+                        case "favorites" -> request.setAttribute(
+                                "profileFavorites",
+                                profileService.favorites(user.id())
+                        );
+                        case "goods" -> {
+                            request.setAttribute(
+                                    "goodsCategories",
+                                    goodsService.listCategories()
+                            );
+                            request.setAttribute(
+                                    "goodsList",
+                                    goodsService.listOwnGoods(user.id())
+                            );
+                        }
+                        case "checkins" -> request.setAttribute(
+                                "profileCheckins",
+                                profileService.checkins(user.id())
+                        );
+                        default -> {
+                        }
+                    }
+                }
+                forward(request, response, "profile.jsp");
                 return;
             }
             if (page != null && DEVELOPMENT_PAGES.contains(page)) {

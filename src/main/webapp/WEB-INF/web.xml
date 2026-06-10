@@ -83,6 +83,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ProfileUpdateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ProfileUpdateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfileUpdateServlet</servlet-name>
+        <url-pattern>/profile/update</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>HomeDataServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.HomeDataServlet</servlet-class>
     </servlet>

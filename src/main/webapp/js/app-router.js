@@ -51,6 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const requestController = new AbortController();
         activeRequest = requestController;
         const query = new URLSearchParams(params);
+        if (page === "profile" && !query.has("tab")) {
+            query.set("tab", "overview");
+        }
         query.set("page", page === "my-goods" ? "myGoods" : page);
         mainContent.classList.add("is-loading");
         mainContent.setAttribute("aria-busy", "true");
