@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.model.Goods" %>
 <%@ page import="cn.campushub.model.Category" %>
+<%@ page import="cn.campushub.constant.SessionConstants" %>
+<%@ page import="cn.campushub.model.SessionUser" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
@@ -12,6 +14,8 @@
             (List<Category>) request.getAttribute("goodsCategories");
     boolean goodsOwner =
             Boolean.TRUE.equals(request.getAttribute("goodsOwner"));
+    SessionUser goodsLoginUser =
+            (SessionUser) session.getAttribute(SessionConstants.LOGIN_USER);
     DateTimeFormatter dateFormatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     DecimalFormat priceFormatter = new DecimalFormat("0.00");
@@ -30,8 +34,9 @@
     <meta name="context-path" content="<%= contextPath %>">
     <title><%= HtmlUtils.escape(goods.getTitle()) %> - CampusHub 二手市场</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
 </head>
-<body>
+<body data-report-authenticated="<%= goodsLoginUser != null %>">
 <header class="simple-topbar">
     <a class="brand" href="<%= contextPath %>/home#market">
         <span class="brand-mark">
@@ -197,6 +202,10 @@
                         data-want-message="<%=
                                 HtmlUtils.escape(goods.getWantMessage())
                         %>">我想要</button>
+                <button type="button"
+                        class="report-btn"
+                        data-target-type="goods"
+                        data-target-id="<%= goods.getId() %>">举报商品</button>
             </div>
             <% } %>
             <% if (!"offline".equals(goods.getTradeMethod())) { %>
@@ -328,5 +337,6 @@
 </svg>
 <div class="toast" id="toast" role="status"></div>
 <script src="<%= contextPath %>/js/market.js"></script>
+<script src="<%= contextPath %>/js/report.js"></script>
 </body>
 </html>

@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.model.ClaimRequest" %>
 <%@ page import="cn.campushub.model.LostFound" %>
+<%@ page import="cn.campushub.constant.SessionConstants" %>
+<%@ page import="cn.campushub.model.SessionUser" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
@@ -8,6 +10,8 @@
     String contextPath = request.getContextPath();
     LostFound item = (LostFound) request.getAttribute("lostFound");
     boolean owner = Boolean.TRUE.equals(request.getAttribute("lostFoundOwner"));
+    SessionUser lostFoundLoginUser =
+            (SessionUser) session.getAttribute(SessionConstants.LOGIN_USER);
     List<ClaimRequest> claims =
             (List<ClaimRequest>) request.getAttribute("claimRequests");
     DateTimeFormatter dateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -29,8 +33,10 @@
     <title><%= HtmlUtils.escape(item.getTitle()) %> - CampusHub</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
 </head>
-<body class="lostfound-detail-body">
+<body class="lostfound-detail-body"
+      data-report-authenticated="<%= lostFoundLoginUser != null %>">
 <main class="lostfound-detail-shell">
     <a class="lostfound-detail-back" href="<%= contextPath %>/home#lostfound">
         ← 返回失物招领
@@ -94,6 +100,12 @@
                 <a href="tel:<%= HtmlUtils.escape(item.getContact()) %>">
                     联系发布人
                 </a>
+                <% } %>
+                <% if (!owner && !"closed".equals(item.getStatus())) { %>
+                <button type="button"
+                        class="report-btn"
+                        data-target-type="lost_found"
+                        data-target-id="<%= item.getId() %>">举报该信息</button>
                 <% } %>
             </div>
         </div>
@@ -201,5 +213,6 @@
     </section>
 </div>
 <script src="<%= contextPath %>/js/lostfound-actions.js"></script>
+<script src="<%= contextPath %>/js/report.js"></script>
 </body>
 </html>

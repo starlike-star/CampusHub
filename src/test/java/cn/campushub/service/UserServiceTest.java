@@ -56,6 +56,21 @@ class UserServiceTest {
     }
 
     @Test
+    void loginRejectsDisabledUser() throws SQLException {
+        FakeUserDao userDao = new FakeUserDao();
+        User user = activeUser();
+        user.setStatus(0);
+        userDao.users.put(user.getUsername(), user);
+        UserService service = new UserService(userDao);
+
+        ServiceResult<SessionUser> result =
+                service.login("campus_01", "campus123");
+
+        assertFalse(result.success());
+        assertEquals("当前账号不可用，请联系管理员", result.message());
+    }
+
+    @Test
     void registerRejectsDuplicateUsername() throws SQLException {
         FakeUserDao userDao = new FakeUserDao();
         userDao.users.put("campus_01", activeUser());

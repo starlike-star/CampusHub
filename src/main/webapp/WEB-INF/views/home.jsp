@@ -35,8 +35,9 @@
     <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
     <link rel="stylesheet"
           href="<%= contextPath %>/css/activity.css?v=20260610-activity-sidebar-2">
+    <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
 </head>
-<body>
+<body data-report-authenticated="<%= loginUser != null %>">
 <svg class="svg-sprite" aria-hidden="true">
     <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></symbol>
     <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"></path></symbol>
@@ -103,6 +104,9 @@
                         <svg><use href="#icon-chevron"></use></svg>
                     </button>
                     <div class="account-menu" id="accountMenu">
+                        <% if ("admin".equalsIgnoreCase(loginUser.role())) { %>
+                        <a href="<%= contextPath %>/admin">后台管理</a>
+                        <% } %>
                         <form action="<%= contextPath %>/logout" method="post">
                             <button type="submit">退出登录</button>
                         </form>
@@ -466,5 +470,6 @@
 <script src="<%= contextPath %>/js/message-actions.js"></script>
 <script src="<%= contextPath %>/js/lostfound-actions.js"></script>
 <script src="<%= contextPath %>/js/activity-actions.js"></script>
+<script src="<%= contextPath %>/js/report.js"></script>
 </body>
 </html>

@@ -37,6 +37,19 @@
         <url-pattern>/api/private/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>AdminAuthFilter</filter-name>
+        <filter-class>cn.campushub.filter.AdminAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/admin</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AdminAuthFilter</filter-name>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.LoginServlet</servlet-class>
@@ -80,6 +93,19 @@
     <servlet-mapping>
         <servlet-name>ContentServlet</servlet-name>
         <url-pattern>/content</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -179,6 +205,15 @@
     <servlet-mapping>
         <servlet-name>CommentLikeServlet</servlet-name>
         <url-pattern>/comment/like</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReportCreateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ReportCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReportCreateServlet</servlet-name>
+        <url-pattern>/report/create</url-pattern>
     </servlet-mapping>
 
     <servlet>

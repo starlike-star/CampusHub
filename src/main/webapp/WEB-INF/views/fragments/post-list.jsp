@@ -142,6 +142,12 @@
                         post.getFavoriteCount()
                 %></span>
             </button>
+            <% if (!owner) { %>
+            <button type="button"
+                    class="report-btn"
+                    data-target-type="post"
+                    data-target-id="<%= post.getId() %>">举报</button>
+            <% } %>
             <span class="view-count">
                 <svg><use href="#icon-eye"></use></svg>
                 <%= post.getViewCount() %>

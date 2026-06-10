@@ -27,8 +27,9 @@
     <title><%= HtmlUtils.escape(post.getTitle()) %> - CampusHub</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/post.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
 </head>
-<body>
+<body data-report-authenticated="<%= loginUser != null %>">
 <header class="simple-topbar">
     <a class="brand" href="<%= contextPath %>/home">
         <span class="brand-mark"><img src="<%= contextPath %>/images/Logo_noword.png" alt="CampusHub"></span>
@@ -97,6 +98,12 @@
                 %></span>
             </button>
             <span>浏览 <strong><%= post.getViewCount() %></strong></span>
+            <% if (loginUser == null || loginUser.id() != post.getUserId()) { %>
+            <button type="button"
+                    class="report-btn"
+                    data-target-type="post"
+                    data-target-id="<%= post.getId() %>">举报帖子</button>
+            <% } %>
         </div>
     </article>
 
@@ -150,6 +157,13 @@
                         <span>点赞</span>
                         <strong><%= comment.getLikeCount() %></strong>
                     </button>
+                    <% if (loginUser == null
+                            || loginUser.id() != comment.getUserId()) { %>
+                    <button type="button"
+                            class="report-btn"
+                            data-target-type="comment"
+                            data-target-id="<%= comment.getId() %>">举报评论</button>
+                    <% } %>
                 </div>
             </article>
             <%  }
@@ -159,5 +173,6 @@
 </main>
 <script src="<%= contextPath %>/js/textarea-autosize.js"></script>
 <script src="<%= contextPath %>/js/post-detail.js"></script>
+<script src="<%= contextPath %>/js/report.js"></script>
 </body>
 </html>
