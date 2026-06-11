@@ -1,6 +1,22 @@
 # CampusHub
 
+> A course project for *Comprehensive Java Web Project Development Practice* at Jiangxi Modern Polytechnic College.
+
 CampusHub is an integrated campus community platform for students and administrators. Centered around a campus social feed, it combines community posts, second-hand trading, lost-and-found services, campus activities, announcements, messaging, global search, daily check-ins, user levels, and administrative moderation in one system.
+
+## Project Information
+
+| Item | Details |
+| --- | --- |
+| Project | CampusHub Integrated Campus Community Platform |
+| Course | Comprehensive Java Web Project Development Practice |
+| School | School of Information Engineering |
+| Class | 2024 Software Technology (Sino-Foreign Cooperation), Class 1 |
+| Group | Group 14 |
+| Student | Xu Yiwen |
+| Student ID | 230628720242 |
+| Instructor | Hu Caiming |
+| Project Type | Maven WAR Web Application |
 
 ## Features
 
