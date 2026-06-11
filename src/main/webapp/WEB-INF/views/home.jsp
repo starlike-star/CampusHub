@@ -29,7 +29,7 @@
     <meta name="context-path" content="<%= contextPath %>">
     <title>CampusHub - 校园综合社区</title>
     <link rel="stylesheet"
-          href="<%= contextPath %>/css/index.css?v=20260610-activity-sidebar-2">
+          href="<%= contextPath %>/css/index.css?v=20260610-global-search-v1">
     <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/messages.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
@@ -71,8 +71,15 @@
                 </span>
             </a>
             <form class="global-search" data-global-search>
-                <svg><use href="#icon-search"></use></svg>
-                <input type="search" name="q" placeholder="搜索校园动态">
+                <button class="global-search-submit"
+                        type="submit"
+                        aria-label="搜索">
+                    <svg><use href="#icon-search"></use></svg>
+                </button>
+                <input type="search"
+                       name="keyword"
+                       maxlength="50"
+                       placeholder="搜索帖子、商品、失物、活动、公告">
                 <kbd>Ctrl K</kbd>
             </form>
             <div class="top-actions">

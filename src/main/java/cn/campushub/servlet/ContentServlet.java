@@ -6,6 +6,7 @@ import cn.campushub.service.LostFoundService;
 import cn.campushub.service.MessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ProfileService;
+import cn.campushub.service.SearchService;
 import cn.campushub.service.SquareService;
 import cn.campushub.service.ActivityRegistrationService;
 import cn.campushub.service.ActivityService;
@@ -34,6 +35,7 @@ public class ContentServlet extends HttpServlet {
     private final ProfileService profileService = new ProfileService();
     private final MessageService messageService = new MessageService();
     private final ActivityService activityService = new ActivityService();
+    private final SearchService searchService = new SearchService();
     private final ActivityRegistrationService activityRegistrationService =
             new ActivityRegistrationService();
 
@@ -47,6 +49,17 @@ public class ContentServlet extends HttpServlet {
         SessionUser user = SessionUtils.currentUser(request);
         Long userId = user == null ? null : user.id();
         try {
+            if ("search".equals(page)) {
+                request.setAttribute(
+                        "searchPage",
+                        searchService.search(
+                                request.getParameter("keyword"),
+                                request.getParameter("type")
+                        )
+                );
+                forward(request, response, "search.jsp");
+                return;
+            }
             if ("home".equals(page)) {
                 request.setAttribute("posts", postService.listPosts(userId));
                 forward(request, response, "home-feed.jsp");

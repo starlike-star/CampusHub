@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";
     const mainContent = document.getElementById("main-content");
+    const globalSearchInput = document.querySelector(
+        "[data-global-search] input[name='keyword']"
+    );
     let activeRequest;
     let currentRouteKey = "home";
 
@@ -120,6 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const route = parseHash();
         const key = routeKey(route);
         updateActiveNav(route.page);
+        if (route.page === "search" && globalSearchInput) {
+            globalSearchInput.value = route.params.get("keyword") || "";
+        }
         if (forceLoad || key !== currentRouteKey) {
             currentRouteKey = key;
             loadContent(route.page, route.params);
@@ -143,6 +149,17 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     document.addEventListener("click", function (event) {
+        const searchTypeLink = event.target.closest("[data-search-type]");
+        if (searchTypeLink) {
+            event.preventDefault();
+            const current = parseHash();
+            const keyword = current.params.get("keyword") || "";
+            const params = new URLSearchParams();
+            params.set("keyword", keyword);
+            params.set("type", searchTypeLink.dataset.searchType || "all");
+            navigate(buildHash("search", params));
+            return;
+        }
         const link = event.target.closest("[data-route]");
         if (!link) {
             return;
@@ -159,14 +176,29 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("submit", function (event) {
         const squareSearch = event.target.closest("[data-square-search]");
         const globalSearch = event.target.closest("[data-global-search]");
-        if (!squareSearch && !globalSearch) {
+        const searchPageSearch = event.target.closest("[data-search-page-search]");
+        if (!squareSearch && !globalSearch && !searchPageSearch) {
             return;
         }
         event.preventDefault();
-        const form = squareSearch || globalSearch;
-        const keyword = new FormData(form).get("q")?.toString().trim() || "";
+        const form = squareSearch || globalSearch || searchPageSearch;
+        const formData = new FormData(form);
+        const keyword = (
+            formData.get("keyword") || formData.get("q") || ""
+        ).toString().trim();
+        if ((globalSearch || searchPageSearch) && !keyword) {
+            window.alert("请输入搜索关键词");
+            form.querySelector("input[type='search']")?.focus();
+            return;
+        }
         const params = new URLSearchParams();
         const current = parseHash();
+        if (globalSearch || searchPageSearch) {
+            params.set("keyword", keyword);
+            params.set("type", "all");
+            navigate(buildHash("search", params));
+            return;
+        }
         params.set(
             "tab",
             squareSearch && current.page === "square"
@@ -177,6 +209,15 @@ document.addEventListener("DOMContentLoaded", function () {
             params.set("q", keyword);
         }
         navigate(buildHash("square", params));
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if ((event.ctrlKey || event.metaKey)
+                && event.key.toLowerCase() === "k") {
+            event.preventDefault();
+            globalSearchInput?.focus();
+            globalSearchInput?.select();
+        }
     });
 
     window.addEventListener("hashchange", function () {
