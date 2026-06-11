@@ -16,6 +16,8 @@ public class User {
     private String phone;
     private String role;
     private Integer status;
+    private Integer experience;
+    private Integer level;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -121,6 +123,22 @@ public class User {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public LocalDateTime getCreatedAt() {

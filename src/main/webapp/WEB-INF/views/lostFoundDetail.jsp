@@ -37,10 +37,18 @@
 </head>
 <body class="lostfound-detail-body"
       data-report-authenticated="<%= lostFoundLoginUser != null %>">
-<main class="lostfound-detail-shell">
-    <a class="lostfound-detail-back" href="<%= contextPath %>/home#lostfound">
-        ← 返回失物招领
+<header class="simple-topbar">
+    <a class="brand" href="<%= contextPath %>/home#lostfound">
+        <span class="brand-mark">
+            <img src="<%= contextPath %>/images/Logo_noword.png" alt="CampusHub">
+        </span>
+        <span class="brand-copy">
+            <strong>CampusHub</strong><small>校园综合社区</small>
+        </span>
     </a>
+    <a class="back-link" href="<%= contextPath %>/home#lostfound">返回失物招领</a>
+</header>
+<main class="lostfound-detail-shell">
     <section class="lostfound-detail card">
         <div class="lostfound-detail-image">
             <img src="<%= contextPath %><%=
@@ -97,9 +105,9 @@
                         data-title="<%= HtmlUtils.escape(item.getTitle()) %>">
                     申请认领
                 </button>
-                <a href="tel:<%= HtmlUtils.escape(item.getContact()) %>">
-                    联系发布人
-                </a>
+                <a href="<%= contextPath %>/private-messages/thread?receiverId=<%=
+                        item.getUserId()
+                %>">私信发布者</a>
                 <% } %>
                 <% if (!owner && !"closed".equals(item.getStatus())) { %>
                 <button type="button"

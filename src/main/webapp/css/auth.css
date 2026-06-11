@@ -286,6 +286,48 @@ input {
     color: #abb3c0;
 }
 
+.captcha-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 10px;
+}
+
+.captcha-image {
+    display: block;
+    width: 150px;
+    height: 45px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.captcha-image:focus {
+    outline: 3px solid rgba(37, 99, 235, .16);
+}
+
+.auth-card .remember-option {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 9px;
+    width: max-content;
+    cursor: pointer;
+}
+
+.auth-card .remember-option input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+.auth-card .remember-option span {
+    color: #59657a;
+    font-size: 12px;
+    font-weight: 500;
+}
+
 .auth-submit {
     height: 46px;
     margin-top: 4px;
@@ -383,5 +425,13 @@ input {
 
     .form-row {
         grid-template-columns: 1fr;
+    }
+
+    .captcha-row {
+        grid-template-columns: minmax(0, 1fr) 128px;
+    }
+
+    .captcha-image {
+        width: 128px;
     }
 }

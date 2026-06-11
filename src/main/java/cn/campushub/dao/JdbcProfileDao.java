@@ -25,7 +25,8 @@ public class JdbcProfileDao implements ProfileDao {
     private static final String OVERVIEW_SQL = """
             SELECT u.id, u.username, u.password, u.nickname, u.avatar,
                    u.student_no, u.college, u.major, u.grade, u.email,
-                   u.phone, u.role, u.status, u.created_at, u.updated_at,
+                   u.phone, u.role, u.status, u.experience, u.level,
+                   u.created_at, u.updated_at,
                    (SELECT COUNT(*) FROM posts p
                     WHERE p.user_id = u.id AND p.status = 1) AS post_count,
                    (SELECT COUNT(*) FROM comments cm
@@ -360,6 +361,8 @@ public class JdbcProfileDao implements ProfileDao {
         user.setPhone(resultSet.getString("phone"));
         user.setRole(resultSet.getString("role"));
         user.setStatus(resultSet.getInt("status"));
+        user.setExperience(resultSet.getInt("experience"));
+        user.setLevel(resultSet.getInt("level"));
         user.setCreatedAt(toLocalDateTime(resultSet.getTimestamp("created_at")));
         user.setUpdatedAt(toLocalDateTime(resultSet.getTimestamp("updated_at")));
         return user;

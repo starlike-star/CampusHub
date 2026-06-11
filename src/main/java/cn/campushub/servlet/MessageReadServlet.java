@@ -2,6 +2,7 @@ package cn.campushub.servlet;
 
 import cn.campushub.model.SessionUser;
 import cn.campushub.service.MessageService;
+import cn.campushub.service.PrivateMessageService;
 import cn.campushub.util.JsonUtils;
 import cn.campushub.util.SessionUtils;
 import javax.servlet.ServletException;
@@ -15,6 +16,8 @@ import java.util.Map;
 
 public class MessageReadServlet extends HttpServlet {
     private final MessageService messageService = new MessageService();
+    private final PrivateMessageService privateMessageService =
+            new PrivateMessageService();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -43,12 +46,20 @@ public class MessageReadServlet extends HttpServlet {
                 );
                 return;
             }
+            int systemUnreadCount = messageService.countUnread(user.id());
+            int privateUnreadCount =
+                    privateMessageService.countUnreadPrivateMessages(user.id());
             JsonUtils.write(
                     response,
                     HttpServletResponse.SC_OK,
                     Map.of(
                             "success", true,
-                            "unreadCount", messageService.countUnread(user.id())
+                            "unreadCount",
+                            systemUnreadCount + privateUnreadCount,
+                            "systemUnreadCount",
+                            systemUnreadCount,
+                            "privateUnreadCount",
+                            privateUnreadCount
                     )
             );
         } catch (SQLException exception) {

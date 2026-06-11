@@ -138,6 +138,13 @@ class UserServiceTest {
         private User lastCreated;
 
         @Override
+        public Optional<User> findById(long id) {
+            return users.values().stream()
+                    .filter(user -> user.getId() != null && user.getId() == id)
+                    .findFirst();
+        }
+
+        @Override
         public Optional<User> findByUsername(String username) {
             return Optional.ofNullable(users.get(username));
         }

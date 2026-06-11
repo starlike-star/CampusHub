@@ -2,7 +2,9 @@ package cn.campushub.service;
 
 import cn.campushub.dao.HomeDao;
 import cn.campushub.model.CheckinResult;
+import cn.campushub.model.ExperienceInfo;
 import cn.campushub.model.HomeSidebarVO;
+import cn.campushub.util.LevelUtils;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -93,10 +95,19 @@ class HomeServiceTest {
         }
 
         @Override
+        public Optional<ExperienceInfo> findExperienceInfo(long userId) {
+            return Optional.of(LevelUtils.experienceInfo(0));
+        }
+
+        @Override
         public CheckinResult checkIn(long userId, LocalDate date, int points) {
             requestedDate = date;
             requestedPoints = points;
-            return CheckinResult.success(points, 1);
+            return CheckinResult.success(
+                    points,
+                    1,
+                    LevelUtils.experienceInfo(points)
+            );
         }
     }
 }

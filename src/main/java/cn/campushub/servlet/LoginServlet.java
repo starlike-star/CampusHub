@@ -2,6 +2,7 @@ package cn.campushub.servlet;
 
 import cn.campushub.constant.SessionConstants;
 import cn.campushub.model.SessionUser;
+import cn.campushub.service.RememberMeService;
 import cn.campushub.service.ServiceResult;
 import cn.campushub.service.UserService;
 import cn.campushub.util.SessionUtils;
@@ -16,6 +17,7 @@ import java.sql.SQLException;
 
 public class LoginServlet extends HttpServlet {
     private final UserService userService = new UserService();
+    private final RememberMeService rememberMeService = new RememberMeService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,7 +34,16 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        boolean rememberMe = "on".equals(request.getParameter("rememberMe"));
         request.setAttribute("username", username);
+        request.setAttribute("rememberMe", rememberMe);
+
+        if (!captchaMatches(request)) {
+            request.setAttribute("errorMessage", "验证码错误");
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp")
+                    .forward(request, response);
+            return;
+        }
 
         try {
             ServiceResult<SessionUser> result = userService.login(username, password);
@@ -43,11 +54,43 @@ public class LoginServlet extends HttpServlet {
             }
 
             SessionUtils.login(request, result.data());
+            updateRememberMe(request, response, result.data(), rememberMe);
             response.sendRedirect(resolveRedirectTarget(request));
         } catch (SQLException exception) {
             log("登录时访问数据库失败", exception);
             request.setAttribute("errorMessage", "服务暂时不可用，请稍后再试");
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
+    }
+
+    private boolean captchaMatches(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Object expected = session == null
+                ? null
+                : session.getAttribute(SessionConstants.LOGIN_CAPTCHA);
+        if (session != null) {
+            session.removeAttribute(SessionConstants.LOGIN_CAPTCHA);
+        }
+        String submitted = request.getParameter("captcha");
+        return expected instanceof String code
+                && submitted != null
+                && code.equalsIgnoreCase(submitted.trim());
+    }
+
+    private void updateRememberMe(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            SessionUser user,
+            boolean rememberMe
+    ) {
+        try {
+            if (rememberMe) {
+                rememberMeService.createRememberToken(user, request, response);
+            } else {
+                rememberMeService.logout(request, response);
+            }
+        } catch (SQLException exception) {
+            log("更新记住我凭证失败", exception);
         }
     }
 

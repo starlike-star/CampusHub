@@ -1,6 +1,7 @@
 package cn.campushub.dao;
 
 import cn.campushub.model.CheckinResult;
+import cn.campushub.model.ExperienceInfo;
 import cn.campushub.model.HomeSidebarVO;
 
 import java.sql.SQLException;
@@ -17,6 +18,8 @@ public interface HomeDao {
 
     Optional<HomeSidebarVO.CheckinStatus> findCheckin(long userId, LocalDate date)
             throws SQLException;
+
+    Optional<ExperienceInfo> findExperienceInfo(long userId) throws SQLException;
 
     CheckinResult checkIn(long userId, LocalDate date, int points) throws SQLException;
 }

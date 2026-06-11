@@ -3,7 +3,9 @@ package cn.campushub.service;
 import cn.campushub.dao.HomeDao;
 import cn.campushub.dao.JdbcHomeDao;
 import cn.campushub.model.CheckinResult;
+import cn.campushub.model.ExperienceInfo;
 import cn.campushub.model.HomeSidebarVO;
+import cn.campushub.util.LevelUtils;
 
 import java.sql.SQLException;
 import java.time.Clock;
@@ -29,8 +31,13 @@ public class HomeService {
                 ? HomeSidebarVO.CheckinStatus.guest()
                 : homeDao.findCheckin(userId, LocalDate.now(clock))
                         .orElse(HomeSidebarVO.CheckinStatus.pending());
+        ExperienceInfo experience = userId == null
+                ? LevelUtils.experienceInfo(0)
+                : homeDao.findExperienceInfo(userId)
+                        .orElseGet(() -> LevelUtils.experienceInfo(0));
         return new HomeSidebarVO(
                 checkin,
+                experience,
                 homeDao.findLatestNotices(),
                 homeDao.findRecommendedActivities(),
                 homeDao.findLatestLostFound()

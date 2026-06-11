@@ -45,7 +45,8 @@
                 HtmlUtils.escape(post.getContent())
         %></textarea>
         <div class="post-header">
-            <span class="avatar avatar-blue post-avatar">
+            <a class="avatar avatar-blue post-avatar post-user-link"
+               href="<%= postContextPath %>/user/profile?id=<%= post.getUserId() %>">
                 <% if (post.getAuthorAvatar() != null
                         && !post.getAuthorAvatar().isBlank()) { %>
                 <img src="<%= postContextPath %><%=
@@ -56,12 +57,15 @@
                 <% } else { %>
                 <%= HtmlUtils.escape(post.getAuthorInitial()) %>
                 <% } %>
-            </span>
+            </a>
             <div class="post-author">
                 <div>
-                    <strong><%=
+                    <a class="post-user-link"
+                       href="<%= postContextPath %>/user/profile?id=<%=
+                                post.getUserId()
+                       %>"><strong><%=
                             HtmlUtils.escape(post.getAuthorNickname())
-                    %></strong>
+                    %></strong></a>
                 </div>
                 <p>
                     <%= HtmlUtils.escape(college) %> ·

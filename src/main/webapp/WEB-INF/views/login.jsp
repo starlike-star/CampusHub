@@ -4,6 +4,7 @@
     String contextPath = request.getContextPath();
     String errorMessage = (String) request.getAttribute("errorMessage");
     String username = (String) request.getAttribute("username");
+    boolean rememberMe = Boolean.TRUE.equals(request.getAttribute("rememberMe"));
 %>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -53,6 +54,25 @@
                     <input type="password" name="password" maxlength="72"
                            placeholder="请输入密码" autocomplete="current-password" required>
                 </label>
+                <label class="captcha-field">
+                    <span>验证码</span>
+                    <span class="captcha-row">
+                        <input type="text" name="captcha" maxlength="5"
+                               placeholder="请输入验证码" autocomplete="off" required>
+                        <img class="captcha-image"
+                             src="<%= contextPath %>/captcha"
+                             alt="登录验证码，点击刷新"
+                             title="点击刷新验证码"
+                             role="button"
+                             tabindex="0"
+                             data-captcha-image>
+                    </span>
+                </label>
+                <label class="remember-option">
+                    <input type="checkbox" name="rememberMe"
+                           <%= rememberMe ? "checked" : "" %>>
+                    <span>记住我（7 天内免密登录）</span>
+                </label>
                 <button class="auth-submit" type="submit">登录</button>
             </form>
 
@@ -60,5 +80,23 @@
         </div>
     </section>
 </main>
+<script>
+    (() => {
+        const image = document.querySelector("[data-captcha-image]");
+        if (!image) {
+            return;
+        }
+        const refresh = () => {
+            image.src = "<%= contextPath %>/captcha?t=" + Date.now();
+        };
+        image.addEventListener("click", refresh);
+        image.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                refresh();
+            }
+        });
+    })();
+</script>
 </body>
 </html>

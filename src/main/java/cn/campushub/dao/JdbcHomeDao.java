@@ -1,6 +1,7 @@
 package cn.campushub.dao;
 
 import cn.campushub.model.CheckinResult;
+import cn.campushub.model.ExperienceInfo;
 import cn.campushub.model.HomeSidebarVO;
 import cn.campushub.util.JdbcUtils;
 
@@ -18,6 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 public class JdbcHomeDao implements HomeDao {
+    private static final int MYSQL_DUPLICATE_KEY = 1062;
+    private static final String CHECKIN_EXPERIENCE_SOURCE = "checkin";
+    private static final String CHECKIN_EXPERIENCE_DESCRIPTION =
+            "每日签到获得经验";
+
+    private final ExperienceDao experienceDao = new JdbcExperienceDao();
+
     public static final String NOTICE_SQL = """
             SELECT id, title, type, created_at
             FROM notices
@@ -126,6 +134,13 @@ public class JdbcHomeDao implements HomeDao {
     }
 
     @Override
+    public Optional<ExperienceInfo> findExperienceInfo(long userId)
+            throws SQLException {
+        experienceDao.reconcileCheckinExperience(userId);
+        return experienceDao.getUserExperienceInfo(userId);
+    }
+
+    @Override
     public CheckinResult checkIn(long userId, LocalDate date, int points)
             throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -138,7 +153,9 @@ public class JdbcHomeDao implements HomeDao {
                     HomeSidebarVO.CheckinStatus status = today.get();
                     return CheckinResult.alreadyCheckedIn(
                             status.points(),
-                            status.continuousDays()
+                            status.continuousDays(),
+                            experienceDao.getUserExperienceInfo(connection, userId)
+                                    .orElse(null)
                     );
                 }
 
@@ -146,29 +163,44 @@ public class JdbcHomeDao implements HomeDao {
                         .map(HomeSidebarVO.CheckinStatus::continuousDays)
                         .map(days -> days + 1)
                         .orElse(1);
-                try (PreparedStatement statement =
-                             connection.prepareStatement(INSERT_CHECKIN_SQL)) {
-                    statement.setLong(1, userId);
-                    statement.setDate(2, Date.valueOf(date));
-                    statement.setInt(3, points);
-                    statement.setInt(4, continuousDays);
-                    statement.executeUpdate();
+                try {
+                    insertCheckin(
+                            connection,
+                            userId,
+                            date,
+                            points,
+                            continuousDays
+                    );
+                } catch (SQLIntegrityConstraintViolationException exception) {
+                    if (exception.getErrorCode() != MYSQL_DUPLICATE_KEY) {
+                        throw exception;
+                    }
+                    connection.rollback();
+                    HomeSidebarVO.CheckinStatus status =
+                            findCheckin(connection, userId, date)
+                                    .orElseThrow(() -> exception);
+                    return CheckinResult.alreadyCheckedIn(
+                            status.points(),
+                            status.continuousDays(),
+                            experienceDao.getUserExperienceInfo(connection, userId)
+                                    .orElse(null)
+                    );
                 }
+
+                ExperienceInfo experience =
+                        experienceDao.addExperience(connection, userId, points);
+                experienceDao.insertExperienceLog(
+                        connection,
+                        userId,
+                        points,
+                        CHECKIN_EXPERIENCE_SOURCE,
+                        CHECKIN_EXPERIENCE_DESCRIPTION
+                );
                 connection.commit();
-                return CheckinResult.success(points, continuousDays);
-            } catch (SQLIntegrityConstraintViolationException exception) {
-                connection.rollback();
-                HomeSidebarVO.CheckinStatus status =
-                        findCheckin(connection, userId, date)
-                                .orElse(new HomeSidebarVO.CheckinStatus(
-                                        true,
-                                        true,
-                                        points,
-                                        1
-                                ));
-                return CheckinResult.alreadyCheckedIn(
-                        status.points(),
-                        status.continuousDays()
+                return CheckinResult.success(
+                        points,
+                        continuousDays,
+                        experience
                 );
             } catch (SQLException exception) {
                 connection.rollback();
@@ -176,6 +208,23 @@ public class JdbcHomeDao implements HomeDao {
             } finally {
                 connection.setAutoCommit(true);
             }
+        }
+    }
+
+    private void insertCheckin(
+            Connection connection,
+            long userId,
+            LocalDate date,
+            int points,
+            int continuousDays
+    ) throws SQLException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(INSERT_CHECKIN_SQL)) {
+            statement.setLong(1, userId);
+            statement.setDate(2, Date.valueOf(date));
+            statement.setInt(3, points);
+            statement.setInt(4, continuousDays);
+            statement.executeUpdate();
         }
     }
 

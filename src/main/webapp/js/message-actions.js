@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";
 
-    function updateBadge(count) {
+    function updateBadge(count, systemCount, privateCount) {
         const badge = document.querySelector("[data-unread-badge]");
         if (!badge) {
             return;
@@ -12,11 +12,23 @@ document.addEventListener("DOMContentLoaded", function () {
         badge.hidden = normalized === 0;
         const pageCount = document.querySelector("[data-message-page-unread]");
         if (pageCount) {
-            pageCount.textContent = String(normalized);
+            pageCount.textContent = String(
+                Math.max(Number(systemCount) || 0, 0)
+            );
         }
         const markAll = document.querySelector("[data-message-read-all]");
         if (markAll) {
-            markAll.disabled = normalized === 0;
+            markAll.disabled = Math.max(Number(systemCount) || 0, 0) === 0;
+        }
+        const privateUnread = document.querySelector(
+            "[data-private-unread-count]"
+        );
+        if (privateUnread) {
+            const normalizedPrivate =
+                Math.max(Number(privateCount) || 0, 0);
+            privateUnread.textContent = normalizedPrivate > 0
+                ? "(" + normalizedPrivate + ")"
+                : "";
         }
     }
 
@@ -43,7 +55,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 headers: {"X-Requested-With": "XMLHttpRequest"}
             });
             if (result) {
-                updateBadge(result.unreadCount);
+                updateBadge(
+                    result.unreadCount,
+                    result.systemUnreadCount,
+                    result.privateUnreadCount
+                );
             }
         } catch (error) {
             updateBadge(0);
@@ -77,7 +93,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 card.classList.remove("message-unread");
                 card.classList.add("message-read");
                 readButton.remove();
-                updateBadge(result.unreadCount);
+                updateBadge(
+                    result.unreadCount,
+                    result.systemUnreadCount,
+                    result.privateUnreadCount
+                );
             } catch (error) {
                 readButton.disabled = false;
                 window.alert(error.message);
@@ -113,7 +133,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 card.classList.add("message-read");
                 card.querySelector("[data-message-read]")?.remove();
             });
-            updateBadge(result.unreadCount);
+            updateBadge(
+                result.unreadCount,
+                result.systemUnreadCount,
+                result.privateUnreadCount
+            );
         } catch (error) {
             readAllButton.disabled = false;
             window.alert(error.message);
@@ -121,4 +145,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     refreshUnreadCount();
+    window.setInterval(refreshUnreadCount, 30000);
 });

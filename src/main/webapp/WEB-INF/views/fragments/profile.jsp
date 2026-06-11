@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.model.FavoriteItemVO" %>
+<%@ page import="cn.campushub.model.ExperienceInfo" %>
 <%@ page import="cn.campushub.model.LostFound" %>
 <%@ page import="cn.campushub.model.ProfileOverviewVO" %>
 <%@ page import="cn.campushub.model.ProfileActivityVO" %>
@@ -7,6 +8,7 @@
 <%@ page import="cn.campushub.model.UserCheckinStatsVO" %>
 <%@ page import="cn.campushub.model.UserCommentVO" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
+<%@ page import="cn.campushub.util.LevelUtils" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
@@ -37,6 +39,9 @@
     User profileUser = overview.user();
     ProfileOverviewVO.Stats profileStats = overview.stats();
     String avatar = profileUser.getAvatar();
+    ExperienceInfo profileExperience = LevelUtils.experienceInfo(
+            profileUser.getExperience() == null ? 0 : profileUser.getExperience()
+    );
 %>
 <div class="profile-dashboard">
     <section class="profile-header card">
@@ -54,7 +59,12 @@
         </div>
         <div class="profile-info">
             <span class="profile-eyebrow">PERSONAL CENTER</span>
-            <h1><%= HtmlUtils.escape(profileUser.getNickname()) %></h1>
+            <h1>
+                <%= HtmlUtils.escape(profileUser.getNickname()) %>
+                <span class="profile-level-badge">Lv.<%=
+                        profileExperience.level()
+                %></span>
+            </h1>
             <p>@<%= HtmlUtils.escape(profileUser.getUsername()) %></p>
             <div class="profile-meta">
                 <span><%= HtmlUtils.escape(
@@ -141,6 +151,28 @@
     </nav>
 
     <% if ("overview".equals(activeTab)) { %>
+    <section class="profile-level-card card">
+        <div class="profile-level-heading">
+            <div>
+                <span>EXPERIENCE LEVEL</span>
+                <strong>Lv.<%= profileExperience.level() %></strong>
+            </div>
+            <p>总经验 <b><%= profileExperience.experience() %></b></p>
+        </div>
+        <div class="profile-level-progress">
+            <span style="width: <%=
+                    profileExperience.progressPercent()
+            %>%"></span>
+        </div>
+        <div class="profile-level-meta">
+            <span>下一等级需要 <%=
+                    profileExperience.nextLevelRequiredExp()
+            %> 总经验</span>
+            <span>还差 <strong><%=
+                    profileExperience.remainingExp()
+            %></strong> 经验</span>
+        </div>
+    </section>
     <section class="profile-section card">
         <div class="profile-section-heading">
             <div>

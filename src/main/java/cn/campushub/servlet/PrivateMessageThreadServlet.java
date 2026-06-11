@@ -1,0 +1,83 @@
+package cn.campushub.servlet;
+
+import cn.campushub.model.PrivateConversation;
+import cn.campushub.model.SessionUser;
+import cn.campushub.service.PrivateMessageService;
+import cn.campushub.util.SessionUtils;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Optional;
+
+public class PrivateMessageThreadServlet extends HttpServlet {
+    private final PrivateMessageService service = new PrivateMessageService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        SessionUser user = SessionUtils.currentUser(request);
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        Long conversationId = PrivateMessageJsonSupport.parsePositiveLong(
+                request.getParameter("conversationId")
+        );
+        Long receiverId = PrivateMessageJsonSupport.parsePositiveLong(
+                request.getParameter("receiverId")
+        );
+        try {
+            if (conversationId == null && receiverId != null) {
+                conversationId = service.getOrCreateConversation(
+                        user.id(),
+                        receiverId
+                );
+            }
+            if (conversationId == null) {
+                response.sendError(
+                        HttpServletResponse.SC_BAD_REQUEST,
+                        "私信会话参数无效"
+                );
+                return;
+            }
+            Optional<PrivateConversation> conversation =
+                    service.findConversation(conversationId, user.id());
+            if (conversation.isEmpty()) {
+                response.sendError(
+                        HttpServletResponse.SC_FORBIDDEN,
+                        "无权访问该私信会话"
+                );
+                return;
+            }
+            service.markConversationRead(conversationId, user.id());
+            request.setAttribute("conversation", conversation.get());
+            request.setAttribute(
+                    "privateMessages",
+                    service.listMessages(conversationId, user.id())
+            );
+            request.setAttribute("currentUserId", user.id());
+            request.getRequestDispatcher("/WEB-INF/views/privateMessageThread.jsp")
+                    .forward(request, response);
+        } catch (IllegalArgumentException exception) {
+            response.sendError(
+                    HttpServletResponse.SC_BAD_REQUEST,
+                    exception.getMessage()
+            );
+        } catch (SecurityException exception) {
+            response.sendError(
+                    HttpServletResponse.SC_FORBIDDEN,
+                    exception.getMessage()
+            );
+        } catch (SQLException exception) {
+            log("加载私信消息失败", exception);
+            response.sendError(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "私信消息加载失败"
+            );
+        }
+    }
+}

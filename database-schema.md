@@ -303,6 +303,45 @@ CREATE INDEX idx_user_exp_logs_user_id ON user_experience_logs(user_id);
 CREATE INDEX idx_user_exp_logs_created_at ON user_experience_logs(created_at);
 
 
+线上订单表
+USE campushub;
+
+CREATE TABLE IF NOT EXISTS goods_orders (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_no VARCHAR(64) NOT NULL UNIQUE COMMENT '订单编号',
+    goods_id BIGINT NOT NULL COMMENT '商品ID',
+    buyer_id BIGINT NOT NULL COMMENT '买家用户ID',
+    seller_id BIGINT NOT NULL COMMENT '卖家用户ID',
+    amount DECIMAL(10,2) NOT NULL COMMENT '订单金额',
+    pay_method VARCHAR(30) DEFAULT 'mock_wechat' COMMENT '支付方式：mock_wechat模拟微信支付',
+    status VARCHAR(30) DEFAULT 'pending_payment' COMMENT '订单状态：pending_payment待支付 paid已支付 cancelled已取消 expired已过期',
+    pay_token VARCHAR(128) NOT NULL UNIQUE COMMENT '模拟支付确认token',
+    expire_at DATETIME NULL COMMENT '支付过期时间',
+    paid_at DATETIME NULL COMMENT '支付时间',
+    cancelled_at DATETIME NULL COMMENT '取消时间',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_goods_orders_goods
+        FOREIGN KEY (goods_id) REFERENCES goods(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_goods_orders_buyer
+        FOREIGN KEY (buyer_id) REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_goods_orders_seller
+        FOREIGN KEY (seller_id) REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX idx_goods_orders_goods_id ON goods_orders(goods_id);
+CREATE INDEX idx_goods_orders_buyer_id ON goods_orders(buyer_id);
+CREATE INDEX idx_goods_orders_seller_id ON goods_orders(seller_id);
+CREATE INDEX idx_goods_orders_status ON goods_orders(status);
+CREATE INDEX idx_goods_orders_pay_token ON goods_orders(pay_token);
+
+
 后端代码修改要求
 
 请检查以下代码：

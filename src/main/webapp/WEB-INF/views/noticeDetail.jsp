@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="<%= contextPath %>/css/notice-detail.css">
 </head>
 <body class="notice-detail-body">
-<header class="notice-topbar">
+<header class="simple-topbar">
     <a class="brand" href="<%= contextPath %>/home">
         <span class="brand-mark">
             <img src="<%= contextPath %>/images/Logo_noword.png" alt="CampusHub">
@@ -46,7 +46,7 @@
             <strong>CampusHub</strong><small>校园综合社区</small>
         </span>
     </a>
-    <a class="notice-back-link"
+    <a class="back-link"
        href="<%= contextPath %>/home#square?tab=notice">返回校园公告</a>
 </header>
 

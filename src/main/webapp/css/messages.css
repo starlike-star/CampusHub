@@ -91,6 +91,16 @@
     background: #2563eb;
 }
 
+.messages-tabs a.private-message-tab {
+    color: #1d4ed8;
+    background: #dbeafe;
+}
+
+.messages-tabs a.private-message-tab:hover {
+    color: #fff;
+    background: #2563eb;
+}
+
 .message-list {
     display: flex;
     flex-direction: column;

@@ -1,0 +1,104 @@
+.public-user-body {
+    min-height: 100vh;
+    background: #f4f7fb;
+}
+
+.public-user-shell {
+    width: min(820px, calc(100% - 32px));
+    margin: 32px auto 60px;
+}
+
+.public-user-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px;
+}
+
+.public-user-avatar {
+    display: grid;
+    flex: 0 0 88px;
+    width: 88px;
+    height: 88px;
+    overflow: hidden;
+    place-items: center;
+    color: #fff;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #60a5fa, #2563eb);
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.public-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.public-user-summary {
+    min-width: 0;
+    flex: 1;
+}
+
+.public-user-summary > span {
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.public-user-summary h1 {
+    margin: 7px 0 5px;
+}
+
+.public-user-summary p {
+    margin: 0;
+    color: #7b8498;
+}
+
+.public-user-details {
+    margin-top: 14px;
+    padding: 24px 28px;
+}
+
+.public-user-details h2 {
+    margin-top: 0;
+}
+
+.public-user-details dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+}
+
+.public-user-details dl div {
+    padding: 15px;
+    border-radius: 11px;
+    background: #f8fafc;
+}
+
+.public-user-details dt {
+    color: #8a94a6;
+    font-size: 11px;
+}
+
+.public-user-details dd {
+    margin: 6px 0 0;
+    font-weight: 700;
+}
+
+.post-user-link {
+    color: inherit;
+}
+
+@media (max-width: 620px) {
+    .public-user-card {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .public-user-details dl {
+        grid-template-columns: 1fr;
+    }
+}

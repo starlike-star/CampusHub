@@ -1,5 +1,7 @@
 package cn.campushub.service;
 
+import cn.campushub.dao.ExperienceDao;
+import cn.campushub.dao.JdbcExperienceDao;
 import cn.campushub.dao.JdbcProfileDao;
 import cn.campushub.dao.ProfileDao;
 import cn.campushub.model.FavoriteItemVO;
@@ -23,13 +25,19 @@ public class ProfileService {
     );
 
     private final ProfileDao profileDao;
+    private final ExperienceDao experienceDao;
 
     public ProfileService() {
-        this(new JdbcProfileDao());
+        this(new JdbcProfileDao(), new JdbcExperienceDao());
     }
 
     ProfileService(ProfileDao profileDao) {
+        this(profileDao, null);
+    }
+
+    ProfileService(ProfileDao profileDao, ExperienceDao experienceDao) {
         this.profileDao = profileDao;
+        this.experienceDao = experienceDao;
     }
 
     public String normalizeTab(String tab) {
@@ -37,6 +45,9 @@ public class ProfileService {
     }
 
     public Optional<ProfileOverviewVO> overview(long userId) throws SQLException {
+        if (experienceDao != null) {
+            experienceDao.reconcileCheckinExperience(userId);
+        }
         return profileDao.findOverview(userId);
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 public record HomeSidebarVO(
         CheckinStatus checkin,
+        ExperienceInfo experience,
         List<NoticeItem> notices,
         List<ActivityItem> activities,
         List<LostFoundItem> lostFoundItems

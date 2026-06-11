@@ -59,7 +59,6 @@
 }
 .lostfound-detail-body { background: #f4f7fb; }
 .lostfound-detail-shell { width: min(1100px, calc(100% - 32px)); margin: 28px auto 60px; display: grid; gap: 18px; }
-.lostfound-detail-back { color: #2563eb; font-weight: 700; text-decoration: none; }
 .lostfound-detail { display: grid; grid-template-columns: 46% 1fr; overflow: hidden; }
 .lostfound-detail-image { min-height: 390px; background: #eaf2ff; }
 .lostfound-detail-image img { width: 100%; height: 100%; object-fit: cover; }

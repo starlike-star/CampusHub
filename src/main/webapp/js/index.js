@@ -65,6 +65,13 @@ document.addEventListener("DOMContentLoaded", function () {
         button.classList.toggle("is-loading", busy);
     }
 
+    function setTextById(id, value) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = value;
+        }
+    }
+
     if (accountButton && accountMenu) {
         accountButton.addEventListener("click", function (event) {
             stopInteraction(event);
@@ -102,19 +109,28 @@ document.addEventListener("DOMContentLoaded", function () {
                     checkinButton.classList.add("checked");
                     checkinButton.textContent = "已签到";
                     checkinButton.disabled = true;
-                    document.getElementById("checkinStatus").textContent = "今日已签到";
+                    setTextById("checkinStatus", "今日已签到");
                 }
                 if (!response.ok || !result.success) {
                     showToast(result.message || "签到失败", true);
                     return;
                 }
-                document.getElementById("checkinPoints").textContent =
-                    "+" + result.points;
-                document.getElementById("streakDays").textContent =
-                    result.continuousDays + " 天";
-                document.getElementById("checkinProgress").style.width =
-                    Math.min(result.continuousDays * 100 / 7, 100) + "%";
-                showToast(result.message + "，积分 +" + result.points);
+                setTextById("checkinPoints", "+" + result.points);
+                setTextById("streakDays", result.continuousDays + " 天");
+                setTextById("checkinLevel", "Lv." + result.level);
+                setTextById("userLevelBadge", "Lv." + result.level);
+                setTextById("currentExperience", result.experience);
+                setTextById(
+                    "remainingExperience",
+                    result.remainingExp + " 经验"
+                );
+                const experienceProgress =
+                    document.getElementById("experienceProgress");
+                if (experienceProgress) {
+                    experienceProgress.style.width =
+                        result.experienceProgress + "%";
+                }
+                showToast(result.message + "，经验 +" + result.points);
             } catch (error) {
                 showToast("签到失败，请稍后重试", true);
             } finally {

@@ -15,6 +15,8 @@
             (List<Message>) request.getAttribute("messages");
     Integer unreadCount = (Integer) request.getAttribute("unreadCount");
     Integer messageCount = (Integer) request.getAttribute("messageCount");
+    Integer privateUnreadCount =
+            (Integer) request.getAttribute("privateUnreadCount");
     DateTimeFormatter messageDateFormatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 %>
@@ -58,6 +60,12 @@
     </section>
 
     <nav class="messages-tabs card" aria-label="消息类型">
+        <a href="<%= messagesContextPath %>/private-messages"
+           class="private-message-tab">私信 <span data-private-unread-count><%=
+                privateUnreadCount != null && privateUnreadCount > 0
+                        ? "(" + privateUnreadCount + ")"
+                        : ""
+        %></span></a>
         <a href="#messages?tab=all"
            data-route="messages"
            data-tab="all"

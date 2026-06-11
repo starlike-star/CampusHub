@@ -199,10 +199,9 @@
                     <svg><use href="#icon-bookmark"></use></svg>
                     收藏 <span><%= goods.getFavoriteCount() %></span>
                 </button>
-                <button type="button"
-                        data-contact-seller="<%=
-                                HtmlUtils.escape(goods.getContact())
-                        %>">联系卖家</button>
+                <a href="<%= contextPath %>/private-messages/thread?receiverId=<%=
+                        goods.getUserId()
+                %>">私信卖家</a>
                 <button type="button"
                         class="primary-btn"
                         data-want-goods

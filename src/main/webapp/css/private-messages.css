@@ -1,0 +1,241 @@
+.private-message-body {
+    min-height: 100vh;
+    background: #f4f7fb;
+}
+
+.private-message-shell {
+    width: min(920px, calc(100% - 32px));
+    margin: 28px auto 60px;
+}
+
+.private-message-heading,
+.private-thread-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.private-message-heading {
+    padding: 24px;
+}
+
+.private-message-heading span,
+.private-thread-header span {
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.private-message-heading h1,
+.private-thread-header h1 {
+    margin: 6px 0 4px;
+}
+
+.private-message-heading p {
+    margin: 0;
+    color: #7b8498;
+}
+
+.private-message-heading > strong {
+    color: #2563eb;
+}
+
+.private-conversation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.private-conversation {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    color: inherit;
+}
+
+.private-conversation:hover {
+    border-color: #93c5fd;
+    transform: translateY(-1px);
+}
+
+.private-conversation-avatar {
+    display: grid;
+    flex: 0 0 46px;
+    width: 46px;
+    height: 46px;
+    overflow: hidden;
+    place-items: center;
+    color: #fff;
+    border-radius: 50%;
+    background: #2563eb;
+    font-weight: 700;
+}
+
+.private-conversation-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.private-conversation-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.private-conversation-line {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.private-conversation-line time,
+.private-conversation-preview {
+    color: #8a94a6;
+    font-size: 11px;
+}
+
+.private-conversation-preview {
+    display: block;
+    overflow: hidden;
+    margin-top: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.private-unread-count {
+    display: grid;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    place-items: center;
+    color: #fff;
+    border-radius: 12px;
+    background: #ef4444;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.private-message-empty {
+    padding: 52px 24px;
+    text-align: center;
+}
+
+.private-message-empty p,
+.private-thread-empty {
+    color: #7b8498;
+}
+
+.private-thread {
+    overflow: hidden;
+}
+
+.private-thread-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid #e8edf4;
+}
+
+.private-thread-header button {
+    padding: 8px 12px;
+    color: #2563eb;
+    border: 0;
+    border-radius: 8px;
+    background: #eff6ff;
+    cursor: pointer;
+}
+
+.private-thread-messages {
+    display: flex;
+    min-height: 360px;
+    max-height: 62vh;
+    overflow-y: auto;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+    background: #f8fafc;
+}
+
+.private-message-bubble {
+    max-width: min(72%, 560px);
+    padding: 11px 14px;
+    border-radius: 14px;
+}
+
+.private-message-bubble p {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.65;
+}
+
+.private-message-bubble time {
+    display: block;
+    margin-top: 5px;
+    font-size: 9px;
+    opacity: .68;
+}
+
+.private-message-bubble.mine {
+    align-self: flex-end;
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    background: #2563eb;
+}
+
+.private-message-bubble.theirs {
+    align-self: flex-start;
+    border: 1px solid #e5eaf1;
+    border-bottom-left-radius: 4px;
+    background: #fff;
+}
+
+.private-message-form {
+    padding: 18px 22px 22px;
+}
+
+.private-message-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.private-message-form textarea {
+    width: 100%;
+    resize: vertical;
+}
+
+.private-message-form > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.private-message-form > div span {
+    color: #8a94a6;
+    font-size: 10px;
+}
+
+.private-message-error {
+    margin: 10px 0 0;
+    color: #dc2626;
+}
+
+@media (max-width: 640px) {
+    .private-message-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .private-conversation-line {
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .private-message-bubble {
+        max-width: 88%;
+    }
+}

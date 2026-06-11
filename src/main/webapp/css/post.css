@@ -1,21 +1,3 @@
-.simple-topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: min(980px, calc(100% - 40px));
-    height: 72px;
-    margin: 0 auto;
-}
-
-.back-link {
-    color: #657087;
-    font-weight: 600;
-}
-
-.back-link:hover {
-    color: var(--primary);
-}
-
 .form-page,
 .detail-page {
     width: min(880px, calc(100% - 40px));
@@ -282,7 +264,6 @@
 }
 
 @media (max-width: 680px) {
-    .simple-topbar,
     .form-page,
     .detail-page {
         width: calc(100% - 20px);

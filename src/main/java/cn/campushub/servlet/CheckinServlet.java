@@ -1,6 +1,7 @@
 package cn.campushub.servlet;
 
 import cn.campushub.model.CheckinResult;
+import cn.campushub.model.ExperienceInfo;
 import cn.campushub.model.SessionUser;
 import cn.campushub.service.HomeService;
 import cn.campushub.util.JsonUtils;
@@ -43,6 +44,17 @@ public class CheckinServlet extends HttpServlet {
             if (result.success()) {
                 data.put("points", result.points());
                 data.put("continuousDays", result.continuousDays());
+            }
+            ExperienceInfo experience = result.experience();
+            if (experience != null) {
+                data.put("experience", experience.experience());
+                data.put("level", experience.level());
+                data.put(
+                        "nextLevelRequiredExp",
+                        experience.nextLevelRequiredExp()
+                );
+                data.put("remainingExp", experience.remainingExp());
+                data.put("experienceProgress", experience.progressPercent());
             }
             data.put("message", result.message());
             JsonUtils.write(response, HttpServletResponse.SC_OK, data);

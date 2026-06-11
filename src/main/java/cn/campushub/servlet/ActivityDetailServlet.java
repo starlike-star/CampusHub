@@ -40,6 +40,7 @@ public class ActivityDetailServlet extends HttpServlet {
                     && activity.activity().getCreatedBy() == user.id();
             boolean canManage = owner || ActivityJsonSupport.isAdmin(user);
             request.setAttribute("activity", activity);
+            request.setAttribute("activityOwner", owner);
             request.setAttribute(
                     "registered",
                     user != null && registrationService.isRegistered(id, user.id())

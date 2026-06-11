@@ -99,6 +99,24 @@ svg {
     margin: 0 auto;
 }
 
+.simple-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(980px, calc(100% - 40px));
+    height: 72px;
+    margin: 0 auto;
+}
+
+.back-link {
+    color: #657087;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -488,6 +506,15 @@ svg {
     height: 35px;
     border-width: 2px;
     font-size: 13px;
+}
+
+.user-level-badge {
+    padding: 3px 6px;
+    color: #1d4ed8;
+    border-radius: 999px;
+    background: #dbeafe;
+    font-size: 9px;
+    font-weight: 700;
 }
 
 .avatar-blue { background: linear-gradient(145deg, #5b8ff9, #2563eb); }
@@ -947,6 +974,15 @@ body.campus-map-open {
 
 .post-author strong {
     font-size: 14px;
+}
+
+.post-user-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.post-user-link:hover strong {
+    color: #2563eb;
 }
 
 .post-author p {
@@ -1572,6 +1608,31 @@ body.campus-map-open {
 .points-badge small {
     opacity: .75;
     font-size: 8px;
+}
+
+.experience-summary {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+
+.experience-summary > strong {
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .18);
+    font-size: 12px;
+}
+
+.experience-summary > span {
+    opacity: .84;
+    font-size: 10px;
+}
+
+.experience-summary b {
+    color: #fff;
 }
 
 .checkin-meta {
@@ -3223,6 +3284,10 @@ body.campus-map-open {
 @media (max-width: 680px) {
     .topbar {
         height: 62px;
+    }
+
+    .simple-topbar {
+        width: calc(100% - 20px);
     }
 
     .topbar-inner {

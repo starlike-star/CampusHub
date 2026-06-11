@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.constant.SessionConstants" %>
 <%@ page import="cn.campushub.model.Category" %>
+<%@ page import="cn.campushub.model.ExperienceInfo" %>
 <%@ page import="cn.campushub.model.HomeSidebarVO" %>
 <%@ page import="cn.campushub.model.SessionUser" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
@@ -17,8 +18,7 @@
     DateTimeFormatter sidebarDateFormatter =
             DateTimeFormatter.ofPattern("MM-dd HH:mm");
     HomeSidebarVO.CheckinStatus checkin = sidebar.checkin();
-    int checkinProgress =
-            Math.min(checkin.continuousDays() * 100 / 7, 100);
+    ExperienceInfo experience = sidebar.experience();
 %>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -120,6 +120,10 @@
                         </span>
                         <span class="user-name"><%=
                                 HtmlUtils.escape(loginUser.nickname())
+                        %></span>
+                        <span class="user-level-badge"
+                              id="userLevelBadge">Lv.<%=
+                                experience.level()
                         %></span>
                         <svg><use href="#icon-chevron"></use></svg>
                     </button>
@@ -229,8 +233,14 @@
                         <strong id="checkinPoints">+<%=
                                 checkin.points()
                         %></strong>
-                        <small>积分</small>
+                        <small>经验</small>
                     </div>
+                </div>
+                <div class="experience-summary">
+                    <strong id="checkinLevel">Lv.<%= experience.level() %></strong>
+                    <span>当前经验 <b id="currentExperience"><%=
+                            experience.experience()
+                    %></b></span>
                 </div>
                 <div class="checkin-meta">
                     <span>连续签到
@@ -238,10 +248,15 @@
                                 checkin.continuousDays()
                         %> 天</strong>
                     </span>
+                    <span>距下一级
+                        <strong id="remainingExperience"><%=
+                                experience.remainingExp()
+                        %> 经验</strong>
+                    </span>
                 </div>
-                <div class="progress-track">
-                    <span id="checkinProgress"
-                          style="width: <%= checkinProgress %>%"></span>
+                <div class="progress-track experience-progress">
+                    <span id="experienceProgress"
+                          style="width: <%= experience.progressPercent() %>%"></span>
                 </div>
                 <button class="checkin-button <%=
                                 checkin.checkedIn() ? "checked" : ""

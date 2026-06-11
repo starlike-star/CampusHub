@@ -12,6 +12,8 @@
     boolean registered = Boolean.TRUE.equals(request.getAttribute("registered"));
     boolean canManage =
             Boolean.TRUE.equals(request.getAttribute("canManageActivity"));
+    boolean activityOwner =
+            Boolean.TRUE.equals(request.getAttribute("activityOwner"));
     List<ActivityRegistrationVO> registrations =
             (List<ActivityRegistrationVO>) request.getAttribute(
                     "activityRegistrations"
@@ -42,8 +44,18 @@
     <link rel="stylesheet" href="<%= contextPath %>/css/image-upload.css">
 </head>
 <body class="activity-detail-body">
+<header class="simple-topbar">
+    <a class="brand" href="<%= contextPath %>/home#activity">
+        <span class="brand-mark">
+            <img src="<%= contextPath %>/images/Logo_noword.png" alt="CampusHub">
+        </span>
+        <span class="brand-copy">
+            <strong>CampusHub</strong><small>校园综合社区</small>
+        </span>
+    </a>
+    <a class="back-link" href="<%= contextPath %>/home#activity">返回校园活动</a>
+</header>
 <main class="activity-detail-shell">
-    <a class="activity-back-link" href="<%= contextPath %>/home#activity">← 返回校园活动</a>
     <article class="activity-detail-card card">
         <div class="activity-detail-cover">
             <img src="<%= contextPath %><%= cover.startsWith("/") ? "" : "/" %><%=
@@ -123,6 +135,12 @@
                                     : activityVO.creatorCollege()
                     ) %></p>
                 </div>
+                <% if (!activityOwner && activity.getCreatedBy() != null) { %>
+                <a class="primary-btn"
+                   href="<%= contextPath %>/private-messages/thread?receiverId=<%=
+                            activity.getCreatedBy()
+                   %>">发送私信</a>
+                <% } %>
             </section>
         </div>
     </article>

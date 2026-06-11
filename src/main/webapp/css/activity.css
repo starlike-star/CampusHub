@@ -308,19 +308,12 @@
 
 .activity-detail-body {
     min-height: 100vh;
-    padding: 32px;
     background: #f4f7fb;
 }
 
 .activity-detail-shell {
-    width: min(1080px, 100%);
-    margin: 0 auto;
-}
-
-.activity-back-link {
-    color: #2563eb;
-    font-weight: 700;
-    text-decoration: none;
+    width: min(1080px, calc(100% - 64px));
+    margin: 32px auto 60px;
 }
 
 .activity-detail-card {
@@ -409,7 +402,8 @@
         grid-template-columns: 1fr;
     }
 
-    .activity-detail-body {
-        padding: 18px;
+    .activity-detail-shell {
+        width: calc(100% - 36px);
+        margin-top: 18px;
     }
 }

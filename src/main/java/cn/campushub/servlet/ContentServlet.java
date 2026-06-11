@@ -4,6 +4,7 @@ import cn.campushub.model.SessionUser;
 import cn.campushub.service.GoodsService;
 import cn.campushub.service.LostFoundService;
 import cn.campushub.service.MessageService;
+import cn.campushub.service.PrivateMessageService;
 import cn.campushub.service.PostService;
 import cn.campushub.service.ProfileService;
 import cn.campushub.service.SearchService;
@@ -34,6 +35,8 @@ public class ContentServlet extends HttpServlet {
     private final LostFoundService lostFoundService = new LostFoundService();
     private final ProfileService profileService = new ProfileService();
     private final MessageService messageService = new MessageService();
+    private final PrivateMessageService privateMessageService =
+            new PrivateMessageService();
     private final ActivityService activityService = new ActivityService();
     private final SearchService searchService = new SearchService();
     private final ActivityRegistrationService activityRegistrationService =
@@ -301,6 +304,10 @@ public class ContentServlet extends HttpServlet {
                     request.setAttribute(
                             "unreadCount",
                             messageService.countUnread(user.id())
+                    );
+                    request.setAttribute(
+                            "privateUnreadCount",
+                            privateMessageService.countUnreadPrivateMessages(user.id())
                     );
                 }
                 forward(request, response, "messages.jsp");

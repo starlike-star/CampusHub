@@ -14,8 +14,21 @@ public class JdbcUserDao implements UserDao {
     private static final String USER_COLUMNS = """
             id, username, password, nickname, avatar, student_no,
             college, major, grade, email, phone, role, status,
-            created_at, updated_at
+            experience, level, created_at, updated_at
             """;
+
+    @Override
+    public Optional<User> findById(long id) throws SQLException {
+        String sql = "SELECT " + USER_COLUMNS
+                + " FROM users WHERE id = ? LIMIT 1";
+        try (Connection connection = JdbcUtils.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? Optional.of(mapUser(resultSet)) : Optional.empty();
+            }
+        }
+    }
 
     @Override
     public Optional<User> findByUsername(String username) throws SQLException {
@@ -100,6 +113,8 @@ public class JdbcUserDao implements UserDao {
         user.setPhone(resultSet.getString("phone"));
         user.setRole(resultSet.getString("role"));
         user.setStatus(resultSet.getInt("status"));
+        user.setExperience(resultSet.getInt("experience"));
+        user.setLevel(resultSet.getInt("level"));
         user.setCreatedAt(toLocalDateTime(resultSet.getTimestamp("created_at")));
         user.setUpdatedAt(toLocalDateTime(resultSet.getTimestamp("updated_at")));
         return user;

@@ -43,7 +43,8 @@
 <main class="detail-page">
     <article class="detail-card card">
         <div class="post-header">
-            <span class="avatar avatar-blue post-avatar">
+            <a class="avatar avatar-blue post-avatar post-user-link"
+               href="<%= contextPath %>/user/profile?id=<%= post.getUserId() %>">
                 <% if (post.getAuthorAvatar() != null && !post.getAuthorAvatar().isBlank()) { %>
                 <img src="<%= contextPath %><%=
                         HtmlUtils.escape(HtmlUtils.resourcePath(
@@ -54,9 +55,16 @@
                 <% } else { %>
                 <%= HtmlUtils.escape(post.getAuthorInitial()) %>
                 <% } %>
-            </span>
+            </a>
             <div class="post-author">
-                <div><strong><%= HtmlUtils.escape(post.getAuthorNickname()) %></strong></div>
+                <div>
+                    <a class="post-user-link"
+                       href="<%= contextPath %>/user/profile?id=<%=
+                                post.getUserId()
+                       %>"><strong><%=
+                            HtmlUtils.escape(post.getAuthorNickname())
+                    %></strong></a>
+                </div>
                 <p>
                     <%= HtmlUtils.escape(post.getAuthorCollege()) %> ·
                     <%= HtmlUtils.escape(post.getAuthorGrade()) %> ·
@@ -138,7 +146,10 @@
                 for (Comment comment : comments) {
             %>
             <article class="comment-item">
-                <span class="avatar avatar-purple post-avatar">
+                <a class="avatar avatar-purple post-avatar post-user-link"
+                   href="<%= contextPath %>/user/profile?id=<%=
+                            comment.getUserId()
+                   %>">
                     <% if (comment.getAuthorAvatar() != null && !comment.getAuthorAvatar().isBlank()) { %>
                     <img src="<%= contextPath %><%=
                             HtmlUtils.escape(HtmlUtils.resourcePath(
@@ -149,10 +160,15 @@
                     <% } else { %>
                     <%= HtmlUtils.escape(comment.getAuthorInitial()) %>
                     <% } %>
-                </span>
+                </a>
                 <div>
                     <header>
-                        <strong><%= HtmlUtils.escape(comment.getAuthorNickname()) %></strong>
+                        <a class="post-user-link"
+                           href="<%= contextPath %>/user/profile?id=<%=
+                                    comment.getUserId()
+                           %>"><strong><%=
+                                HtmlUtils.escape(comment.getAuthorNickname())
+                        %></strong></a>
                         <span><%= HtmlUtils.escape(comment.getAuthorCollege()) %> · <%= HtmlUtils.escape(comment.getAuthorGrade()) %></span>
                         <time><%= comment.getCreatedAt() == null ? "" : comment.getCreatedAt().format(dateFormatter) %></time>
                     </header>
