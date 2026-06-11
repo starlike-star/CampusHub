@@ -119,6 +119,13 @@ public class RememberMeService {
         clearCookie(response, request);
     }
 
+    public void clearRememberCookie(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        clearCookie(response, request);
+    }
+
     private void revokeCurrentToken(HttpServletRequest request) throws SQLException {
         ParsedCookie parsed = parseCookie(findCookieValue(request));
         if (parsed == null) {

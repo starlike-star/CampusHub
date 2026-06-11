@@ -51,7 +51,9 @@ public class JdbcSquareDao implements SquareDao {
     @Override
     public List<Post> findPosts(String tab, Long currentUserId, String keyword)
             throws SQLException {
-        boolean categoryTab = "study".equals(tab) || "life".equals(tab);
+        boolean categoryTab = "study".equals(tab)
+                || "life".equals(tab)
+                || "trade".equals(tab);
         boolean hasKeyword = keyword != null;
         StringBuilder sql = new StringBuilder(POST_SELECT);
         if (categoryTab) {
@@ -74,10 +76,7 @@ public class JdbcSquareDao implements SquareDao {
             statement.setLong(index++, userId);
             statement.setLong(index++, userId);
             if (categoryTab) {
-                statement.setString(
-                        index++,
-                        "study".equals(tab) ? "学习交流" : "校园生活"
-                );
+                statement.setString(index++, categoryName(tab));
             }
             if (hasKeyword) {
                 String pattern = "%" + keyword + "%";
@@ -92,6 +91,14 @@ public class JdbcSquareDao implements SquareDao {
             }
         }
         return posts;
+    }
+
+    private String categoryName(String tab) {
+        return switch (tab) {
+            case "study" -> "学习交流";
+            case "trade" -> "二手交易";
+            default -> "校园生活";
+        };
     }
 
     @Override

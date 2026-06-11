@@ -1,5 +1,7 @@
 package cn.campushub.filter;
 
+import cn.campushub.model.SessionUser;
+import cn.campushub.service.AccountService;
 import cn.campushub.service.RememberMeService;
 import cn.campushub.util.SessionUtils;
 
@@ -15,6 +17,7 @@ import java.sql.SQLException;
 
 public class RememberMeFilter implements Filter {
     private final RememberMeService rememberMeService = new RememberMeService();
+    private final AccountService accountService = new AccountService();
 
     @Override
     public void doFilter(
@@ -25,7 +28,26 @@ public class RememberMeFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        if (!SessionUtils.isLoggedIn(httpRequest)) {
+        SessionUser currentUser = SessionUtils.currentUser(httpRequest);
+        boolean invalidated = false;
+        if (currentUser != null && shouldValidateSession(httpRequest)) {
+            try {
+                if (!accountService.isActive(currentUser.id())) {
+                    httpRequest.getSession().invalidate();
+                    rememberMeService.clearRememberCookie(
+                            httpRequest,
+                            httpResponse
+                    );
+                    invalidated = true;
+                }
+            } catch (SQLException exception) {
+                httpRequest.getServletContext().log(
+                        "Account session validation failed",
+                        exception
+                );
+            }
+        }
+        if (!invalidated && !SessionUtils.isLoggedIn(httpRequest)) {
             try {
                 rememberMeService.autoLogin(httpRequest, httpResponse)
                         .ifPresent(user -> SessionUtils.login(httpRequest, user));
@@ -37,5 +59,15 @@ public class RememberMeFilter implements Filter {
             }
         }
         chain.doFilter(request, response);
+    }
+
+    private boolean shouldValidateSession(HttpServletRequest request) {
+        String path = request.getRequestURI()
+                .substring(request.getContextPath().length());
+        return !(path.startsWith("/css/")
+                || path.startsWith("/js/")
+                || path.startsWith("/images/")
+                || path.startsWith("/uploads/")
+                || path.equals("/captcha"));
     }
 }

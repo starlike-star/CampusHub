@@ -36,6 +36,7 @@
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/image-upload.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/trade.css">
 </head>
 <body data-report-authenticated="<%= goodsLoginUser != null %>">
 <header class="simple-topbar">
@@ -165,6 +166,9 @@
                 <button type="button"
                         class="primary-btn"
                         data-goods-action="edit">编辑商品</button>
+                <% if (!"sold".equals(goods.getStatus())
+                        || (goodsLoginUser != null
+                        && "admin".equalsIgnoreCase(goodsLoginUser.role()))) { %>
                 <label class="goods-status-control">
                     <select data-goods-action="status"
                             aria-label="修改商品状态">
@@ -183,9 +187,12 @@
                         <option value="off_shelf">下架商品</option>
                     </select>
                 </label>
+                <% } %>
+                <% if (!"sold".equals(goods.getStatus())) { %>
                 <button type="button"
                         class="goods-delete-btn"
                         data-goods-action="delete">下架商品</button>
+                <% } %>
             </div>
             <% } else { %>
             <div class="goods-detail-buyer-actions">
@@ -205,8 +212,9 @@
                 <button type="button"
                         class="primary-btn"
                         data-want-goods
-                        data-want-message="<%=
-                                HtmlUtils.escape(goods.getWantMessage())
+                        data-goods-id="<%= goods.getId() %>"
+                        data-trade-method="<%=
+                                HtmlUtils.escape(goods.getTradeMethod())
                         %>">我想要</button>
                 <button type="button"
                         class="report-btn"
@@ -216,7 +224,11 @@
             <% } %>
             <% if (!"offline".equals(goods.getTradeMethod())) { %>
             <p class="online-payment-notice">
-                线上付款流程暂未开放，请联系卖家确认。
+                支持 CampusHub 模拟线上交易，不涉及真实资金。
+            </p>
+            <% } else { %>
+            <p class="online-payment-notice">
+                该商品仅支持线下交易，请通过私信联系卖家。
             </p>
             <% } %>
         </section>
@@ -355,6 +367,46 @@
     </section>
 </div>
 
+<div class="trade-modal" data-trade-modal hidden>
+    <div class="trade-modal-backdrop" data-close-trade-modal></div>
+    <section class="trade-modal-dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="tradeModalTitle">
+        <div class="trade-modal-heading">
+            <div>
+                <span>CampusHub 模拟支付</span>
+                <h2 id="tradeModalTitle">模拟微信扫码确认支付</h2>
+            </div>
+            <button type="button"
+                    class="trade-close"
+                    data-close-trade-modal
+                    aria-label="关闭">×</button>
+        </div>
+        <p class="trade-disclaimer">
+            仅用于课设演示，不是微信官方支付，不涉及真实资金。
+        </p>
+        <div class="trade-summary">
+            <p><span>商品</span><strong data-trade-title></strong></p>
+            <p><span>订单编号</span><strong data-trade-order-no></strong></p>
+            <p><span>支付金额</span><strong data-trade-amount></strong></p>
+        </div>
+        <img class="trade-qrcode"
+             data-trade-qrcode
+             alt="CampusHub 模拟支付二维码">
+        <p class="trade-status" data-trade-status>等待扫码支付</p>
+        <p class="trade-countdown" data-trade-countdown></p>
+        <p class="trade-network-warning" data-trade-warning hidden>
+            当前项目通过 localhost 访问，手机无法直接扫码连接。请改用电脑局域网 IP
+            访问项目后重新下单，例如本机 WLAN 地址 10.74.48.223。
+        </p>
+        <button type="button"
+                class="trade-complete"
+                data-trade-complete
+                hidden>完成</button>
+    </section>
+</div>
+
 <svg class="svg-sprite" aria-hidden="true">
     <symbol id="icon-bookmark" viewBox="0 0 24 24">
         <path d="M6 3h12v18l-6-4-6 4z"></path>
@@ -363,6 +415,7 @@
 <div class="toast" id="toast" role="status"></div>
 <script src="<%= contextPath %>/js/image-upload.js"></script>
 <script src="<%= contextPath %>/js/market.js"></script>
+<script src="<%= contextPath %>/js/trade.js"></script>
 <script src="<%= contextPath %>/js/report.js"></script>
 </body>
 </html>

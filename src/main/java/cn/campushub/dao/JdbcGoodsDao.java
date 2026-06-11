@@ -335,7 +335,7 @@ public class JdbcGoodsDao implements GoodsDao {
                 UPDATE goods
                 SET status = ?
                 WHERE id = ?
-                """ + (admin ? "" : " AND user_id = ?");
+                """ + (admin ? "" : " AND user_id = ? AND status != 'sold'");
         try (Connection connection = JdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, status);

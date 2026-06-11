@@ -118,7 +118,7 @@
                 <img src="<%= contextPath %><%= HtmlUtils.escape(
                         HtmlUtils.resourcePath(
                                 activityVO.creatorAvatar() == null
-                                        ? "images/default-avatar.png"
+                                        ? "images/default-user.png"
                                         : activityVO.creatorAvatar()
                         )
                 ) %>" alt="">
@@ -194,7 +194,7 @@
             <img src="<%= contextPath %><%= HtmlUtils.escape(
                     HtmlUtils.resourcePath(
                             registration.avatar() == null
-                                    ? "images/default-avatar.png"
+                                    ? "images/default-user.png"
                                     : registration.avatar()
                     )
             ) %>" alt="">

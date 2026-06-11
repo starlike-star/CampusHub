@@ -14,11 +14,21 @@ public record SessionUser(
     private static final long serialVersionUID = 1L;
 
     public static SessionUser from(User user) {
+        String avatar = user.getAvatar();
+        boolean defaultAvatar = avatar == null
+                || avatar.isBlank()
+                || "images/default-avatar.png".equals(avatar)
+                || "images/default-user.png".equals(avatar);
+        if (defaultAvatar) {
+            avatar = "admin".equalsIgnoreCase(user.getRole())
+                    ? "images/Admin.png"
+                    : "images/default-user.png";
+        }
         return new SessionUser(
                 user.getId(),
                 user.getUsername(),
                 user.getNickname(),
-                user.getAvatar(),
+                avatar,
                 user.getRole()
         );
     }

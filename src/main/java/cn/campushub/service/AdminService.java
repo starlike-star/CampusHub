@@ -61,7 +61,7 @@ public class AdminService {
         return adminDao.findUsers(
                 keyword(keyword),
                 allowed(role, ROLES),
-                integer(status, Set.of(0, 1))
+                integer(status, Set.of(0, 1, 2))
         );
     }
 

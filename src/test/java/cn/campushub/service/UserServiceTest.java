@@ -35,7 +35,7 @@ class UserServiceTest {
         assertEquals("校园同学", result.data().nickname());
         assertNotNull(userDao.lastCreated);
         assertEquals("student@example.com", userDao.lastCreated.getEmail());
-        assertEquals("images/default-avatar.png", userDao.lastCreated.getAvatar());
+        assertEquals("images/default-user.png", userDao.lastCreated.getAvatar());
         assertEquals("student", userDao.lastCreated.getRole());
         assertEquals(1, userDao.lastCreated.getStatus());
         assertTrue(PasswordUtils.matches("campus123", userDao.lastCreated.getPassword()));
@@ -127,7 +127,7 @@ class UserServiceTest {
         user.setEmail("student@example.com");
         user.setNickname("校园同学");
         user.setPassword(PasswordUtils.hash("campus123"));
-        user.setAvatar("images/default-avatar.png");
+        user.setAvatar("images/default-user.png");
         user.setRole("student");
         user.setStatus(1);
         return user;

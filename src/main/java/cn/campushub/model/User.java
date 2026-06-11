@@ -18,6 +18,8 @@ public class User {
     private Integer status;
     private Integer experience;
     private Integer level;
+    private LocalDateTime canceledAt;
+    private String cancelReason;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -139,6 +141,22 @@ public class User {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public LocalDateTime getCanceledAt() {
+        return canceledAt;
+    }
+
+    public void setCanceledAt(LocalDateTime canceledAt) {
+        this.canceledAt = canceledAt;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     public LocalDateTime getCreatedAt() {

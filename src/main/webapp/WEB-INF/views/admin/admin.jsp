@@ -26,6 +26,13 @@
     String contextPath = request.getContextPath();
     String section = (String) request.getAttribute("section");
     SessionUser admin = (SessionUser) session.getAttribute(SessionConstants.LOGIN_USER);
+    String adminAvatar = admin.avatar();
+    if (adminAvatar == null
+            || adminAvatar.isBlank()
+            || "images/default-avatar.png".equals(adminAvatar)
+            || "images/default-user.png".equals(adminAvatar)) {
+        adminAvatar = "images/Admin.png";
+    }
     Map<String, String> filters =
             (Map<String, String>) request.getAttribute("filters");
     if (filters == null) {
@@ -97,7 +104,13 @@
                 <h1><%= e(titles.get(section)) %></h1>
             </div>
             <div class="admin-account">
-                <span class="admin-avatar"><%= e(admin.avatarText()) %></span>
+                <span class="admin-avatar">
+                    <img src="<%= contextPath %><%= e(
+                            HtmlUtils.resourcePath(adminAvatar)
+                    ) %>"
+                         onerror="this.onerror=null;this.src='<%= contextPath %>/images/Admin.png';"
+                         alt="<%= e(admin.nickname()) %>">
+                </span>
                 <span><strong><%= e(admin.nickname()) %></strong><small>管理员</small></span>
                 <form action="<%= contextPath %>/logout" method="post">
                     <button type="submit">退出</button>
@@ -147,6 +160,7 @@
                 <option value="">全部状态</option>
                 <option value="1"<%= selected(filters, "status", "1") %>>正常</option>
                 <option value="0"<%= selected(filters, "status", "0") %>>禁用</option>
+                <option value="2"<%= selected(filters, "status", "2") %>>已注销</option>
             </select>
             <button type="submit">筛选</button>
         </form>
@@ -165,9 +179,15 @@
                     <td><%= e(row.get("student_no")) %><small><%= e(row.get("college")) %> / <%= e(row.get("major")) %> / <%= e(row.get("grade")) %></small></td>
                     <td><%= e(row.get("email")) %><small><%= e(row.get("phone")) %></small></td>
                     <td><span class="badge"><%= e(row.get("role")) %></span></td>
-                    <td><span class="badge <%= "1".equals(String.valueOf(row.get("status"))) ? "green" : "red" %>"><%= "1".equals(String.valueOf(row.get("status"))) ? "正常" : "禁用" %></span></td>
+                    <% String userStatus = String.valueOf(row.get("status")); %>
+                    <td><span class="badge <%= "1".equals(userStatus) ? "green" : "red" %>"><%=
+                            "1".equals(userStatus)
+                                    ? "正常"
+                                    : ("2".equals(userStatus) ? "已注销" : "禁用")
+                    %></span></td>
                     <td><%= e(row.get("created_at")) %></td>
                     <td class="actions">
+                        <% if (!"2".equals(userStatus)) { %>
                         <form action="<%= contextPath %>/admin/users/status" method="post">
                             <input type="hidden" name="id" value="<%= e(row.get("id")) %>">
                             <input type="hidden" name="status" value="<%= "1".equals(String.valueOf(row.get("status"))) ? "0" : "1" %>">
@@ -183,6 +203,9 @@
                                    minlength="8" maxlength="72" placeholder="新密码" required>
                             <button type="submit">重置密码</button>
                         </form>
+                        <% } else { %>
+                        <span>账号已注销，不可恢复</span>
+                        <% } %>
                     </td>
                 </tr>
                 <% } %>

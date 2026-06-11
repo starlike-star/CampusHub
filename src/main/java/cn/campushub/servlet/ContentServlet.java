@@ -267,6 +267,10 @@ public class ContentServlet extends HttpServlet {
                                     goodsService.listOwnGoods(user.id())
                             );
                         }
+                        case "purchasedGoods" -> request.setAttribute(
+                                "purchasedGoods",
+                                profileService.purchasedGoods(user.id())
+                        );
                         case "lostfound" -> request.setAttribute(
                                 "profileLostFound",
                                 lostFoundService.listOwn(user.id())

@@ -20,7 +20,7 @@ CREATE TABLE users (
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     nickname VARCHAR(50) NOT NULL,
-    avatar VARCHAR(255) DEFAULT 'images/default-avatar.png',
+    avatar VARCHAR(255) DEFAULT 'images/default-user.png',
     student_no VARCHAR(50),
     college VARCHAR(100),
     major VARCHAR(100),
@@ -340,6 +340,25 @@ CREATE INDEX idx_goods_orders_buyer_id ON goods_orders(buyer_id);
 CREATE INDEX idx_goods_orders_seller_id ON goods_orders(seller_id);
 CREATE INDEX idx_goods_orders_status ON goods_orders(status);
 CREATE INDEX idx_goods_orders_pay_token ON goods_orders(pay_token);
+
+
+注销
+ALTER TABLE users
+ADD COLUMN canceled_at DATETIME NULL COMMENT '账号注销时间',
+ADD COLUMN cancel_reason VARCHAR(255) NULL COMMENT '账号注销原因';
+CREATE TABLE IF NOT EXISTS account_cancel_logs (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    username_snapshot VARCHAR(50) NOT NULL,
+    nickname_snapshot VARCHAR(50),
+    cancel_reason VARCHAR(255),
+    canceled_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ip_address VARCHAR(64),
+    user_agent VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX idx_account_cancel_logs_user_id ON account_cancel_logs(user_id);
 
 
 后端代码修改要求

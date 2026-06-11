@@ -135,7 +135,13 @@
         <a href="#profile?tab=goods"
            data-route="profile"
            data-tab="goods"
-           class="<%= "goods".equals(activeTab) ? "active" : "" %>">我的商品</a>
+           class="<%= "goods".equals(activeTab) ? "active" : "" %>">我发布的商品</a>
+        <a href="#profile?tab=purchasedGoods"
+           data-route="profile"
+           data-tab="purchasedGoods"
+           class="<%= "purchasedGoods".equals(activeTab)
+                   ? "active"
+                   : "" %>">我买到的商品</a>
         <a href="#profile?tab=lostfound"
            data-route="profile"
            data-tab="lostfound"
@@ -223,6 +229,20 @@
                             : "学生"
             %></dd></div>
         </dl>
+    </section>
+    <section class="profile-danger-zone card">
+        <div>
+            <span>ACCOUNT SECURITY</span>
+            <h2>注销账号</h2>
+            <p>注销后账号无法再次登录，相关内容将被隐藏，行为和隐私数据将被清理。</p>
+        </div>
+        <% if ("admin".equalsIgnoreCase(profileUser.getRole())) { %>
+        <p class="profile-admin-cancel-note">
+            管理员账号不能在前台注销，请联系系统管理员。
+        </p>
+        <% } else { %>
+        <button type="button" data-account-cancel-open>注销账号</button>
+        <% } %>
     </section>
     <% } else if ("posts".equals(activeTab)) { %>
     <section class="profile-section profile-list-section">
@@ -362,6 +382,8 @@
     <section class="profile-section profile-embedded-module">
         <jsp:include page="my-goods.jsp"/>
     </section>
+    <% } else if ("purchasedGoods".equals(activeTab)) { %>
+    <jsp:include page="purchased-goods.jsp"/>
     <% } else if ("lostfound".equals(activeTab)) {
         List<LostFound> profileLostFound =
                 (List<LostFound>) request.getAttribute("profileLostFound");
@@ -528,6 +550,62 @@
     </section>
     <% } %>
 </div>
+
+<% if (!"admin".equalsIgnoreCase(profileUser.getRole())) { %>
+<div class="profile-modal account-cancel-modal"
+     data-account-cancel-modal
+     hidden>
+    <div class="profile-modal-backdrop" data-account-cancel-close></div>
+    <section class="profile-modal-dialog account-cancel-dialog"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="accountCancelTitle">
+        <div class="profile-modal-heading account-cancel-heading">
+            <div>
+                <span>DANGER ZONE</span>
+                <h2 id="accountCancelTitle">注销账号</h2>
+            </div>
+            <button type="button"
+                    class="modal-close-btn"
+                    data-account-cancel-close
+                    aria-label="关闭">×</button>
+        </div>
+        <p class="account-cancel-warning">
+            注销后，你将无法再登录该账号。你发布的帖子、商品、失物招领、
+            活动报名、收藏、点赞、私信等数据将被隐藏或清理。该操作不可恢复。
+        </p>
+        <form data-account-cancel-form>
+            <label>当前密码
+                <input type="password"
+                       name="password"
+                       minlength="8"
+                       maxlength="72"
+                       autocomplete="current-password"
+                       required>
+            </label>
+            <label>注销原因（可选）
+                <textarea name="reason"
+                          maxlength="255"
+                          rows="3"
+                          placeholder="可填写注销原因"></textarea>
+            </label>
+            <label class="account-cancel-confirm">
+                <input type="checkbox" name="confirm" value="true" required>
+                <span>我确认注销该账号，并理解该操作不可恢复。</span>
+            </label>
+            <p class="profile-form-error"
+               data-account-cancel-error
+               hidden></p>
+            <div class="profile-modal-actions">
+                <button type="button" data-account-cancel-close>取消</button>
+                <button type="submit" class="account-cancel-submit">
+                    确认注销
+                </button>
+            </div>
+        </form>
+    </section>
+</div>
+<% } %>
 
 <div class="profile-modal" data-profile-modal hidden>
     <div class="profile-modal-backdrop" data-profile-modal-close></div>

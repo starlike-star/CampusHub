@@ -51,6 +51,10 @@
        href="#square?tab=life"
        data-route="square"
        data-tab="life">校园生活</a>
+    <a class="<%= "trade".equals(activeTab) ? "active" : "" %>"
+       href="#square?tab=trade"
+       data-route="square"
+       data-tab="trade">二手交易</a>
 </nav>
 
 <% if ("notice".equals(activeTab)) { %>

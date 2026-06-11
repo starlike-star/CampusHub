@@ -4,6 +4,7 @@ import cn.campushub.model.FavoriteItemVO;
 import cn.campushub.model.Post;
 import cn.campushub.model.ProfileOverviewVO;
 import cn.campushub.model.ProfileActivityVO;
+import cn.campushub.model.PurchasedGoodsVO;
 import cn.campushub.model.User;
 import cn.campushub.model.UserCheckinStatsVO;
 import cn.campushub.model.UserCommentVO;
@@ -103,6 +104,19 @@ public class JdbcProfileDao implements ProfileDao {
                     ORDER BY checkin_date DESC LIMIT 1), 0) AS continuous_days
             FROM checkins
             WHERE user_id = ?
+            """;
+
+    private static final String PURCHASED_GOODS_SQL = """
+            SELECT g.id AS goods_id, o.order_no, g.title, o.amount, g.images,
+                   g.condition_level, g.trade_method,
+                   seller.nickname AS seller_nickname,
+                   c.name AS category_name, o.paid_at
+            FROM goods_orders o
+            JOIN goods g ON g.id = o.goods_id
+            JOIN users seller ON seller.id = o.seller_id
+            LEFT JOIN categories c ON c.id = g.category_id
+            WHERE o.buyer_id = ? AND o.status = 'paid'
+            ORDER BY o.paid_at DESC, o.id DESC
             """;
 
     private static final String CHECKIN_RECORDS_SQL = """
@@ -250,6 +264,34 @@ public class JdbcProfileDao implements ProfileDao {
                 Comparator.nullsLast(Comparator.reverseOrder())
         ));
         return favorites;
+    }
+
+    @Override
+    public List<PurchasedGoodsVO> findPurchasedGoods(long userId)
+            throws SQLException {
+        List<PurchasedGoodsVO> goods = new ArrayList<>();
+        try (Connection connection = JdbcUtils.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(PURCHASED_GOODS_SQL)) {
+            statement.setLong(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    goods.add(new PurchasedGoodsVO(
+                            resultSet.getLong("goods_id"),
+                            resultSet.getString("order_no"),
+                            resultSet.getString("title"),
+                            resultSet.getBigDecimal("amount"),
+                            resultSet.getString("images"),
+                            resultSet.getString("condition_level"),
+                            resultSet.getString("trade_method"),
+                            resultSet.getString("seller_nickname"),
+                            resultSet.getString("category_name"),
+                            toLocalDateTime(resultSet.getTimestamp("paid_at"))
+                    ));
+                }
+            }
+        }
+        return goods;
     }
 
     @Override

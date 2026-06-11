@@ -144,6 +144,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>AccountCancelServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.AccountCancelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AccountCancelServlet</servlet-name>
+        <url-pattern>/account/cancel</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>ImageUploadServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.ImageUploadServlet</servlet-class>
         <multipart-config>
@@ -344,6 +353,51 @@
     <servlet-mapping>
         <servlet-name>GoodsDeleteServlet</servlet-name>
         <url-pattern>/goods/delete</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TradeOrderCreateServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.TradeOrderCreateServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TradeOrderCreateServlet</servlet-name>
+        <url-pattern>/trade/order/create</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TradeOrderStatusServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.TradeOrderStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TradeOrderStatusServlet</servlet-name>
+        <url-pattern>/trade/order/status</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>TradeQrCodeServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.TradeQrCodeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TradeQrCodeServlet</servlet-name>
+        <url-pattern>/trade/qrcode</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MockPayPageServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.MockPayPageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MockPayPageServlet</servlet-name>
+        <url-pattern>/trade/mock-pay</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>MockPayConfirmServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.MockPayConfirmServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MockPayConfirmServlet</servlet-name>
+        <url-pattern>/trade/mock-pay/confirm</url-pattern>
     </servlet-mapping>
 
     <servlet>

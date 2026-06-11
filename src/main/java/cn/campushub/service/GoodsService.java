@@ -172,7 +172,11 @@ public class GoodsService {
             return ServiceResult.failure("商品状态参数无效");
         }
         if (!goodsDao.updateStatus(goodsId, userId, admin, status)) {
-            return ServiceResult.failure("商品不存在或无权修改");
+            return ServiceResult.failure(
+                    admin
+                            ? "商品不存在或无权修改"
+                            : "商品不存在、无权修改或已售出"
+            );
         }
         return ServiceResult.success(
                 "off_shelf".equals(status) ? "商品已下架" : "商品状态已更新",

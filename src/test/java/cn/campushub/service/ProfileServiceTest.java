@@ -47,7 +47,7 @@ class ProfileServiceTest {
         assertTrue(result.success());
         assertEquals(9L, dao.updated.getId());
         assertEquals("Campus User", dao.updated.getNickname());
-        assertEquals("images/default-avatar.png", dao.updated.getAvatar());
+        assertEquals("images/default-user.png", dao.updated.getAvatar());
         assertEquals("20260001", dao.updated.getStudentNo());
         assertEquals("campus@example.com", dao.updated.getEmail());
     }

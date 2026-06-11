@@ -4,6 +4,7 @@ import cn.campushub.model.FavoriteItemVO;
 import cn.campushub.model.Post;
 import cn.campushub.model.ProfileActivityVO;
 import cn.campushub.model.ProfileOverviewVO;
+import cn.campushub.model.PurchasedGoodsVO;
 import cn.campushub.model.User;
 import cn.campushub.model.UserCheckinStatsVO;
 import cn.campushub.model.UserCommentVO;
@@ -20,6 +21,11 @@ public interface ProfileDao {
     List<UserCommentVO> findComments(long userId) throws SQLException;
 
     List<FavoriteItemVO> findFavorites(long userId) throws SQLException;
+
+    default List<PurchasedGoodsVO> findPurchasedGoods(long userId)
+            throws SQLException {
+        return List.of();
+    }
 
     UserCheckinStatsVO findCheckins(long userId) throws SQLException;
 

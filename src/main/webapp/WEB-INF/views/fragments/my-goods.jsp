@@ -20,7 +20,7 @@
 <section class="market-header card">
     <div>
         <span class="market-eyebrow">MY GOODS</span>
-        <h1>我的商品</h1>
+        <h1>我发布的商品</h1>
         <p>管理已发布商品、交易方式和在售状态</p>
     </div>
     <% if (!loginRequired) { %>
@@ -107,6 +107,7 @@
                     : goods.getCreatedAt().format(myGoodsDateFormatter) %></p>
             <div class="goods-actions">
                 <button type="button" data-goods-action="edit">编辑</button>
+                <% if (!"sold".equals(goods.getStatus())) { %>
                 <label class="goods-status-control">
                     <select data-goods-action="status"
                             aria-label="修改商品状态">
@@ -128,10 +129,14 @@
                                         : "" %>>已下架</option>
                     </select>
                 </label>
-                <% if (!"off_shelf".equals(goods.getStatus())) { %>
+                <% } %>
+                <% if (!"off_shelf".equals(goods.getStatus())
+                        && !"sold".equals(goods.getStatus())) { %>
                 <button type="button"
                         class="goods-delete-btn"
                         data-goods-action="delete">下架</button>
+                <% } %>
+                <% if (!"off_shelf".equals(goods.getStatus())) { %>
                 <a class="goods-detail-btn"
                    href="<%= myGoodsContextPath %>/goods/detail?id=<%=
                             goods.getId()

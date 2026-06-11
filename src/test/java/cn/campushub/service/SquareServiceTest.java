@@ -31,6 +31,16 @@ class SquareServiceTest {
     }
 
     @Test
+    void tradeTabQueriesSecondHandTradePosts() throws Exception {
+        FakeSquareDao dao = new FakeSquareDao();
+        SquareService service = new SquareService(dao);
+
+        service.listPosts("trade", 7L, null);
+
+        assertEquals("trade", dao.tab);
+    }
+
+    @Test
     void keywordIsTrimmedAndLimited() throws Exception {
         FakeSquareDao dao = new FakeSquareDao();
         SquareService service = new SquareService(dao);

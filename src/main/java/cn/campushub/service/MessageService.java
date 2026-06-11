@@ -200,6 +200,25 @@ public class MessageService {
         );
     }
 
+    public void notifyTradePaid(
+            long buyerId,
+            long sellerId,
+            String goodsTitle
+    ) throws SQLException {
+        createMessage(
+                buyerId,
+                "模拟支付成功",
+                "你已成功购买商品《" + goodsTitle + "》，请与卖家确认交付方式。",
+                "system"
+        );
+        createMessage(
+                sellerId,
+                "商品已售出",
+                "你的商品《" + goodsTitle + "》已被用户购买，请及时联系买家完成交付。",
+                "system"
+        );
+    }
+
     private void notifyTarget(
             Optional<NotificationTarget> target,
             long actorId,

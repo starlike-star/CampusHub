@@ -261,14 +261,18 @@ public class JdbcAdminDao implements AdminDao {
 
     @Override
     public boolean updateUserStatus(long userId, int status) throws SQLException {
-        return update("UPDATE users SET status = ? WHERE id = ?", status, userId);
+        return update(
+                "UPDATE users SET status = ? WHERE id = ? AND status != 2",
+                status,
+                userId
+        );
     }
 
     @Override
     public boolean resetUserPassword(long userId, String passwordHash)
             throws SQLException {
         return update(
-                "UPDATE users SET password = ? WHERE id = ?",
+                "UPDATE users SET password = ? WHERE id = ? AND status != 2",
                 passwordHash,
                 userId
         );

@@ -85,6 +85,19 @@ document.addEventListener("DOMContentLoaded", function () {
         document.body.classList.remove("modal-open");
     }
 
+    function closeAccountCancelModal() {
+        const modal = document.querySelector("[data-account-cancel-modal]");
+        if (modal) {
+            modal.hidden = true;
+            modal.querySelector("[data-account-cancel-form]")?.reset();
+            const error = modal.querySelector("[data-account-cancel-error]");
+            if (error) {
+                error.hidden = true;
+            }
+        }
+        document.body.classList.remove("modal-open");
+    }
+
     document.addEventListener("click", function (event) {
         const editButton = event.target.closest("[data-profile-edit]");
         if (editButton) {
@@ -100,10 +113,56 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.target.closest("[data-profile-modal-close]")) {
             stopInteraction(event);
             closeModal();
+            return;
+        }
+        if (event.target.closest("[data-account-cancel-open]")) {
+            stopInteraction(event);
+            const modal = document.querySelector("[data-account-cancel-modal]");
+            if (modal) {
+                modal.hidden = false;
+                document.body.classList.add("modal-open");
+                modal.querySelector('[name="password"]')?.focus();
+            }
+            return;
+        }
+        if (event.target.closest("[data-account-cancel-close]")) {
+            stopInteraction(event);
+            closeAccountCancelModal();
         }
     });
 
     document.addEventListener("submit", async function (event) {
+        const cancelForm = event.target.closest("[data-account-cancel-form]");
+        if (cancelForm) {
+            stopInteraction(event);
+            const submit = cancelForm.querySelector('[type="submit"]');
+            const errorBox = cancelForm.querySelector(
+                "[data-account-cancel-error]"
+            );
+            const values = Object.fromEntries(new FormData(cancelForm).entries());
+            if (values.confirm !== "true") {
+                errorBox.textContent = "请勾选注销确认";
+                errorBox.hidden = false;
+                return;
+            }
+            setBusy(submit, true);
+            errorBox.hidden = true;
+            try {
+                const result = await postForm("/account/cancel", values);
+                if (!result) {
+                    return;
+                }
+                window.alert(result.message);
+                window.location.replace(contextPath + "/login");
+            } catch (error) {
+                errorBox.textContent = error.message;
+                errorBox.hidden = false;
+            } finally {
+                setBusy(submit, false);
+            }
+            return;
+        }
+
         const form = event.target.closest("[data-profile-form]");
         if (!form) {
             return;
@@ -172,6 +231,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
             closeModal();
+            closeAccountCancelModal();
         }
     });
 });

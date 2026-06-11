@@ -12,9 +12,9 @@ import java.util.Set;
 
 public class SquareService {
     private static final Set<String> POST_TABS =
-            Set.of("latest", "hot", "study", "life");
+            Set.of("latest", "hot", "study", "life", "trade");
     private static final Set<String> ALL_TABS =
-            Set.of("latest", "hot", "notice", "study", "life");
+            Set.of("latest", "hot", "notice", "study", "life", "trade");
 
     private final SquareDao squareDao;
 

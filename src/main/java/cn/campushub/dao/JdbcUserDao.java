@@ -14,7 +14,8 @@ public class JdbcUserDao implements UserDao {
     private static final String USER_COLUMNS = """
             id, username, password, nickname, avatar, student_no,
             college, major, grade, email, phone, role, status,
-            experience, level, created_at, updated_at
+            experience, level, canceled_at, cancel_reason,
+            created_at, updated_at
             """;
 
     @Override
@@ -115,6 +116,8 @@ public class JdbcUserDao implements UserDao {
         user.setStatus(resultSet.getInt("status"));
         user.setExperience(resultSet.getInt("experience"));
         user.setLevel(resultSet.getInt("level"));
+        user.setCanceledAt(toLocalDateTime(resultSet.getTimestamp("canceled_at")));
+        user.setCancelReason(resultSet.getString("cancel_reason"));
         user.setCreatedAt(toLocalDateTime(resultSet.getTimestamp("created_at")));
         user.setUpdatedAt(toLocalDateTime(resultSet.getTimestamp("updated_at")));
         return user;

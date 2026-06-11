@@ -8,6 +8,7 @@ import cn.campushub.model.FavoriteItemVO;
 import cn.campushub.model.Post;
 import cn.campushub.model.ProfileOverviewVO;
 import cn.campushub.model.ProfileActivityVO;
+import cn.campushub.model.PurchasedGoodsVO;
 import cn.campushub.model.User;
 import cn.campushub.model.UserCheckinStatsVO;
 import cn.campushub.model.UserCommentVO;
@@ -21,7 +22,7 @@ import java.util.Set;
 public class ProfileService {
     private static final Set<String> TABS = Set.of(
             "overview", "posts", "comments", "favorites", "goods",
-            "lostfound", "activities", "checkins"
+            "purchasedGoods", "lostfound", "activities", "checkins"
     );
 
     private final ProfileDao profileDao;
@@ -61,6 +62,11 @@ public class ProfileService {
 
     public List<FavoriteItemVO> favorites(long userId) throws SQLException {
         return profileDao.findFavorites(userId);
+    }
+
+    public List<PurchasedGoodsVO> purchasedGoods(long userId)
+            throws SQLException {
+        return profileDao.findPurchasedGoods(userId);
     }
 
     public UserCheckinStatsVO checkins(long userId) throws SQLException {
@@ -111,7 +117,7 @@ public class ProfileService {
         User user = new User();
         user.setId(userId);
         user.setNickname(nickname);
-        user.setAvatar(avatar == null ? "images/default-avatar.png" : avatar);
+        user.setAvatar(avatar == null ? "images/default-user.png" : avatar);
         user.setStudentNo(studentNo);
         user.setCollege(college);
         user.setMajor(major);

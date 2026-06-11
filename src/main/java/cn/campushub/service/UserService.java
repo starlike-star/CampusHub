@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 public class UserService {
-    private static final String DEFAULT_AVATAR = "images/default-avatar.png";
+    private static final String DEFAULT_AVATAR = "images/default-user.png";
 
     private final UserDao userDao;
 
@@ -105,6 +105,9 @@ public class UserService {
         }
 
         User user = optionalUser.get();
+        if (user.getStatus() != null && user.getStatus() == 2) {
+            return ServiceResult.failure("该账号已注销，无法登录");
+        }
         if (user.getStatus() == null || user.getStatus() != 1) {
             return ServiceResult.failure("当前账号不可用，请联系管理员");
         }
