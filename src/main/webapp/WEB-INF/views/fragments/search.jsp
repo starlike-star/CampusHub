@@ -102,9 +102,7 @@
     <div class="search-result-list">
         <% for (SearchResultVO result : typeResults) {
             boolean noticeResult = "notice".equals(result.type());
-            String targetUrl = noticeResult
-                    ? result.targetUrl()
-                    : searchContextPath + result.targetUrl();
+            String targetUrl = searchContextPath + result.targetUrl();
             String imageUrl = null;
             if (result.image() != null && !result.image().isBlank()) {
                 imageUrl = result.image().startsWith("http://")
@@ -118,10 +116,7 @@
         <article class="search-result-card card">
             <% if (imageUrl != null) { %>
             <a class="search-result-image"
-               href="<%= HtmlUtils.escape(targetUrl) %>"
-               <% if (noticeResult) { %>
-               data-route="square" data-tab="notice"
-               <% } %>>
+               href="<%= HtmlUtils.escape(targetUrl) %>">
                 <img src="<%= HtmlUtils.escape(imageUrl) %>"
                      alt=""
                      loading="lazy">
@@ -144,10 +139,9 @@
                     %></time>
                 </div>
                 <h2>
-                    <a href="<%= HtmlUtils.escape(targetUrl) %>"
-                       <% if (noticeResult) { %>
-                       data-route="square" data-tab="notice"
-                       <% } %>><%= HtmlUtils.escape(result.title()) %></a>
+                    <a href="<%= HtmlUtils.escape(targetUrl) %>"><%=
+                            HtmlUtils.escape(result.title())
+                    %></a>
                 </h2>
                 <p><%= HtmlUtils.escape(result.summary()) %></p>
                 <div class="search-result-footer">
@@ -161,10 +155,9 @@
                         <span><%= HtmlUtils.escape(result.extraInfo()) %></span>
                     </div>
                     <a class="search-detail-link"
-                       href="<%= HtmlUtils.escape(targetUrl) %>"
-                       <% if (noticeResult) { %>
-                       data-route="square" data-tab="notice"
-                       <% } %>><%= noticeResult ? "查看公告" : "查看详情" %></a>
+                       href="<%= HtmlUtils.escape(targetUrl) %>"><%=
+                            noticeResult ? "查看公告" : "查看详情"
+                    %></a>
                 </div>
             </div>
         </article>

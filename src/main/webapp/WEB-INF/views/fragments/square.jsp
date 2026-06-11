@@ -86,8 +86,16 @@
                     ? ""
                     : notice.getCreatedAt().format(noticeDateFormatter) %></time>
         </div>
-        <h2><%= HtmlUtils.escape(notice.getTitle()) %></h2>
+        <h2>
+            <a href="<%= squareContextPath %>/notice/detail?id=<%=
+                    notice.getId()
+            %>"><%= HtmlUtils.escape(notice.getTitle()) %></a>
+        </h2>
         <p><%= HtmlUtils.escape(notice.getSummary()) %></p>
+        <a class="notice-detail-link"
+           href="<%= squareContextPath %>/notice/detail?id=<%=
+                   notice.getId()
+           %>">查看详情</a>
     </article>
     <%  }
        } %>

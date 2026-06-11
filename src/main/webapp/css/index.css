@@ -3636,6 +3636,18 @@ body.campus-map-open {
     margin-top: 15px;
 }
 
+.notice-card h2 a:hover {
+    color: var(--primary);
+}
+
+.notice-detail-link {
+    display: inline-flex;
+    margin-top: 14px;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 600;
+}
+
 @media (max-width: 720px) {
     .search-header {
         align-items: stretch;

@@ -229,6 +229,80 @@ CREATE TABLE reports (
     CONSTRAINT fk_reports_user FOREIGN KEY (user_id) REFERENCES users(id),
     CONSTRAINT fk_reports_handler FOREIGN KEY (handled_by) REFERENCES users(id)
 );
+
+
+USE campushub;
+
+CREATE TABLE IF NOT EXISTS private_conversations (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_a_id BIGINT NOT NULL,
+    user_b_id BIGINT NOT NULL,
+    last_message VARCHAR(500) NULL,
+    last_message_at DATETIME NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_conversation_pair (user_a_id, user_b_id),
+    FOREIGN KEY (user_a_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_b_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS private_messages (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    conversation_id BIGINT NOT NULL,
+    sender_id BIGINT NOT NULL,
+    receiver_id BIGINT NOT NULL,
+    content VARCHAR(1000) NOT NULL,
+    is_read TINYINT DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES private_conversations(id) ON DELETE CASCADE,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_private_messages_conversation ON private_messages(conversation_id, created_at);
+CREATE INDEX idx_private_messages_receiver_read ON private_messages(receiver_id, is_read);
+CREATE INDEX idx_private_conversations_user_a ON private_conversations(user_a_id);
+CREATE INDEX idx_private_conversations_user_b ON private_conversations(user_b_id);
+
+
+USE campushub;
+
+CREATE TABLE IF NOT EXISTS remember_tokens (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    selector VARCHAR(64) NOT NULL UNIQUE,
+    token_hash VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    last_used_at DATETIME NULL,
+    user_agent VARCHAR(255) NULL,
+    ip_address VARCHAR(64) NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_remember_tokens_user_id ON remember_tokens(user_id);
+CREATE INDEX idx_remember_tokens_expires_at ON remember_tokens(expires_at);
+
+USE campushub;
+
+ALTER TABLE users
+ADD COLUMN experience INT DEFAULT 0 COMMENT '用户经验值',
+ADD COLUMN level INT DEFAULT 1 COMMENT '用户等级';
+
+CREATE TABLE IF NOT EXISTS user_experience_logs (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    change_value INT NOT NULL,
+    source VARCHAR(50) NOT NULL,
+    description VARCHAR(255) NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_user_exp_logs_user_id ON user_experience_logs(user_id);
+CREATE INDEX idx_user_exp_logs_created_at ON user_experience_logs(created_at);
+
+
 后端代码修改要求
 
 请检查以下代码：

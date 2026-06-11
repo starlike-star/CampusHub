@@ -251,7 +251,7 @@ public class JdbcSearchDao implements SearchDao {
                         null,
                         resultSet.getBoolean("is_top") ? "置顶" : "公告",
                         noticeTypeText(resultSet.getString("type")),
-                        "#square?tab=notice",
+                        "/notice/detail?id=" + resultSet.getLong("id"),
                         toLocalDateTime(resultSet.getTimestamp("created_at"))
                 )
         );

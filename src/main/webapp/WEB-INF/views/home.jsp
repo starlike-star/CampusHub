@@ -282,9 +282,7 @@
                                 noticeType = "生活";
                             }
                     %>
-                    <a href="#square?tab=notice"
-                       data-route="square"
-                       data-tab="notice">
+                    <a href="<%= contextPath %>/notice/detail?id=<%= notice.id() %>">
                         <span class="notice-type <%= noticeClass %>"><%=
                                 noticeType
                         %></span>

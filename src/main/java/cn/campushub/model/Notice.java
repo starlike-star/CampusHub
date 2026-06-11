@@ -8,7 +8,10 @@ public class Notice {
     private String content;
     private String type;
     private boolean top;
+    private Long createdBy;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String publisherName;
 
     public Long getId() {
         return id;
@@ -50,12 +53,36 @@ public class Notice {
         this.top = top;
     }
 
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getPublisherName() {
+        return publisherName;
+    }
+
+    public void setPublisherName(String publisherName) {
+        this.publisherName = publisherName;
     }
 
     public String getSummary() {

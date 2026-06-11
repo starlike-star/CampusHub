@@ -231,6 +231,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>NoticeDetailServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.NoticeDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NoticeDetailServlet</servlet-name>
+        <url-pattern>/notice/detail</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>PostFavoriteServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.PostFavoriteServlet</servlet-class>
     </servlet>
