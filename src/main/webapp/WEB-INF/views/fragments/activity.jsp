@@ -6,6 +6,7 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Set" %>
+<%-- 渲染活动页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String activityContextPath = request.getContextPath();
     List<ActivityVO> activities =
@@ -115,9 +116,9 @@
                         activity.getId()
                %>">
                 <img src="<%= activityContextPath %><%=
-                        cover.startsWith("/") ? "" : "/"
-                %><%= HtmlUtils.escape(cover) %>"
-                     onerror="this.onerror=null;this.src='<%= activityContextPath %>/images/default-activity.png';"
+                        HtmlUtils.escape(HtmlUtils.resourcePath(cover))
+                %>"
+                     onerror="this.onerror=null;this.src='<%= activityContextPath %>/images/default-activity.png?v=20260611';"
                      alt="<%= HtmlUtils.escape(activity.getTitle()) %>">
                 <span class="activity-card-status <%= activity.getStatus() %>"><%=
                         statusText

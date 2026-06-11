@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 定义记住登录令牌数据访问能力及业务层依赖的数据契约。
+ */
 public interface RememberTokenDao {
     void createToken(
             long userId,

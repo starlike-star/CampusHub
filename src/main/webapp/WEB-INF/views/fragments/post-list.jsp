@@ -5,6 +5,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染帖子列表页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String postContextPath = request.getContextPath();
     SessionUser postLoginUser =
@@ -149,19 +150,19 @@
                     aria-pressed="<%= post.isFavorited() %>">
                 <svg><use href="#icon-bookmark"></use></svg>
                 <span class="favorite-count-value"><%=
-                        post.getFavoriteCount()
+                         post.getFavoriteCount()
                 %></span>
             </button>
+            <span class="view-count">
+                <svg><use href="#icon-eye"></use></svg>
+                <%= post.getViewCount() %>
+            </span>
             <% if (!owner) { %>
             <button type="button"
                     class="report-btn"
                     data-target-type="post"
                     data-target-id="<%= post.getId() %>">举报</button>
             <% } %>
-            <span class="view-count">
-                <svg><use href="#icon-eye"></use></svg>
-                <%= post.getViewCount() %>
-            </span>
         </div>
 
         <section class="quick-comment-panel" hidden>

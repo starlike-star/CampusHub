@@ -3,6 +3,9 @@ package cn.campushub.model;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * 表示系统中的失物招领领域数据，并提供对应属性访问。
+ */
 public class LostFound {
     private Long id;
     private Long userId;

@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 聚合PurchasedGoods页面展示所需的数据。
+ */
 public record PurchasedGoodsVO(
         long goodsId,
         String orderNo,

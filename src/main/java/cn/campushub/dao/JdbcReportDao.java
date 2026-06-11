@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * 使用 JDBC 实现举报数据的查询与持久化操作。
+ */
 public class JdbcReportDao implements ReportDao {
     @Override
     public Long findTargetOwnerId(String targetType, long targetId)

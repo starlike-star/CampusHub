@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * 接收失物招领的详情查询请求，调用业务层并生成 HTTP 响应。
+ */
 public class LostFoundDetailServlet extends HttpServlet {
     private final LostFoundService lostFoundService = new LostFoundService();
     private final ClaimRequestService claimService = new ClaimRequestService();

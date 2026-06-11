@@ -1,3 +1,4 @@
+// 根据输入内容自动调整多行文本框高度。
 (function () {
     function resizeTextarea(textarea) {
         if (!textarea

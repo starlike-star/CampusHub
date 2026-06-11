@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * 编排失物招领业务规则、参数校验与数据访问操作。
+ */
 public class LostFoundService {
     private static final Set<String> TYPES = Set.of("lost", "found");
     private static final Set<String> STATUSES =

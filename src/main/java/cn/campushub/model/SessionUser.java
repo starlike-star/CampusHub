@@ -3,6 +3,9 @@ package cn.campushub.model;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * 表示系统中的SessionUser领域数据，并提供对应属性访问。
+ */
 public record SessionUser(
         long id,
         String username,

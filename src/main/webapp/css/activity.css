@@ -1,3 +1,4 @@
+/* 定义活动页面或组件的布局、配色与响应式样式。 */
 .activity-page,
 .activity-detail-shell {
     display: grid;

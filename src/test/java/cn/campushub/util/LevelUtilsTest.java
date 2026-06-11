@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * 验证 LevelUtils相关逻辑的正常路径、边界条件和失败场景。
+ */
 class LevelUtilsTest {
     @Test
     void calculatesLevelsAtConfiguredThresholds() {

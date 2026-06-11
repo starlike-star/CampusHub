@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * 提供 JSON 字符串转义、响应输出和简单数据序列化能力。
+ */
 public final class JsonUtils {
     private JsonUtils() {
     }

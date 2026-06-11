@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%-- 渲染无权限提示页面，输出服务端数据与前端交互所需标记。 --%>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>

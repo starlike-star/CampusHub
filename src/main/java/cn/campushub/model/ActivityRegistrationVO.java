@@ -2,6 +2,9 @@ package cn.campushub.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * 聚合活动报名页面展示所需的数据。
+ */
 public record ActivityRegistrationVO(
         long id,
         long activityId,

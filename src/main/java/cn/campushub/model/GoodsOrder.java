@@ -3,6 +3,9 @@ package cn.campushub.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+/**
+ * 表示系统中的商品订单领域数据，并提供对应属性访问。
+ */
 public class GoodsOrder {
     private Long id;
     private String orderNo;

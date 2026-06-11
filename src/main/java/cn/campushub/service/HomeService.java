@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.time.Clock;
 import java.time.LocalDate;
 
+/**
+ * 编排首页业务规则、参数校验与数据访问操作。
+ */
 public class HomeService {
     private static final int DAILY_POINTS = 5;
 

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 接收活动的取消报名请求，调用业务层并生成 HTTP 响应。
+ */
 public class ActivityCancelRegisterServlet extends HttpServlet {
     private final ActivityRegistrationService registrationService =
             new ActivityRegistrationService();

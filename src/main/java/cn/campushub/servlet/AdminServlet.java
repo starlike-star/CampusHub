@@ -16,6 +16,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 处理后台管理页面请求并聚合管理端所需数据。
+ */
 public class AdminServlet extends HttpServlet {
     private static final Set<String> SECTIONS = Set.of(
             "dashboard",

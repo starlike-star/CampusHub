@@ -12,6 +12,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 使用 JDBC 实现校园广场数据的查询与持久化操作。
+ */
 public class JdbcSquareDao implements SquareDao {
     public static final String LATEST_ORDER =
             "ORDER BY p.created_at DESC";

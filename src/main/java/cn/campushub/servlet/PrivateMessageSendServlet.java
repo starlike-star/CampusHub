@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收私信消息的发送请求，调用业务层并生成 HTTP 响应。
+ */
 public class PrivateMessageSendServlet extends HttpServlet {
     private final PrivateMessageService service = new PrivateMessageService();
 

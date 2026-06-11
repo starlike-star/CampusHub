@@ -5,6 +5,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染活动详情页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     ActivityVO activityVO = (ActivityVO) request.getAttribute("activity");
@@ -58,10 +59,10 @@
 <main class="activity-detail-shell">
     <article class="activity-detail-card card">
         <div class="activity-detail-cover">
-            <img src="<%= contextPath %><%= cover.startsWith("/") ? "" : "/" %><%=
-                    HtmlUtils.escape(cover)
+            <img src="<%= contextPath %><%=
+                    HtmlUtils.escape(HtmlUtils.resourcePath(cover))
             %>"
-                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-activity.png';"
+                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-activity.png?v=20260611';"
                  alt="<%= HtmlUtils.escape(activity.getTitle()) %>">
             <span class="activity-status <%= activity.getStatus() %>"><%=
                     statusText

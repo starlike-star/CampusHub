@@ -13,6 +13,9 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 验证 认领申请相关逻辑的正常路径、边界条件和失败场景。
+ */
 class ClaimRequestServiceTest {
     @Test
     void duplicatePendingClaimReturnsFailure() throws SQLException {

@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * 验证 全站搜索相关逻辑的正常路径、边界条件和失败场景。
+ */
 class SearchServiceTest {
     @Test
     void emptyKeywordDoesNotQueryDatabase() throws Exception {

@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收活动的报名请求，调用业务层并生成 HTTP 响应。
+ */
 public class ActivityRegisterServlet extends HttpServlet {
     private final ActivityRegistrationService registrationService =
             new ActivityRegistrationService();

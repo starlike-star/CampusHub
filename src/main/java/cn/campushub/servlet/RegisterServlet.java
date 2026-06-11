@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 处理注册页面展示、验证码校验和新用户创建。
+ */
 public class RegisterServlet extends HttpServlet {
     private final UserService userService = new UserService();
 

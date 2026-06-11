@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现失物招领数据的查询与持久化操作。
+ */
 public class JdbcLostFoundDao implements LostFoundDao {
     private static final String SELECT_FIELDS = """
             SELECT lf.id, lf.user_id, lf.category_id, lf.type, lf.item_name,

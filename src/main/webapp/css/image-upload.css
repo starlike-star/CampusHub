@@ -1,7 +1,37 @@
+/* 定义图片上传页面或组件的布局、配色与响应式样式。 */
 .image-upload {
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 14px;
+    padding: 16px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #f8fbff 0%, #fff 70%);
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.image-upload:focus-within {
+    border-color: rgba(37, 99, 235, .65);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+}
+
+.image-upload-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.image-upload-label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.image-upload-heading small {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 400;
 }
 
 .image-upload-controls {
@@ -31,6 +61,15 @@
     cursor: pointer;
     font: inherit;
     font-weight: 600;
+    transition: color .2s ease, border-color .2s ease, background .2s ease,
+                transform .2s ease;
+}
+
+.image-upload-button:hover {
+    color: #1d4ed8;
+    border-color: #93c5fd;
+    background: #dbeafe;
+    transform: translateY(-1px);
 }
 
 .image-upload-button:disabled {
@@ -64,4 +103,16 @@
     border: 1px solid #dfe5ee;
     border-radius: 10px;
     background: #f8fafc;
+}
+
+@media (max-width: 640px) {
+    .image-upload {
+        padding: 14px;
+    }
+
+    .image-upload-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
 }

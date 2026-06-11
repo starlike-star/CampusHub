@@ -2,6 +2,9 @@ package cn.campushub.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * 聚合全站搜索页面展示所需的数据。
+ */
 public record SearchResultVO(
         long id,
         String type,

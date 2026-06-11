@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 定义经验值数据访问能力及业务层依赖的数据契约。
+ */
 public interface ExperienceDao {
     ExperienceInfo addExperience(Connection connection, long userId, int value)
             throws SQLException;

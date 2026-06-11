@@ -2,6 +2,7 @@
 <%@ page import="cn.campushub.constant.SessionConstants" %>
 <%@ page import="cn.campushub.model.SessionUser" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
+<%-- 渲染首页动态流页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String homeContextPath = request.getContextPath();
     SessionUser homeLoginUser =

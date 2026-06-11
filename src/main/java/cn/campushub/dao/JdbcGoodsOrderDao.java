@@ -13,6 +13,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现商品订单数据的查询与持久化操作。
+ */
 public class JdbcGoodsOrderDao implements GoodsOrderDao {
     private static final String ORDER_COLUMNS = """
             SELECT o.id, o.order_no, o.goods_id, o.buyer_id, o.seller_id,

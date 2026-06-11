@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 编排举报业务规则、参数校验与数据访问操作。
+ */
 public class ReportService {
     private static final Logger LOGGER = Logger.getLogger(ReportService.class.getName());
     private static final Set<String> TARGET_TYPES =

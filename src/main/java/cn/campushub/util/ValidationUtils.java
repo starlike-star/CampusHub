@@ -2,6 +2,9 @@ package cn.campushub.util;
 
 import java.util.regex.Pattern;
 
+/**
+ * 集中提供常用文本、数字和业务参数校验方法。
+ */
 public final class ValidationUtils {
     private static final Pattern USERNAME_PATTERN =
             Pattern.compile("^[A-Za-z][A-Za-z0-9_]{3,49}$");

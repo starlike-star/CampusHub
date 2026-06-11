@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 定义站内通知数据访问能力及业务层依赖的数据契约。
+ */
 public interface MessageDao {
     void create(Message message) throws SQLException;
 

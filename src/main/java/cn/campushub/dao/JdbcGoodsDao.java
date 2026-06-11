@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现商品数据的查询与持久化操作。
+ */
 public class JdbcGoodsDao implements GoodsDao {
     public static final String BASE_LIST_SQL = """
             SELECT g.id, g.user_id, g.category_id, g.title, g.description,

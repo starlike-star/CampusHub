@@ -6,6 +6,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染失物招领详情页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     LostFound item = (LostFound) request.getAttribute("lostFound");
@@ -52,9 +53,11 @@
     <section class="lostfound-detail card">
         <div class="lostfound-detail-image">
             <img src="<%= contextPath %><%=
-                    item.getFirstImage().startsWith("/") ? "" : "/"
-            %><%= HtmlUtils.escape(item.getFirstImage()) %>"
-                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-lostfound.png';"
+                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                            item.getFirstImage()
+                    ))
+            %>"
+                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-lostfound.png?v=20260611';"
                  alt="<%= HtmlUtils.escape(item.getTitle()) %>">
         </div>
         <div class="lostfound-detail-info">

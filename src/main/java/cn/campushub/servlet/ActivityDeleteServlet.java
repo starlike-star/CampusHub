@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收活动的删除请求，调用业务层并生成 HTTP 响应。
+ */
 public class ActivityDeleteServlet extends HttpServlet {
     private final ActivityService activityService = new ActivityService();
 

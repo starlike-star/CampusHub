@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 根据交易地址生成用于扫码支付或确认的二维码图片。
+ */
 public class TradeQrCodeServlet extends HttpServlet {
     private static final int SIZE = 320;
     private final TradeOrderService tradeOrderService = new TradeOrderService();
@@ -31,6 +34,13 @@ public class TradeQrCodeServlet extends HttpServlet {
         SessionUser user = SessionUtils.currentUser(request);
         if (user == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        if (TradeUrlUtils.isLocalhost(request)) {
+            response.sendError(
+                    HttpServletResponse.SC_CONFLICT,
+                    "请使用局域网地址访问后重新生成二维码"
+            );
             return;
         }
         try {

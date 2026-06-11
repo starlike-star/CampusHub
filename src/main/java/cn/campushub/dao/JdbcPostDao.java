@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现帖子数据的查询与持久化操作。
+ */
 public class JdbcPostDao implements PostDao {
     public static final String HOME_POST_SQL = """
             SELECT p.id, p.user_id, p.category_id, p.title, p.content, p.images,

@@ -2,6 +2,7 @@
 <%@ page import="cn.campushub.model.Category" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染帖子发布页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     List<Category> categories = (List<Category>) request.getAttribute("categories");
@@ -69,7 +70,10 @@
                           placeholder="请输入帖子完整内容"><%= HtmlUtils.escape((String) request.getAttribute("content")) %></textarea>
             </label>
             <div class="image-upload" data-image-upload="post">
-                <span>帖子图片</span>
+                <div class="image-upload-heading">
+                    <span class="image-upload-label">帖子图片</span>
+                    <small>选填，最多上传5张校园相关图片</small>
+                </div>
                 <input type="hidden"
                        name="images"
                        data-image-upload-value

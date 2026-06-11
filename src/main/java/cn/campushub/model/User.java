@@ -2,6 +2,9 @@ package cn.campushub.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * 表示系统中的用户领域数据，并提供对应属性访问。
+ */
 public class User {
     private Long id;
     private String username;

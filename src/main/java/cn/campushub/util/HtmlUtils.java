@@ -1,6 +1,11 @@
 package cn.campushub.util;
 
+/**
+ * 提供 HTML 特殊字符转义，降低页面输出中的注入风险。
+ */
 public final class HtmlUtils {
+    private static final String DEFAULT_IMAGE_VERSION = "20260611";
+
     private HtmlUtils() {
     }
 
@@ -20,6 +25,21 @@ public final class HtmlUtils {
         if (value == null || value.isBlank()) {
             return "";
         }
-        return value.startsWith("/") ? value : "/" + value;
+        String path = value.startsWith("/") ? value : "/" + value;
+        if (isDefaultImage(path) && !path.contains("?")) {
+            return path + "?v=" + DEFAULT_IMAGE_VERSION;
+        }
+        return path;
+    }
+
+    private static boolean isDefaultImage(String path) {
+        return switch (path) {
+            case "/images/default-activity.png",
+                 "/images/default-goods.png",
+                 "/images/default-lostfound.png",
+                 "/images/default-user.png",
+                 "/images/Admin.png" -> true;
+            default -> false;
+        };
     }
 }

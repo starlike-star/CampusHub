@@ -1,3 +1,4 @@
+// 处理活动发布、编辑、报名、取消报名、状态变更和删除等前端交互。
 document.addEventListener("DOMContentLoaded", function () {
     if (window.activityActionsInitialized) {
         return;

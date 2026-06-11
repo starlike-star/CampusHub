@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 定义首页数据访问能力及业务层依赖的数据契约。
+ */
 public interface HomeDao {
     List<HomeSidebarVO.NoticeItem> findLatestNotices() throws SQLException;
 

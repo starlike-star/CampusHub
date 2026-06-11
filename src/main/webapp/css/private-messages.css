@@ -1,3 +1,4 @@
+/* 定义私信页面或组件的布局、配色与响应式样式。 */
 .private-message-body {
     min-height: 100vh;
     background: #f4f7fb;
@@ -194,17 +195,39 @@
 
 .private-message-form {
     padding: 18px 22px 22px;
+    border-top: 1px solid #e8edf4;
+    background: #fff;
 }
 
 .private-message-form label {
     display: block;
     margin-bottom: 8px;
+    color: #48536a;
     font-weight: 700;
 }
 
 .private-message-form textarea {
     width: 100%;
-    resize: vertical;
+    min-height: 104px;
+    padding: 12px 14px;
+    color: var(--text);
+    border: 1px solid #dfe5ee;
+    border-radius: 10px;
+    outline: none;
+    resize: none;
+    background: #fff;
+    font: inherit;
+    line-height: 1.7;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.private-message-form textarea::placeholder {
+    color: #9aa4b5;
+}
+
+.private-message-form textarea:focus {
+    border-color: rgba(37, 99, 235, .55);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
 }
 
 .private-message-form > div {
@@ -216,12 +239,16 @@
 
 .private-message-form > div span {
     color: #8a94a6;
-    font-size: 10px;
+    font-size: 12px;
 }
 
 .private-message-error {
     margin: 10px 0 0;
+    padding: 10px 12px;
     color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 9px;
+    background: #fef2f2;
 }
 
 @media (max-width: 640px) {

@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * 拦截受保护请求，确保用户登录后才能继续访问。
+ */
 public class AuthFilter implements Filter {
     @Override
     public void doFilter(

@@ -4,6 +4,7 @@
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染私信列表页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     List<PrivateConversation> conversations =
@@ -19,7 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的私信 - CampusHub</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
-    <link rel="stylesheet" href="<%= contextPath %>/css/private-messages.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/private-messages.css?v=20260611-1">
 </head>
 <body class="private-message-body">
 <header class="simple-topbar">

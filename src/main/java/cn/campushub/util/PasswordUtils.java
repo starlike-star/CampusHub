@@ -2,6 +2,9 @@ package cn.campushub.util;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+/**
+ * 提供密码哈希生成与安全比对能力。
+ */
 public final class PasswordUtils {
     private static final int LOG_ROUNDS = 12;
 

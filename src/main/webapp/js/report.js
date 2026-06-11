@@ -1,3 +1,4 @@
+// 提供内容举报弹窗、原因校验和举报请求提交。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

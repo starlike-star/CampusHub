@@ -1,3 +1,4 @@
+/* 定义商品交易页面或组件的布局、配色与响应式样式。 */
 .trade-modal[hidden] {
     display: none;
 }

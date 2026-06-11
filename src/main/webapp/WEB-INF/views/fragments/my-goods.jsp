@@ -5,6 +5,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染我的商品页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String myGoodsContextPath = request.getContextPath();
     boolean loginRequired =
@@ -83,9 +84,11 @@
         %></textarea>
         <div class="goods-image">
             <img src="<%= myGoodsContextPath %><%=
-                    goods.getFirstImage().startsWith("/") ? "" : "/"
-            %><%= HtmlUtils.escape(goods.getFirstImage()) %>"
-                 onerror="this.onerror=null;this.src='<%= myGoodsContextPath %>/images/default-goods.png';"
+                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                            goods.getFirstImage()
+                    ))
+            %>"
+                 onerror="this.onerror=null;this.src='<%= myGoodsContextPath %>/images/default-goods.png?v=20260611';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>">
             <span class="goods-status <%= goods.getStatus() %>"><%=
                     statusText

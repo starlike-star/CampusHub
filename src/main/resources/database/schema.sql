@@ -1,3 +1,4 @@
+-- 定义 CampusHub 数据库的基础表结构、约束、索引与初始化数据。
 CREATE DATABASE IF NOT EXISTS campushub
     DEFAULT CHARACTER SET utf8mb4
     DEFAULT COLLATE utf8mb4_0900_ai_ci;

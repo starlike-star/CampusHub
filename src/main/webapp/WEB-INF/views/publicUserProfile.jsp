@@ -2,6 +2,7 @@
 <%@ page import="cn.campushub.model.PublicUserProfile" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%-- 渲染公开用户主页页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     PublicUserProfile publicUser =

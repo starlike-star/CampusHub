@@ -14,6 +14,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 为首页异步请求聚合动态列表与侧栏统计数据。
+ */
 public class HomeDataServlet extends HttpServlet {
     private final PostService postService = new PostService();
 

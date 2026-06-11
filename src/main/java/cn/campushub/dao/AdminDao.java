@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 定义后台管理数据访问能力及业务层依赖的数据契约。
+ */
 public interface AdminDao {
     Map<String, Long> dashboard() throws SQLException;
 

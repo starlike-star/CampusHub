@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现公开用户主页数据的查询与持久化操作。
+ */
 public class JdbcPublicUserProfileDao implements PublicUserProfileDao {
     @Override
     public Optional<PublicUserProfile> findActiveById(long userId)

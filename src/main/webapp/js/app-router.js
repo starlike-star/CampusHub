@@ -1,3 +1,4 @@
+// 实现基于 URL Hash 的页面路由、异步内容加载和主界面初始化。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";
@@ -148,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mainContent.querySelectorAll("textarea").forEach(function (textarea) {
                 window.resizeTextarea?.(textarea);
             });
+            window.CampusHubImageUpload?.sync(mainContent);
             initCampusMapPreview();
         } catch (error) {
             if (error.name === "AbortError") {

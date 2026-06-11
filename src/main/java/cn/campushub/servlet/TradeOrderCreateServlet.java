@@ -18,6 +18,9 @@ import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 接收交易订单的创建请求，调用业务层并生成 HTTP 响应。
+ */
 public class TradeOrderCreateServlet extends HttpServlet {
     private final TradeOrderService tradeOrderService = new TradeOrderService();
 
@@ -50,6 +53,7 @@ public class TradeOrderCreateServlet extends HttpServlet {
             }
             GoodsOrder order = result.order();
             String baseUrl = TradeUrlUtils.publicBaseUrl(request);
+            boolean localhost = TradeUrlUtils.isLocalhost(request);
             String payUrl = baseUrl + "/trade/mock-pay?token="
                     + order.getPayToken();
             Map<String, Object> body = new LinkedHashMap<>();
@@ -61,15 +65,18 @@ public class TradeOrderCreateServlet extends HttpServlet {
             body.put("payUrl", payUrl);
             body.put(
                     "qrcodeUrl",
-                    request.getContextPath() + "/trade/qrcode?orderNo="
-                            + order.getOrderNo()
+                    localhost
+                            ? ""
+                            : request.getContextPath()
+                                    + "/trade/qrcode?orderNo="
+                                    + order.getOrderNo()
             );
             body.put(
                     "expireAt",
                     order.getExpireAt().atZone(ZoneId.systemDefault())
                             .toInstant().toEpochMilli()
             );
-            body.put("localhostWarning", TradeUrlUtils.isLocalhost(request));
+            body.put("localhostWarning", localhost);
             JsonUtils.write(response, HttpServletResponse.SC_OK, body);
         } catch (SQLException exception) {
             log("创建模拟交易订单失败", exception);

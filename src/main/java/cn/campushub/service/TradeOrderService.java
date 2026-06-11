@@ -14,6 +14,9 @@ import java.util.HexFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 编排交易订单业务规则、参数校验与数据访问操作。
+ */
 public class TradeOrderService {
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final AtomicInteger SEQUENCE = new AtomicInteger();

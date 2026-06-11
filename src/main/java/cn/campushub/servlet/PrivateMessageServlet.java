@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 接收私信消息的请求处理请求，调用业务层并生成 HTTP 响应。
+ */
 public class PrivateMessageServlet extends HttpServlet {
     private final PrivateMessageService service = new PrivateMessageService();
 

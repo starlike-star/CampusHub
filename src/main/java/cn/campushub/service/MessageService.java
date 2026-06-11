@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * 编排站内通知业务规则、参数校验与数据访问操作。
+ */
 public class MessageService {
     private static final Set<String> FILTER_TYPES =
             Set.of("comment", "like", "favorite", "claim", "activity", "system");

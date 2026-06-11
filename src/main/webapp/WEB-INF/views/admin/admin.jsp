@@ -5,6 +5,7 @@
 <%@ page import="java.util.Collections" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
+<%-- 渲染后台管理页面，输出服务端数据与前端交互所需标记。 --%>
 <%!
     private String e(Object value) {
         return HtmlUtils.escape(value == null ? "" : String.valueOf(value));
@@ -20,6 +21,65 @@
 
     private long stat(Map<String, Long> stats, String key) {
         return stats == null ? 0L : stats.getOrDefault(key, 0L);
+    }
+
+    private String statusText(String section, Object value) {
+        String status = value == null ? "" : String.valueOf(value);
+        if ("posts".equals(section)) {
+            if ("0".equals(status)) {
+                return "已删除";
+            }
+            if ("2".equals(status)) {
+                return "审核中";
+            }
+            return "正常";
+        }
+        if ("goods".equals(section)) {
+            if ("reserved".equals(status)) {
+                return "已预订";
+            }
+            if ("sold".equals(status)) {
+                return "已售出";
+            }
+            if ("off_shelf".equals(status)) {
+                return "已下架";
+            }
+            return "在售";
+        }
+        if ("lostfound".equals(section)) {
+            if ("claiming".equals(status)) {
+                return "认领中";
+            }
+            if ("completed".equals(status)) {
+                return "已找回";
+            }
+            if ("closed".equals(status)) {
+                return "已关闭";
+            }
+            return "待认领";
+        }
+        if ("activities".equals(section)) {
+            if ("closed".equals(status)) {
+                return "已截止";
+            }
+            if ("ongoing".equals(status)) {
+                return "进行中";
+            }
+            if ("finished".equals(status)) {
+                return "已结束";
+            }
+            return "报名中";
+        }
+        if ("reports".equals(section)) {
+            if ("handled".equals(status)) {
+                return "已处理";
+            }
+            if ("rejected".equals(status)) {
+                return "已驳回";
+            }
+            return "待处理";
+        }
+        return status;
     }
 %>
 <%
@@ -108,7 +168,7 @@
                     <img src="<%= contextPath %><%= e(
                             HtmlUtils.resourcePath(adminAvatar)
                     ) %>"
-                         onerror="this.onerror=null;this.src='<%= contextPath %>/images/Admin.png';"
+                         onerror="this.onerror=null;this.src='<%= contextPath %>/images/Admin.png?v=20260611';"
                          alt="<%= e(admin.nickname()) %>">
                 </span>
                 <span><strong><%= e(admin.nickname()) %></strong><small>管理员</small></span>
@@ -249,7 +309,7 @@
                     <td><%= e(row.get("author_nickname")) %></td>
                     <td><%= e(row.get("category_name")) %><small><%= e(row.get("topic")) %></small></td>
                     <td class="metrics">赞 <%= e(row.get("like_count")) %> · 评 <%= e(row.get("comment_count")) %> · 藏 <%= e(row.get("favorite_count")) %> · 阅 <%= e(row.get("view_count")) %></td>
-                    <td><span class="badge"><%= e(row.get("status")) %></span></td>
+                    <td><span class="badge"><%= e(statusText(section, row.get("status"))) %></span></td>
                     <td><%= e(row.get("created_at")) %></td>
                     <td class="actions">
                         <% String postStatus = String.valueOf(row.get("status")); %>
@@ -307,7 +367,7 @@
                     <td><%= e(row.get("seller_nickname")) %></td>
                     <td><%= e(row.get("category_name")) %><small><%= e(row.get("condition_level")) %></small></td>
                     <td><%= e(row.get("trade_method")) %><small><%= e(row.get("trade_place")) %></small></td>
-                    <td><span class="badge"><%= e(row.get("status")) %></span></td>
+                    <td><span class="badge"><%= e(statusText(section, row.get("status"))) %></span></td>
                     <td class="actions">
                         <% String goodsStatus = String.valueOf(row.get("status")); %>
                         <form action="<%= contextPath %>/admin/goods/status" method="post">
@@ -341,7 +401,7 @@
                 <option value="">全部状态</option>
                 <option value="pending"<%= selected(filters, "status", "pending") %>>待认领</option>
                 <option value="claiming"<%= selected(filters, "status", "claiming") %>>认领中</option>
-                <option value="completed"<%= selected(filters, "status", "completed") %>>已完成</option>
+                <option value="completed"<%= selected(filters, "status", "completed") %>>已找回</option>
                 <option value="closed"<%= selected(filters, "status", "closed") %>>已关闭</option>
             </select>
             <button type="submit">筛选</button>
@@ -360,7 +420,7 @@
                         <details><summary>查看描述</summary><p><%= e(row.get("description")) %></p></details>
                     </td>
                     <td><%= e(row.get("place")) %></td><td><%= e(row.get("author_nickname")) %></td>
-                    <td><span class="badge"><%= e(row.get("status")) %></span></td><td><%= e(row.get("created_at")) %></td>
+                    <td><span class="badge"><%= e(statusText(section, row.get("status"))) %></span></td><td><%= e(row.get("created_at")) %></td>
                     <td class="actions">
                         <form action="<%= contextPath %>/admin/lostfound/status" method="post">
                             <input type="hidden" name="id" value="<%= e(row.get("id")) %>">
@@ -368,8 +428,8 @@
                             <select name="status">
                                 <option value="pending"<%= "pending".equals(lostStatus) ? " selected" : "" %>>待认领</option>
                                 <option value="claiming"<%= "claiming".equals(lostStatus) ? " selected" : "" %>>认领中</option>
-                                <option value="completed"<%= "completed".equals(lostStatus) ? " selected" : "" %>>已完成</option>
-                                <option value="closed"<%= "closed".equals(lostStatus) ? " selected" : "" %>>关闭</option>
+                                <option value="completed"<%= "completed".equals(lostStatus) ? " selected" : "" %>>已找回</option>
+                                <option value="closed"<%= "closed".equals(lostStatus) ? " selected" : "" %>>已关闭</option>
                             </select>
                             <button type="submit">更新</button>
                         </form>
@@ -410,7 +470,7 @@
                     <td><%= e(row.get("location")) %></td>
                     <td><%= e(row.get("start_time")) %><small>截止 <%= e(row.get("deadline")) %></small></td>
                     <td><%= e(row.get("current_members")) %> / <%= e(row.get("max_members")) %></td>
-                    <td><%= e(row.get("author_nickname")) %></td><td><span class="badge"><%= e(row.get("status")) %></span></td>
+                    <td><%= e(row.get("author_nickname")) %></td><td><span class="badge"><%= e(statusText(section, row.get("status"))) %></span></td>
                     <td class="actions">
                         <form action="<%= contextPath %>/admin/activities/status" method="post">
                             <input type="hidden" name="id" value="<%= e(row.get("id")) %>">
@@ -522,7 +582,7 @@
                     <td>#<%= e(row.get("id")) %></td><td><%= e(row.get("reporter_nickname")) %></td>
                     <td><span class="badge"><%= e(row.get("target_type")) %></span><small>#<%= e(row.get("target_id")) %></small></td>
                     <td class="reason"><%= e(row.get("reason")) %></td>
-                    <td><span class="badge"><%= e(row.get("status")) %></span></td>
+                    <td><span class="badge"><%= e(statusText(section, row.get("status"))) %></span></td>
                     <td><%= e(row.get("created_at")) %><small><%= e(row.get("handled_at")) %></small></td>
                     <td><%= e(row.get("handler_nickname")) %></td>
                     <td class="actions">
@@ -550,5 +610,20 @@
         <% } %>
     </main>
 </div>
+<script>
+    document.addEventListener("submit", function (event) {
+        const form = event.target;
+        if (!(form instanceof HTMLFormElement)
+                || form.method.toLowerCase() !== "post"
+                || form.dataset.submitting === "true") {
+            return;
+        }
+        form.dataset.submitting = "true";
+        form.querySelectorAll('button[type="submit"], input[type="submit"]')
+            .forEach(function (button) {
+                button.disabled = true;
+            });
+    });
+</script>
 </body>
 </html>

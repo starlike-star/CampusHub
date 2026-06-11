@@ -11,6 +11,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Set" %>
+<%-- 渲染二手市场页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String marketContextPath = request.getContextPath();
     SessionUser marketUser =
@@ -234,9 +235,11 @@
         <a class="goods-image"
            href="<%= marketContextPath %>/goods/detail?id=<%= goods.getId() %>">
             <img src="<%= marketContextPath %><%=
-                    goods.getFirstImage().startsWith("/") ? "" : "/"
-            %><%= HtmlUtils.escape(goods.getFirstImage()) %>"
-                 onerror="this.onerror=null;this.src='<%= marketContextPath %>/images/default-goods.png';"
+                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                            goods.getFirstImage()
+                    ))
+            %>"
+                 onerror="this.onerror=null;this.src='<%= marketContextPath %>/images/default-goods.png?v=20260611';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>"
                  loading="lazy">
             <span class="goods-status <%= goods.getStatus() %>"><%=

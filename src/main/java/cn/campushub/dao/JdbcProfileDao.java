@@ -22,6 +22,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现个人主页数据的查询与持久化操作。
+ */
 public class JdbcProfileDao implements ProfileDao {
     private static final String OVERVIEW_SQL = """
             SELECT u.id, u.username, u.password, u.nickname, u.avatar,

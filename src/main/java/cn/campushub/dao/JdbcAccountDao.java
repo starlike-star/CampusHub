@@ -11,6 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 使用 JDBC 实现账号数据的查询与持久化操作。
+ */
 public class JdbcAccountDao implements AccountDao {
     @Override
     public AccountCancelResult cancelAccount(

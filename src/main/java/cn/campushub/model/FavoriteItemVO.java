@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+/**
+ * 聚合FavoriteItem页面展示所需的数据。
+ */
 public record FavoriteItemVO(
         long favoriteId,
         String targetType,

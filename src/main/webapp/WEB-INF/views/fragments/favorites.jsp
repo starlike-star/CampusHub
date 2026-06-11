@@ -3,6 +3,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染我的收藏页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String favoritesContextPath = request.getContextPath();
     boolean loginRequired =
@@ -49,10 +50,12 @@
            href="<%= favoritesContextPath %>/goods/detail?id=<%=
                     goods.getId()
            %>">
-            <img src="<%= favoritesContextPath %>/<%=
-                    HtmlUtils.escape(goods.getFirstImage())
+            <img src="<%= favoritesContextPath %><%=
+                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                            goods.getFirstImage()
+                    ))
             %>"
-                 onerror="this.onerror=null;this.src='<%= favoritesContextPath %>/images/default-goods.png';"
+                 onerror="this.onerror=null;this.src='<%= favoritesContextPath %>/images/default-goods.png?v=20260611';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>">
             <span class="goods-status <%= goods.getStatus() %>"><%=
                     statusText

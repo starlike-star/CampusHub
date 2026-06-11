@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 编排后台管理业务规则、参数校验与数据访问操作。
+ */
 public class AdminService {
     private static final Logger LOGGER = Logger.getLogger(AdminService.class.getName());
     private static final Set<String> ROLES = Set.of("student", "admin");

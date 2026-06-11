@@ -2,6 +2,9 @@ package cn.campushub.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * 表示系统中的站内通知领域数据，并提供对应属性访问。
+ */
 public class Message {
     private Long id;
     private Long userId;

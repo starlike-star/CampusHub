@@ -1,3 +1,4 @@
+// 处理站内通知的已读、全部已读和未读数量刷新。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

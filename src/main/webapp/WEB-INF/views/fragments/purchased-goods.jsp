@@ -4,6 +4,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染已购商品页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String purchasedContextPath = request.getContextPath();
     List<PurchasedGoodsVO> purchasedGoods =
@@ -33,11 +34,13 @@
                         goods.goodsId()
                %>">
                 <img src="<%= purchasedContextPath %><%=
-                        goods.firstImage().startsWith("/") ? "" : "/"
-                %><%= HtmlUtils.escape(goods.firstImage()) %>"
+                        HtmlUtils.escape(HtmlUtils.resourcePath(
+                                goods.firstImage()
+                        ))
+                %>"
                      onerror="this.onerror=null;this.src='<%=
                             purchasedContextPath
-                     %>/images/default-goods.png';"
+                     %>/images/default-goods.png?v=20260611';"
                      alt="<%= HtmlUtils.escape(goods.title()) %>">
                 <span class="goods-status sold">已买到</span>
                 <% if (goods.categoryName() != null) { %>

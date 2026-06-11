@@ -19,6 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 验证 首页相关逻辑的正常路径、边界条件和失败场景。
+ */
 class HomeServiceTest {
     private static final Clock CLOCK = Clock.fixed(
             Instant.parse("2026-06-09T08:00:00Z"),

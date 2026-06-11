@@ -8,6 +8,9 @@ import cn.campushub.util.ValidationUtils;
 
 import java.sql.SQLException;
 
+/**
+ * 编排账号业务规则、参数校验与数据访问操作。
+ */
 public class AccountService {
     private static final int MAX_REASON_LENGTH = 255;
     private static final int MAX_IP_LENGTH = 64;

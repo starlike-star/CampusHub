@@ -6,6 +6,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染失物招领页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String lfContextPath = request.getContextPath();
     SessionUser lfUser =
@@ -117,9 +118,11 @@
             <a class="lostfound-image"
                href="<%= lfContextPath %>/lostfound/detail?id=<%= item.getId() %>">
                 <img src="<%= lfContextPath %><%=
-                        item.getFirstImage().startsWith("/") ? "" : "/"
-                %><%= HtmlUtils.escape(item.getFirstImage()) %>"
-                     onerror="this.onerror=null;this.src='<%= lfContextPath %>/images/default-lostfound.png';"
+                        HtmlUtils.escape(HtmlUtils.resourcePath(
+                                item.getFirstImage()
+                        ))
+                %>"
+                     onerror="this.onerror=null;this.src='<%= lfContextPath %>/images/default-lostfound.png?v=20260611';"
                      alt="<%= HtmlUtils.escape(item.getTitle()) %>">
                 <span class="lostfound-type-badge <%= item.getType() %>"><%=
                         "lost".equals(item.getType()) ? "失物" : "招领"

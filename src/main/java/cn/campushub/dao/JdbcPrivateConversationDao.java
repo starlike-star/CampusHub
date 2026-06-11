@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现私信会话数据的查询与持久化操作。
+ */
 public class JdbcPrivateConversationDao implements PrivateConversationDao {
     private static final String SELECT_CONVERSATION = """
             SELECT c.id, c.user_a_id, c.user_b_id, c.last_message,

@@ -14,6 +14,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.SecureRandom;
 
+/**
+ * 生成图形验证码并将校验值保存到当前会话。
+ */
 public class CaptchaServlet extends HttpServlet {
     private static final String CHARACTERS = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
     private static final int CODE_LENGTH = 5;

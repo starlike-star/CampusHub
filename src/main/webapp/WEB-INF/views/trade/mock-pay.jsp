@@ -3,6 +3,7 @@
 <%@ page import="cn.campushub.model.TradeOrderResult" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.text.DecimalFormat" %>
+<%-- 渲染模拟支付页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     GoodsOrder order = (GoodsOrder) request.getAttribute("order");
     TradeOrderResult payResult =

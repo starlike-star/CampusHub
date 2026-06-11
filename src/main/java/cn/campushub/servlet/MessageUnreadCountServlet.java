@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收站内通知的未读数量查询请求，调用业务层并生成 HTTP 响应。
+ */
 public class MessageUnreadCountServlet extends HttpServlet {
     private final MessageService messageService = new MessageService();
     private final PrivateMessageService privateMessageService =

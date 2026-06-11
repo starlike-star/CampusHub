@@ -9,6 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+/**
+ * 验证 后台管理相关逻辑的正常路径、边界条件和失败场景。
+ */
 class AdminServiceTest {
     @Test
     void administratorCannotDisableOwnAccount() throws Exception {

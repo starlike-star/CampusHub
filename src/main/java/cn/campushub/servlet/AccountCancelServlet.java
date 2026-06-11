@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收账号的请求处理请求，调用业务层并生成 HTTP 响应。
+ */
 public class AccountCancelServlet extends HttpServlet {
     private final AccountService accountService = new AccountService();
     private final RememberMeService rememberMeService = new RememberMeService();

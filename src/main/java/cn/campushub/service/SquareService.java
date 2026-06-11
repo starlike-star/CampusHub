@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 编排校园广场业务规则、参数校验与数据访问操作。
+ */
 public class SquareService {
     private static final Set<String> POST_TABS =
             Set.of("latest", "hot", "study", "life", "trade");

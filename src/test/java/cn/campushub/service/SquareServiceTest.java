@@ -10,6 +10,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * 验证 校园广场相关逻辑的正常路径、边界条件和失败场景。
+ */
 class SquareServiceTest {
     @Test
     void invalidTabFallsBackToLatest() throws Exception {

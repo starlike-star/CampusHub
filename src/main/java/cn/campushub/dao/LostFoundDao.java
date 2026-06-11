@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 定义失物招领数据访问能力及业务层依赖的数据契约。
+ */
 public interface LostFoundDao {
     List<LostFound> findAll(
             String type,

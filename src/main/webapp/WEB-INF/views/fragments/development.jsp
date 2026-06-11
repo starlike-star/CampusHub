@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
+<%-- 渲染功能开发提示页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String moduleName = (String) request.getAttribute("moduleName");
 %>

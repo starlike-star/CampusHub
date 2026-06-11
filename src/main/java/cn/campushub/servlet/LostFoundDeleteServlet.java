@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * 接收失物招领的删除请求，调用业务层并生成 HTTP 响应。
+ */
 public class LostFoundDeleteServlet extends LostFoundStatusServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

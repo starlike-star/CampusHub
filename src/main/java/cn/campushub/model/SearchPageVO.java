@@ -3,6 +3,9 @@ package cn.campushub.model;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 聚合全站搜索页面展示所需的数据。
+ */
 public record SearchPageVO(
         String keyword,
         String type,

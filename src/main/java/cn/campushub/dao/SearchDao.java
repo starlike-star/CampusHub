@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 定义全站搜索数据访问能力及业务层依赖的数据契约。
+ */
 public interface SearchDao {
     Map<String, Integer> countMatches(String keyword) throws SQLException;
 

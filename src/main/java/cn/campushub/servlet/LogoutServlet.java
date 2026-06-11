@@ -9,6 +9,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 清理登录会话与持久登录令牌并完成退出跳转。
+ */
 public class LogoutServlet extends HttpServlet {
     private final RememberMeService rememberMeService = new RememberMeService();
 

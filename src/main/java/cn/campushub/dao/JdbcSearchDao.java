@@ -16,6 +16,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 使用 JDBC 实现全站搜索数据的查询与持久化操作。
+ */
 public class JdbcSearchDao implements SearchDao {
     private static final DateTimeFormatter EXTRA_TIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -344,6 +347,7 @@ public class JdbcSearchDao implements SearchDao {
         return switch (value == null ? "" : value) {
             case "reserved" -> "已预订";
             case "sold" -> "已售出";
+            case "off_shelf" -> "已下架";
             default -> "在售";
         };
     }
@@ -352,6 +356,7 @@ public class JdbcSearchDao implements SearchDao {
         return switch (value == null ? "" : value) {
             case "claiming" -> "认领中";
             case "completed" -> "已找回";
+            case "closed" -> "已关闭";
             default -> "待认领";
         };
     }
@@ -360,6 +365,7 @@ public class JdbcSearchDao implements SearchDao {
         return switch (value == null ? "" : value) {
             case "closed" -> "已截止";
             case "ongoing" -> "进行中";
+            case "finished" -> "已结束";
             default -> "报名中";
         };
     }

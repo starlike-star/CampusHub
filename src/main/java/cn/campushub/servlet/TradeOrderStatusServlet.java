@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 接收交易订单的状态变更请求，调用业务层并生成 HTTP 响应。
+ */
 public class TradeOrderStatusServlet extends HttpServlet {
     private final TradeOrderService tradeOrderService = new TradeOrderService();
 

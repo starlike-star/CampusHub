@@ -1,3 +1,4 @@
+// 处理二手市场筛选、商品发布编辑、收藏和状态操作。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

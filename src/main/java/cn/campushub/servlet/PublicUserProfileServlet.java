@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * 接收公开用户主页的请求处理请求，调用业务层并生成 HTTP 响应。
+ */
 public class PublicUserProfileServlet extends HttpServlet {
     private final PublicUserProfileService service =
             new PublicUserProfileService();

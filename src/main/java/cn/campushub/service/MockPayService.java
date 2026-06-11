@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * 编排MockPay业务规则、参数校验与数据访问操作。
+ */
 public class MockPayService {
     private static final Logger LOGGER =
             Logger.getLogger(MockPayService.class.getName());

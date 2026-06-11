@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现认领申请数据的查询与持久化操作。
+ */
 public class JdbcClaimRequestDao implements ClaimRequestDao {
     @Override
     public ClaimCreateResult create(

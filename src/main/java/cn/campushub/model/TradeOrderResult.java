@@ -1,5 +1,8 @@
 package cn.campushub.model;
 
+/**
+ * 封装交易订单操作的处理结果与返回数据。
+ */
 public record TradeOrderResult(
         boolean success,
         String message,

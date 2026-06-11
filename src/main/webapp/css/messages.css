@@ -1,3 +1,4 @@
+/* 定义站内通知页面或组件的布局、配色与响应式样式。 */
 .messages-page {
     display: flex;
     flex-direction: column;

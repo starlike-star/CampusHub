@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现活动数据的查询与持久化操作。
+ */
 public class JdbcActivityDao implements ActivityDao {
     private static final String SELECT_FIELDS = """
             SELECT a.id, a.title, a.content, a.cover_image, a.location,

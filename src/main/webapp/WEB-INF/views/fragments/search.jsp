@@ -4,6 +4,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染全站搜索页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String searchContextPath = request.getContextPath();
     SearchPageVO searchPage =
@@ -104,6 +105,20 @@
             boolean noticeResult = "notice".equals(result.type());
             String targetUrl = searchContextPath + result.targetUrl();
             String imageUrl = null;
+            String defaultImage = null;
+            if ("goods".equals(result.type())) {
+                defaultImage =
+                        searchContextPath
+                                + "/images/default-goods.png?v=20260611";
+            } else if ("lost_found".equals(result.type())) {
+                defaultImage =
+                        searchContextPath
+                                + "/images/default-lostfound.png?v=20260611";
+            } else if ("activity".equals(result.type())) {
+                defaultImage =
+                        searchContextPath
+                                + "/images/default-activity.png?v=20260611";
+            }
             if (result.image() != null && !result.image().isBlank()) {
                 imageUrl = result.image().startsWith("http://")
                         || result.image().startsWith("https://")
@@ -111,6 +126,8 @@
                         : searchContextPath
                                 + (result.image().startsWith("/") ? "" : "/")
                                 + result.image();
+            } else {
+                imageUrl = defaultImage;
             }
         %>
         <article class="search-result-card card">
@@ -119,7 +136,12 @@
                href="<%= HtmlUtils.escape(targetUrl) %>">
                 <img src="<%= HtmlUtils.escape(imageUrl) %>"
                      alt=""
-                     loading="lazy">
+                     loading="lazy"
+                     <% if (defaultImage != null) { %>
+                     onerror="this.onerror=null;this.src='<%=
+                             HtmlUtils.escape(defaultImage)
+                     %>';"
+                     <% } %>>
             </a>
             <% } %>
             <div class="search-result-main">

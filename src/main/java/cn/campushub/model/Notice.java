@@ -2,6 +2,9 @@ package cn.campushub.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * 表示系统中的公告领域数据，并提供对应属性访问。
+ */
 public class Notice {
     private Long id;
     private String title;

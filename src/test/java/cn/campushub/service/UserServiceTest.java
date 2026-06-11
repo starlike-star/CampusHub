@@ -16,6 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 验证 用户相关逻辑的正常路径、边界条件和失败场景。
+ */
 class UserServiceTest {
     @Test
     void registerNormalizesCredentialsAndHashesPassword() throws SQLException {

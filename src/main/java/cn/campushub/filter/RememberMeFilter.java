@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 在会话缺少登录用户时尝试通过持久令牌恢复登录状态。
+ */
 public class RememberMeFilter implements Filter {
     private final RememberMeService rememberMeService = new RememberMeService();
     private final AccountService accountService = new AccountService();

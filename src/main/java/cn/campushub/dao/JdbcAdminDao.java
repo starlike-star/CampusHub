@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现后台管理数据的查询与持久化操作。
+ */
 public class JdbcAdminDao implements AdminDao {
     @Override
     public Map<String, Long> dashboard() throws SQLException {

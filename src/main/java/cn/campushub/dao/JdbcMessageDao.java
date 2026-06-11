@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现站内通知数据的查询与持久化操作。
+ */
 public class JdbcMessageDao implements MessageDao {
     @Override
     public void create(Message message) throws SQLException {

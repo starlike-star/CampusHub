@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 定义帖子数据访问能力及业务层依赖的数据契约。
+ */
 public interface PostDao {
     List<Post> findActivePosts(Long currentUserId) throws SQLException;
 

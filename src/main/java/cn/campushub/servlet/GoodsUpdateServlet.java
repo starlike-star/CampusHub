@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收商品的更新请求，调用业务层并生成 HTTP 响应。
+ */
 public class GoodsUpdateServlet extends HttpServlet {
     private final GoodsService goodsService = new GoodsService();
 

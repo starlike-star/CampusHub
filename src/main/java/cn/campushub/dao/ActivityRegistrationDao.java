@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 定义活动报名数据访问能力及业务层依赖的数据契约。
+ */
 public interface ActivityRegistrationDao {
     Set<Long> findRegisteredActivityIds(long userId) throws SQLException;
 

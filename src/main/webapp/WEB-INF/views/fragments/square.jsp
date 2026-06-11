@@ -3,6 +3,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染校园广场页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String squareContextPath = request.getContextPath();
     String activeTab = (String) request.getAttribute("activeTab");

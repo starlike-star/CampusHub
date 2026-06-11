@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 接收Checkin的请求处理请求，调用业务层并生成 HTTP 响应。
+ */
 public class CheckinServlet extends HttpServlet {
     private final HomeService homeService = new HomeService();
 

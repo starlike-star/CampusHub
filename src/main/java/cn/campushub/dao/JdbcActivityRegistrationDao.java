@@ -16,6 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 使用 JDBC 实现活动报名数据的查询与持久化操作。
+ */
 public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
     @Override
     public Set<Long> findRegisteredActivityIds(long userId) throws SQLException {

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 表示系统中的帖子领域数据，并提供对应属性访问。
+ */
 public class Post {
     private Long id;
     private Long userId;

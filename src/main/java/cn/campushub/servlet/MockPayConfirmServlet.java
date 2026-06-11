@@ -10,6 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 接收MockPay的确认请求，调用业务层并生成 HTTP 响应。
+ */
 public class MockPayConfirmServlet extends HttpServlet {
     private final MockPayService mockPayService = new MockPayService();
 

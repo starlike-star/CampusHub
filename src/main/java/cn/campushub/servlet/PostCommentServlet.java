@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * 接收帖子的请求处理请求，调用业务层并生成 HTTP 响应。
+ */
 public class PostCommentServlet extends HttpServlet {
     private final PostService postService = new PostService();
     private final MessageService messageService = new MessageService();

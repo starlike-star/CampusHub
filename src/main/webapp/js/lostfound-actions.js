@@ -1,3 +1,4 @@
+// 处理失物招领信息的发布、编辑、认领、状态变更和删除交互。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

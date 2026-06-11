@@ -1,3 +1,4 @@
+// 封装图片选择、上传、预览、数量限制与失败提示交互。
 (function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

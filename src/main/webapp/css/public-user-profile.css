@@ -1,3 +1,4 @@
+/* 定义公开用户主页页面或组件的布局、配色与响应式样式。 */
 .public-user-body {
     min-height: 100vh;
     background: #f4f7fb;

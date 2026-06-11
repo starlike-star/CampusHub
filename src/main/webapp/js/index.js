@@ -1,3 +1,4 @@
+// 初始化首页通用交互、导航状态和全局组件行为。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

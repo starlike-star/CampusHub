@@ -5,6 +5,9 @@ import cn.campushub.model.SessionUser;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * 统一读取和维护当前会话中的登录用户信息。
+ */
 public final class SessionUtils {
     private SessionUtils() {
     }

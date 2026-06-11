@@ -7,6 +7,7 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染商品详情页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     Goods goods = (Goods) request.getAttribute("goods");
@@ -82,10 +83,10 @@
                 String mainImage = detailImages.get(0);
             %>
             <img class="goods-main-image"
-                 src="<%= contextPath %><%= mainImage.startsWith("/") ? "" : "/" %><%=
-                        HtmlUtils.escape(mainImage)
+                 src="<%= contextPath %><%=
+                        HtmlUtils.escape(HtmlUtils.resourcePath(mainImage))
                  %>"
-                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-goods.png';"
+                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-goods.png?v=20260611';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>">
             <% if (detailImages.size() > 1) { %>
             <div class="goods-thumbnails">
@@ -397,8 +398,9 @@
         <p class="trade-status" data-trade-status>等待扫码支付</p>
         <p class="trade-countdown" data-trade-countdown></p>
         <p class="trade-network-warning" data-trade-warning hidden>
-            当前项目通过 localhost 访问，手机无法直接扫码连接。请改用电脑局域网 IP
-            访问项目后重新下单，例如本机 WLAN 地址 10.74.48.223。
+            当前支付地址是 localhost，系统不会生成手机二维码。请让手机和电脑连接
+            同一局域网，改用电脑的局域网 IP 访问项目后重新下单，或配置
+            CAMPUSHUB_PUBLIC_BASE_URL / campushub.publicBaseUrl。
         </p>
         <button type="button"
                 class="trade-complete"

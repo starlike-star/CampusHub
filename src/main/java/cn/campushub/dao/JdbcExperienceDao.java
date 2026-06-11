@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现经验值数据的查询与持久化操作。
+ */
 public class JdbcExperienceDao implements ExperienceDao {
     private static final int CHECKIN_EXPERIENCE = 5;
     private static final String CHECKIN_SOURCE = "checkin";

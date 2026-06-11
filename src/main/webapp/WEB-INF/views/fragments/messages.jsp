@@ -3,6 +3,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染站内通知页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String messagesContextPath = request.getContextPath();
     boolean messagesLoginRequired =

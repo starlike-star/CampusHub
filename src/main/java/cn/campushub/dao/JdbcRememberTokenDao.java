@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现记住登录令牌数据的查询与持久化操作。
+ */
 public class JdbcRememberTokenDao implements RememberTokenDao {
     @Override
     public void createToken(

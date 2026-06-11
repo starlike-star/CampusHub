@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * 为站内通知接口提供统一的 JSON 响应和参数处理辅助能力。
+ */
 final class MessageJsonSupport {
     private MessageJsonSupport() {
     }

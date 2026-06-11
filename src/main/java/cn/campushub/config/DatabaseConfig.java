@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * 集中读取并校验数据库连接配置，为 JDBC 访问提供统一配置来源。
+ */
 public final class DatabaseConfig {
     private static final Properties PROPERTIES = new Properties();
 

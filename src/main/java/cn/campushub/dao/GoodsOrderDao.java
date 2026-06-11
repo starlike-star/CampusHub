@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 定义商品订单数据访问能力及业务层依赖的数据契约。
+ */
 public interface GoodsOrderDao {
     TradeOrderResult createPending(
             long goodsId,

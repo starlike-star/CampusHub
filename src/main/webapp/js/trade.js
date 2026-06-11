@@ -1,3 +1,4 @@
+// 处理商品交易下单、模拟支付、二维码展示和订单状态轮询。
 (function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";
@@ -114,10 +115,20 @@
         field("title").textContent = order.title;
         field("order-no").textContent = order.orderNo;
         field("amount").textContent = "¥" + Number(order.amount).toFixed(2);
-        field("qrcode").src = order.qrcodeUrl + "&t=" + Date.now();
+        const qrcode = field("qrcode");
+        qrcode.hidden = !order.qrcodeUrl;
+        qrcode.removeAttribute("src");
+        if (order.qrcodeUrl) {
+            qrcode.src = order.qrcodeUrl + "&t=" + Date.now();
+        }
         field("warning").hidden = !order.localhostWarning;
         field("complete").hidden = true;
-        setStatus("等待扫码支付");
+        setStatus(
+            order.localhostWarning
+                ? "请使用局域网地址重新访问后生成二维码"
+                : "等待扫码支付",
+            order.localhostWarning ? "error" : ""
+        );
         modal.hidden = false;
         document.body.classList.add("modal-open");
         startCountdown(Number(order.expireAt));

@@ -2,6 +2,9 @@ package cn.campushub.util;
 
 import cn.campushub.model.ExperienceInfo;
 
+/**
+ * 根据经验值计算用户等级、进度和升级阈值。
+ */
 public final class LevelUtils {
     private static final int FIRST_LEVEL_REQUIRED_EXP = 100;
 

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * 拦截后台请求并校验当前用户是否具有管理员权限。
+ */
 public class AdminAuthFilter implements Filter {
     @Override
     public void doFilter(

@@ -19,6 +19,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * 校验并保存用户上传的图片，返回可访问的图片地址。
+ */
 public class ImageUploadServlet extends HttpServlet {
     private static final long MAX_FILE_SIZE = 5L * 1024 * 1024;
     private static final Set<String> ALLOWED_TYPES = Set.of(

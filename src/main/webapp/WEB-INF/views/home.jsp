@@ -7,6 +7,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染应用首页页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     SessionUser loginUser =
@@ -29,7 +30,7 @@
     <meta name="context-path" content="<%= contextPath %>">
     <title>CampusHub - 校园综合社区</title>
     <link rel="stylesheet"
-          href="<%= contextPath %>/css/index.css?v=20260611-campus-map">
+          href="<%= contextPath %>/css/index.css?v=20260611-post-actions">
     <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/messages.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
@@ -349,11 +350,11 @@
                        class="home-activity-item">
                         <span class="home-activity-thumb">
                             <img src="<%= contextPath %><%=
-                                    homeActivityCover.startsWith("/")
-                                            ? HtmlUtils.escape(homeActivityCover)
-                                            : "/" + HtmlUtils.escape(homeActivityCover)
+                                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                                            homeActivityCover
+                                    ))
                             %>"
-                                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-activity.png';"
+                                 onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-activity.png?v=20260611';"
                                  alt="">
                             <b><%= String.format("%02d", activityNumber) %></b>
                         </span>

@@ -2,6 +2,7 @@
 <%@ page import="cn.campushub.model.Notice" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%-- 渲染公告详情页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     Notice notice = (Notice) request.getAttribute("notice");

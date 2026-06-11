@@ -1,3 +1,4 @@
+/* 定义失物招领页面或组件的布局、配色与响应式样式。 */
 .lostfound-page { display: grid; gap: 18px; }
 .lostfound-header { display: flex; align-items: center; justify-content: space-between; padding: 26px; }
 .lostfound-header span, .lostfound-modal-heading span { color: #2563eb; font-size: 12px; font-weight: 800; letter-spacing: .12em; }

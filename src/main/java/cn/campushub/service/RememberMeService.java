@@ -20,6 +20,9 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Optional;
 
+/**
+ * 编排RememberMe业务规则、参数校验与数据访问操作。
+ */
 public class RememberMeService {
     public static final String COOKIE_NAME = "CAMPUSHUB_REMEMBER_ME";
     private static final int MAX_AGE_SECONDS = 7 * 24 * 60 * 60;

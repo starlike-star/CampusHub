@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 编排全站搜索业务规则、参数校验与数据访问操作。
+ */
 public class SearchService {
     private static final List<String> RESULT_TYPES =
             List.of("post", "goods", "lost_found", "activity", "notice");

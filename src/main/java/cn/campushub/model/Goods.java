@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 表示系统中的商品领域数据，并提供对应属性访问。
+ */
 public class Goods {
     private Long id;
     private Long userId;

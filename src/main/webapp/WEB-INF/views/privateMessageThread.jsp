@@ -4,6 +4,7 @@
 <%@ page import="cn.campushub.util.HtmlUtils" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="java.util.List" %>
+<%-- 渲染私信会话页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     PrivateConversation conversation =
@@ -21,7 +22,7 @@
     <meta name="context-path" content="<%= contextPath %>">
     <title>与 <%= HtmlUtils.escape(conversation.otherNickname()) %> 的私信 - CampusHub</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
-    <link rel="stylesheet" href="<%= contextPath %>/css/private-messages.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/private-messages.css?v=20260611-1">
 </head>
 <body class="private-message-body">
 <header class="simple-topbar">

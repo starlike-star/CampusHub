@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * 编排活动业务规则、参数校验与数据访问操作。
+ */
 public class ActivityService {
     private static final Set<String> STATUSES =
             Set.of("signup", "closed", "ongoing", "finished");

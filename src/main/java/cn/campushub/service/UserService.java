@@ -12,6 +12,9 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * 编排用户业务规则、参数校验与数据访问操作。
+ */
 public class UserService {
     private static final String DEFAULT_AVATAR = "images/default-user.png";
 

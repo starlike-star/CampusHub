@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现用户数据的查询与持久化操作。
+ */
 public class JdbcUserDao implements UserDao {
     private static final String USER_COLUMNS = """
             id, username, password, nickname, avatar, student_no,

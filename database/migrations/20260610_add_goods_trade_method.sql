@@ -1,3 +1,4 @@
+-- 为商品交易方式功能补充数据库字段及相关数据迁移。
 ALTER TABLE goods
 ADD COLUMN trade_method ENUM('offline', 'online', 'both')
 DEFAULT 'offline'

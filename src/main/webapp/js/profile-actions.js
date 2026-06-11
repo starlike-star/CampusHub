@@ -1,3 +1,4 @@
+// 处理个人资料编辑、头像上传、签到及个人内容操作。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

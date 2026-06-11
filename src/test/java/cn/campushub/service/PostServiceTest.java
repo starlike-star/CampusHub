@@ -17,6 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 验证 帖子相关逻辑的正常路径、边界条件和失败场景。
+ */
 class PostServiceTest {
     @Test
     void publishUsesSessionUserAndStoresImages() throws SQLException {

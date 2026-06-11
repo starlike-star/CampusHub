@@ -15,6 +15,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 处理登录页面展示、凭据校验、会话建立与记住登录选项。
+ */
 public class LoginServlet extends HttpServlet {
     private final UserService userService = new UserService();
     private final RememberMeService rememberMeService = new RememberMeService();

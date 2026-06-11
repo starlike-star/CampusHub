@@ -1,3 +1,4 @@
+// 处理注册表单校验、验证码刷新和密码可见性切换。
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("registerForm");
     const username = document.getElementById("username");

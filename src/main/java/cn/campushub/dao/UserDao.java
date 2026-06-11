@@ -5,6 +5,9 @@ import cn.campushub.model.User;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * 定义用户数据访问能力及业务层依赖的数据契约。
+ */
 public interface UserDao {
     Optional<User> findById(long id) throws SQLException;
 

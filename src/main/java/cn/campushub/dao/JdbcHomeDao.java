@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现首页数据的查询与持久化操作。
+ */
 public class JdbcHomeDao implements HomeDao {
     private static final int MYSQL_DUPLICATE_KEY = 1062;
     private static final String CHECKIN_EXPERIENCE_SOURCE = "checkin";

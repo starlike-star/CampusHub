@@ -1,3 +1,4 @@
+// 处理帖子详情页的评论、点赞、收藏、编辑与删除交互。
 document.addEventListener("DOMContentLoaded", function () {
     const contextPath =
         document.querySelector('meta[name="context-path"]')?.content || "";

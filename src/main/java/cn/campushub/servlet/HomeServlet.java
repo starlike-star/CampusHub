@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * 渲染应用主页面并准备当前登录用户等基础数据。
+ */
 public class HomeServlet extends HttpServlet {
     private final PostService postService = new PostService();
     private final HomeService homeService = new HomeService();

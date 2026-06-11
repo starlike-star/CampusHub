@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * 验证 活动相关逻辑的正常路径、边界条件和失败场景。
+ */
 class ActivityServiceTest {
     @Test
     void listNormalizesFilters() throws SQLException {

@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * 使用 JDBC 实现公告数据的查询与持久化操作。
+ */
 public class JdbcNoticeDao implements NoticeDao {
     @Override
     public Optional<Notice> findVisibleNoticeById(long id) throws SQLException {

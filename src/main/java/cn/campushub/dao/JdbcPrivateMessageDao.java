@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 使用 JDBC 实现私信消息数据的查询与持久化操作。
+ */
 public class JdbcPrivateMessageDao implements PrivateMessageDao {
     @Override
     public long create(

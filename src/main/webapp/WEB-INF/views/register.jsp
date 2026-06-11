@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="cn.campushub.util.HtmlUtils" %>
+<%-- 渲染用户注册页面，输出服务端数据与前端交互所需标记。 --%>
 <%
     String contextPath = request.getContextPath();
     String errorMessage = (String) request.getAttribute("errorMessage");

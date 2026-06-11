@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
+/**
+ * 接收商品的详情查询请求，调用业务层并生成 HTTP 响应。
+ */
 public class GoodsDetailServlet extends HttpServlet {
     private final GoodsService goodsService = new GoodsService();
 

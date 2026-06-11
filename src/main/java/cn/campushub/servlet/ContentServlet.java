@@ -22,6 +22,9 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 根据前端路由参数分发并渲染各业务页面片段。
+ */
 public class ContentServlet extends HttpServlet {
     private static final Set<String> DEVELOPMENT_PAGES =
             Set.of("activity");

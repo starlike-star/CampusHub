@@ -3,6 +3,9 @@ package cn.campushub.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * 聚合首页页面展示所需的数据。
+ */
 public record HomeSidebarVO(
         CheckinStatus checkin,
         ExperienceInfo experience,

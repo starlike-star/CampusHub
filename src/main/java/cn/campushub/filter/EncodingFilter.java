@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * 统一请求与响应字符编码，避免中文参数和页面内容乱码。
+ */
 public class EncodingFilter implements Filter {
     @Override
     public void doFilter(

@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * 编排认领申请业务规则、参数校验与数据访问操作。
+ */
 public class ClaimRequestService {
     private static final Set<String> ACTIONS = Set.of("approve", "reject");
     private final ClaimRequestDao claimRequestDao;

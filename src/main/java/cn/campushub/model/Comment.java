@@ -2,6 +2,9 @@ package cn.campushub.model;
 
 import java.time.LocalDateTime;
 
+/**
+ * 表示系统中的评论领域数据，并提供对应属性访问。
+ */
 public class Comment {
     private Long id;
     private Long postId;

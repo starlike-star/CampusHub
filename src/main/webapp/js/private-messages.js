@@ -1,3 +1,4 @@
+// 处理私信会话列表、消息发送、轮询刷新与滚动定位。
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("[data-private-message-form]");
     if (!form) {

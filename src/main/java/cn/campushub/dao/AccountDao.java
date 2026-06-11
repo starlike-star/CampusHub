@@ -4,6 +4,9 @@ import cn.campushub.model.AccountCancelResult;
 
 import java.sql.SQLException;
 
+/**
+ * 定义账号数据访问能力及业务层依赖的数据契约。
+ */
 public interface AccountDao {
     AccountCancelResult cancelAccount(
             long userId,
