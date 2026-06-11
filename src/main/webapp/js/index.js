@@ -282,7 +282,9 @@ document.addEventListener("DOMContentLoaded", function () {
         avatar.className = "quick-comment-avatar";
         if (comment.avatar) {
             const image = document.createElement("img");
-            image.src = contextPath + "/" + comment.avatar;
+            image.src = contextPath
+                + (comment.avatar.startsWith("/") ? "" : "/")
+                + comment.avatar;
             image.alt = comment.nickname;
             avatar.appendChild(image);
         } else {
@@ -311,10 +313,12 @@ document.addEventListener("DOMContentLoaded", function () {
         editForm.elements.topic.value =
             card.querySelector(".post-topic").textContent.trim().replace(/^#/, "");
         editForm.elements.categoryId.value = button.dataset.categoryId;
+        editForm.elements.images.value = card.dataset.images || "";
         editForm.dataset.cardPostId = card.dataset.postId;
         editError.hidden = true;
         editModal.hidden = false;
         document.body.classList.add("modal-open");
+        window.CampusHubImageUpload?.sync(editForm);
         window.resizeTextarea?.(editForm.elements.content);
         editForm.elements.title.focus();
     }
@@ -346,7 +350,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     title: editForm.elements.title.value,
                     content: editForm.elements.content.value,
                     topic: editForm.elements.topic.value,
-                    categoryId: editForm.elements.categoryId.value
+                    categoryId: editForm.elements.categoryId.value,
+                    images: editForm.elements.images.value
                 });
                 if (!result) {
                     return;
@@ -364,6 +369,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 topic.classList.toggle("is-empty", !result.post.topic);
                 card.querySelector(".edit-post-btn").dataset.categoryId =
                     result.post.categoryId;
+                card.dataset.images = result.post.images;
                 closeEditModal();
                 showToast("帖子已更新");
             } catch (error) {

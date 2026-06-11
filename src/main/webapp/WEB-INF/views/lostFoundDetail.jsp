@@ -43,9 +43,9 @@
     </a>
     <section class="lostfound-detail card">
         <div class="lostfound-detail-image">
-            <img src="<%= contextPath %>/<%= HtmlUtils.escape(
-                    item.getFirstImage()
-            ) %>"
+            <img src="<%= contextPath %><%=
+                    item.getFirstImage().startsWith("/") ? "" : "/"
+            %><%= HtmlUtils.escape(item.getFirstImage()) %>"
                  onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-lostfound.png';"
                  alt="<%= HtmlUtils.escape(item.getTitle()) %>">
         </div>

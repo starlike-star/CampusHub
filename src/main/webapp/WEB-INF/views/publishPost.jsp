@@ -13,9 +13,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="context-path" content="<%= contextPath %>">
     <title>发布帖子 - CampusHub</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/post.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/image-upload.css">
 </head>
 <body>
 <header class="simple-topbar">
@@ -66,7 +68,28 @@
                 <textarea name="content" rows="12" required
                           placeholder="请输入帖子完整内容"><%= HtmlUtils.escape((String) request.getAttribute("content")) %></textarea>
             </label>
-            <p class="form-hint">图片上传将在后续版本开放，本版 images 字段保持为空。</p>
+            <div class="image-upload" data-image-upload="post">
+                <span>帖子图片</span>
+                <input type="hidden"
+                       name="images"
+                       data-image-upload-value
+                       value="<%= HtmlUtils.escape((String) request.getAttribute("images")) %>">
+                <div class="image-upload-controls">
+                    <input class="image-upload-file"
+                           type="file"
+                           multiple
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           data-image-upload-input>
+                    <button class="image-upload-button"
+                            type="button"
+                            data-image-upload-button>选择图片</button>
+                    <small class="image-upload-status"
+                           data-image-upload-status>可多选，单张最大 5MB</small>
+                </div>
+                <div class="image-upload-preview"
+                     data-image-upload-preview
+                     hidden></div>
+            </div>
             <div class="form-actions">
                 <a href="<%= contextPath %>/home">取消</a>
                 <button class="primary-btn" type="submit">发布帖子</button>
@@ -75,5 +98,6 @@
     </section>
 </main>
 <script src="<%= contextPath %>/js/textarea-autosize.js"></script>
+<script src="<%= contextPath %>/js/image-upload.js"></script>
 </body>
 </html>

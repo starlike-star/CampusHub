@@ -42,7 +42,9 @@
     <section class="profile-header card">
         <div class="profile-avatar">
             <% if (avatar != null && !avatar.isBlank()) { %>
-            <img src="<%= profileContextPath %>/<%= HtmlUtils.escape(avatar) %>"
+            <img src="<%= profileContextPath %><%=
+                    avatar.startsWith("/") ? "" : "/"
+            %><%= HtmlUtils.escape(avatar) %>"
                  alt="<%= HtmlUtils.escape(profileUser.getNickname()) %>">
             <% } else { %>
             <span><%= HtmlUtils.escape(
@@ -517,12 +519,27 @@
                            value="<%= HtmlUtils.escape(profileUser.getNickname()) %>"
                            required>
                 </label>
-                <label>头像路径
-                    <input type="text"
+                <div class="image-upload" data-image-upload="avatar">
+                    <span>头像</span>
+                    <input type="hidden"
                            name="avatar"
-                           maxlength="255"
+                           data-image-upload-value
                            value="<%= HtmlUtils.escape(profileUser.getAvatar()) %>">
-                </label>
+                    <div class="image-upload-controls">
+                        <input class="image-upload-file"
+                               type="file"
+                               accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                               data-image-upload-input>
+                        <button class="image-upload-button"
+                                type="button"
+                                data-image-upload-button>选择图片</button>
+                        <small class="image-upload-status"
+                               data-image-upload-status>支持 JPG、PNG、WebP，最大 5MB</small>
+                    </div>
+                    <div class="image-upload-preview"
+                         data-image-upload-preview
+                         hidden></div>
+                </div>
             </div>
             <div class="profile-form-row">
                 <label>学号

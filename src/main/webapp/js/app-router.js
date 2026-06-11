@@ -8,6 +8,52 @@ document.addEventListener("DOMContentLoaded", function () {
     let activeRequest;
     let currentRouteKey = "home";
 
+    function initCampusMapPreview() {
+        const modal = document.querySelector("[data-campus-map-modal]");
+        if (!modal || document.documentElement.dataset.campusMapBound === "true") {
+            return;
+        }
+        document.documentElement.dataset.campusMapBound = "true";
+        let activeOpener = null;
+
+        const closeMap = function () {
+            if (modal.hidden) {
+                return;
+            }
+            modal.hidden = true;
+            document.body.classList.remove("campus-map-open");
+            activeOpener?.focus();
+            activeOpener = null;
+        };
+
+        document.addEventListener("click", function (event) {
+            const openButton = event.target.closest("[data-campus-map-open]");
+            if (openButton) {
+                event.preventDefault();
+                event.stopPropagation();
+                activeOpener = openButton;
+                modal.hidden = false;
+                document.body.classList.add("campus-map-open");
+                modal.querySelector(".campus-map-close")?.focus();
+                return;
+            }
+
+            const closeButton = event.target.closest("[data-campus-map-close]");
+            if (closeButton && modal.contains(closeButton)) {
+                event.preventDefault();
+                closeMap();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !modal.hidden) {
+                closeMap();
+            }
+        });
+    }
+
+    window.initCampusMapPreview = initCampusMapPreview;
+
     function parseHash() {
         const rawHash = window.location.hash.replace(/^#/, "");
         if (!rawHash) {
@@ -102,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
             mainContent.querySelectorAll("textarea").forEach(function (textarea) {
                 window.resizeTextarea?.(textarea);
             });
+            initCampusMapPreview();
         } catch (error) {
             if (error.name === "AbortError") {
                 return;
@@ -223,6 +270,8 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("hashchange", function () {
         handleRoute(false);
     });
+
+    initCampusMapPreview();
 
     if (!window.location.hash) {
         window.history.replaceState(

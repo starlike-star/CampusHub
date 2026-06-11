@@ -233,9 +233,9 @@
         %></textarea>
         <a class="goods-image"
            href="<%= marketContextPath %>/goods/detail?id=<%= goods.getId() %>">
-            <img src="<%= marketContextPath %>/<%=
-                    HtmlUtils.escape(goods.getFirstImage())
-            %>"
+            <img src="<%= marketContextPath %><%=
+                    goods.getFirstImage().startsWith("/") ? "" : "/"
+            %><%= HtmlUtils.escape(goods.getFirstImage()) %>"
                  onerror="this.onerror=null;this.src='<%= marketContextPath %>/images/default-goods.png';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>"
                  loading="lazy">
@@ -287,8 +287,10 @@
                 <span class="goods-seller-avatar">
                     <% if (goods.getSellerAvatar() != null
                             && !goods.getSellerAvatar().isBlank()) { %>
-                    <img src="<%= marketContextPath %>/<%=
-                            HtmlUtils.escape(goods.getSellerAvatar())
+                    <img src="<%= marketContextPath %><%=
+                            HtmlUtils.escape(HtmlUtils.resourcePath(
+                                    goods.getSellerAvatar()
+                            ))
                     %>" alt="">
                     <% } else { %>
                     <%= HtmlUtils.escape(goods.getSellerInitial()) %>
@@ -424,11 +426,26 @@
                           placeholder="介绍物品情况、购买时间和使用痕迹"></textarea>
             </label>
             <div class="goods-form-row">
-                <label>图片路径
-                    <input type="text"
+                <div class="image-upload" data-image-upload="goods">
+                    <span>商品封面</span>
+                    <input type="hidden"
                            name="images"
-                           placeholder="可为空，多个路径用逗号分隔">
-                </label>
+                           data-image-upload-value>
+                    <div class="image-upload-controls">
+                        <input class="image-upload-file"
+                               type="file"
+                               accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                               data-image-upload-input>
+                        <button class="image-upload-button"
+                                type="button"
+                                data-image-upload-button>选择图片</button>
+                        <small class="image-upload-status"
+                               data-image-upload-status>支持重新选择，最大 5MB</small>
+                    </div>
+                    <div class="image-upload-preview"
+                         data-image-upload-preview
+                         hidden></div>
+                </div>
                 <p class="goods-trade-hint" data-trade-place-hint>
                     线下交易建议填写明确的交易地点。
                 </p>

@@ -6,21 +6,30 @@ import cn.campushub.util.ValidationUtils;
 
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ReportService {
+    private static final Logger LOGGER = Logger.getLogger(ReportService.class.getName());
     private static final Set<String> TARGET_TYPES =
             Set.of("post", "comment", "goods", "lost_found");
     private static final int MIN_REASON_LENGTH = 5;
     private static final int MAX_REASON_LENGTH = 255;
 
     private final ReportDao reportDao;
+    private final MessageService messageService;
 
     public ReportService() {
-        this(new JdbcReportDao());
+        this(new JdbcReportDao(), new MessageService());
     }
 
     ReportService(ReportDao reportDao) {
+        this(reportDao, null);
+    }
+
+    ReportService(ReportDao reportDao, MessageService messageService) {
         this.reportDao = reportDao;
+        this.messageService = messageService;
     }
 
     public ServiceResult<Void> create(
@@ -60,10 +69,22 @@ public class ReportService {
         if (reportDao.createReport(userId, targetType, targetId, reason) != 1) {
             return ServiceResult.failure("举报提交失败，请稍后重试");
         }
+        notifyAdmins(targetType);
         return ServiceResult.success(
                 "举报提交成功，管理员会尽快处理",
                 null
         );
+    }
+
+    private void notifyAdmins(String targetType) {
+        if (messageService == null) {
+            return;
+        }
+        try {
+            messageService.notifyAdminsOfReport(targetType);
+        } catch (SQLException exception) {
+            LOGGER.log(Level.WARNING, "举报已提交，但管理员消息创建失败", exception);
+        }
     }
 
     private Long parsePositiveLong(String value) {

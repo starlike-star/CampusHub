@@ -110,7 +110,9 @@
                 imageUrl = result.image().startsWith("http://")
                         || result.image().startsWith("https://")
                         ? result.image()
-                        : searchContextPath + "/" + result.image();
+                        : searchContextPath
+                                + (result.image().startsWith("/") ? "" : "/")
+                                + result.image();
             }
         %>
         <article class="search-result-card card">

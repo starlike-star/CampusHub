@@ -118,6 +118,20 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ImageUploadServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.ImageUploadServlet</servlet-class>
+        <multipart-config>
+            <max-file-size>5242880</max-file-size>
+            <max-request-size>6291456</max-request-size>
+            <file-size-threshold>0</file-size-threshold>
+        </multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ImageUploadServlet</servlet-name>
+        <url-pattern>/upload/image</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>MessageUnreadCountServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.MessageUnreadCountServlet</servlet-class>
     </servlet>

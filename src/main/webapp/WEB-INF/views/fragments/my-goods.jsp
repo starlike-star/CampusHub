@@ -82,9 +82,9 @@
                 HtmlUtils.escape(goods.getDescription())
         %></textarea>
         <div class="goods-image">
-            <img src="<%= myGoodsContextPath %>/<%=
-                    HtmlUtils.escape(goods.getFirstImage())
-            %>"
+            <img src="<%= myGoodsContextPath %><%=
+                    goods.getFirstImage().startsWith("/") ? "" : "/"
+            %><%= HtmlUtils.escape(goods.getFirstImage()) %>"
                  onerror="this.onerror=null;this.src='<%= myGoodsContextPath %>/images/default-goods.png';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>">
             <span class="goods-status <%= goods.getStatus() %>"><%=
@@ -218,11 +218,26 @@
             <label>商品描述
                 <textarea name="description" rows="6" required></textarea>
             </label>
-            <label>图片路径
-                <input type="text"
+            <div class="image-upload" data-image-upload="goods">
+                <span>商品封面</span>
+                <input type="hidden"
                        name="images"
-                       placeholder="可为空，多个路径用逗号分隔">
-            </label>
+                       data-image-upload-value>
+                <div class="image-upload-controls">
+                    <input class="image-upload-file"
+                           type="file"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           data-image-upload-input>
+                    <button class="image-upload-button"
+                            type="button"
+                            data-image-upload-button>选择图片</button>
+                    <small class="image-upload-status"
+                           data-image-upload-status>支持重新选择，最大 5MB</small>
+                </div>
+                <div class="image-upload-preview"
+                     data-image-upload-preview
+                     hidden></div>
+            </div>
             <p class="goods-trade-hint" data-trade-place-hint>
                 线下交易建议填写明确的交易地点。
             </p>

@@ -15,4 +15,11 @@ public final class HtmlUtils {
                 .replace("\"", "&quot;")
                 .replace("'", "&#39;");
     }
+
+    public static String resourcePath(String value) {
+        if (value == null || value.isBlank()) {
+            return "";
+        }
+        return value.startsWith("/") ? value : "/" + value;
+    }
 }

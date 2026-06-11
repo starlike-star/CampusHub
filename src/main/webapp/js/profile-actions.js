@@ -28,6 +28,23 @@ document.addEventListener("DOMContentLoaded", function () {
         button.classList.toggle("is-loading", busy);
     }
 
+    function updateCurrentUserAvatars(avatar, nickname) {
+        document.querySelectorAll("[data-current-user-avatar]")
+            .forEach(function (container) {
+                container.replaceChildren();
+                if (avatar) {
+                    const image = document.createElement("img");
+                    image.src = contextPath
+                        + (avatar.startsWith("/") ? "" : "/")
+                        + avatar;
+                    image.alt = nickname || "";
+                    container.appendChild(image);
+                    return;
+                }
+                container.textContent = (nickname || "U").slice(0, 1);
+            });
+    }
+
     async function postForm(path, values) {
         const body = new URLSearchParams();
         Object.entries(values).forEach(function ([key, value]) {
@@ -105,6 +122,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
             document.querySelector(".user-name").textContent = result.nickname;
+            updateCurrentUserAvatars(result.avatar, result.nickname);
+            const headerAvatar = document.querySelector(".profile-avatar img");
+            if (headerAvatar && result.avatar) {
+                headerAvatar.src = contextPath
+                    + (result.avatar.startsWith("/") ? "" : "/")
+                    + result.avatar;
+            }
             closeModal();
             showToast(result.message);
             window.CampusHubRouter?.reload();

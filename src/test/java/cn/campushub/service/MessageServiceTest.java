@@ -57,13 +57,61 @@ class MessageServiceTest {
         assertEquals("activity", service.normalizeTab("activity"));
     }
 
+    @Test
+    void reportSubmissionNotifiesEveryActiveAdmin() throws SQLException {
+        FakeMessageDao dao = new FakeMessageDao();
+        dao.adminIds = List.of(2L, 5L);
+        MessageService service = new MessageService(dao);
+
+        service.notifyAdminsOfReport("goods");
+
+        assertEquals(2, dao.createdMessages.size());
+        assertEquals("收到新的举报", dao.createdMessages.get(0).getTitle());
+        assertEquals("system", dao.createdMessages.get(0).getType());
+        assertEquals(
+                "有用户举报了【商品】，请前往后台举报管理处理。",
+                dao.createdMessages.get(0).getContent()
+        );
+    }
+
+    @Test
+    void handledReportDoesNotNotifyReporterTwiceWhenTheyOwnTarget()
+            throws SQLException {
+        FakeMessageDao dao = new FakeMessageDao();
+        MessageService service = new MessageService(dao);
+
+        service.notifyReportHandled(7L, 7L);
+
+        assertEquals(1, dao.createdMessages.size());
+        assertEquals("你的举报已处理", dao.createdMessages.get(0).getTitle());
+    }
+
+    @Test
+    void rejectedReportOnlyNotifiesReporter() throws SQLException {
+        FakeMessageDao dao = new FakeMessageDao();
+        MessageService service = new MessageService(dao);
+
+        service.notifyReportRejected(7L);
+
+        assertEquals(1, dao.createdMessages.size());
+        assertEquals("你的举报已审核", dao.createdMessages.get(0).getTitle());
+    }
+
     private static class FakeMessageDao implements MessageDao {
         private Message created;
+        private List<Long> adminIds = List.of();
+        private final List<Message> createdMessages = new java.util.ArrayList<>();
         private Optional<NotificationTarget> postTarget = Optional.empty();
 
         @Override
         public void create(Message message) {
             created = message;
+            createdMessages.add(message);
+        }
+
+        @Override
+        public List<Long> findActiveAdminIds() {
+            return adminIds;
         }
 
         @Override

@@ -86,6 +86,51 @@ public class MessageService {
         messageDao.create(message);
     }
 
+    public void notifyAdminsOfReport(String targetType) throws SQLException {
+        String targetName = switch (targetType) {
+            case "post" -> "帖子";
+            case "comment" -> "评论";
+            case "goods" -> "商品";
+            case "lost_found" -> "失物招领";
+            default -> "内容";
+        };
+        for (Long adminId : messageDao.findActiveAdminIds()) {
+            createMessage(
+                    adminId,
+                    "收到新的举报",
+                    "有用户举报了【" + targetName + "】，请前往后台举报管理处理。",
+                    "system"
+            );
+        }
+    }
+
+    public void notifyReportHandled(long reporterId, Long ownerId)
+            throws SQLException {
+        createMessage(
+                reporterId,
+                "你的举报已处理",
+                "你提交的举报已由管理员处理，感谢你维护社区环境。",
+                "system"
+        );
+        if (ownerId != null && ownerId > 0 && ownerId != reporterId) {
+            createMessage(
+                    ownerId,
+                    "你的内容已被处理",
+                    "你发布的内容因违反平台规范，已由管理员进行处理。如有疑问请联系管理员。",
+                    "system"
+            );
+        }
+    }
+
+    public void notifyReportRejected(long reporterId) throws SQLException {
+        createMessage(
+                reporterId,
+                "你的举报已审核",
+                "经管理员审核，暂未发现该内容违规，感谢你的反馈。",
+                "system"
+        );
+    }
+
     public void notifyPostComment(
             long postId,
             long actorId,

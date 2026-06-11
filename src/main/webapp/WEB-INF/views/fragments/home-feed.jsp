@@ -11,11 +11,22 @@
 %>
 <section class="composer card">
     <div class="composer-main">
-        <span class="avatar avatar-blue"><%=
-                homeLoginUser == null
-                        ? "U"
-                        : HtmlUtils.escape(homeLoginUser.avatarText())
-        %></span>
+        <span class="avatar avatar-blue"
+              data-current-user-avatar>
+            <% if (homeLoginUser != null
+                    && homeLoginUser.avatar() != null
+                    && !homeLoginUser.avatar().isBlank()) { %>
+            <img src="<%= homeContextPath %><%=
+                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                            homeLoginUser.avatar()
+                    ))
+            %>" alt="<%= HtmlUtils.escape(homeLoginUser.nickname()) %>">
+            <% } else { %>
+            <%= homeLoginUser == null
+                    ? "U"
+                    : HtmlUtils.escape(homeLoginUser.avatarText()) %>
+            <% } %>
+        </span>
         <a class="composer-placeholder"
            href="<%= homeContextPath %>/post/publish">今天发生了什么？</a>
     </div>

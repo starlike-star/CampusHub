@@ -45,7 +45,11 @@
         <div class="post-header">
             <span class="avatar avatar-blue post-avatar">
                 <% if (post.getAuthorAvatar() != null && !post.getAuthorAvatar().isBlank()) { %>
-                <img src="<%= contextPath %>/<%= HtmlUtils.escape(post.getAuthorAvatar()) %>"
+                <img src="<%= contextPath %><%=
+                        HtmlUtils.escape(HtmlUtils.resourcePath(
+                                post.getAuthorAvatar()
+                        ))
+                %>"
                      alt="<%= HtmlUtils.escape(post.getAuthorNickname()) %>">
                 <% } else { %>
                 <%= HtmlUtils.escape(post.getAuthorInitial()) %>
@@ -70,7 +74,9 @@
             <% if (!post.getImageList().isEmpty()) { %>
             <div class="database-photo-grid">
                 <% for (String image : post.getImageList()) { %>
-                <img src="<%= contextPath %>/<%= HtmlUtils.escape(image) %>" alt="帖子图片">
+                <img src="<%= contextPath %><%= image.startsWith("/") ? "" : "/" %><%=
+                        HtmlUtils.escape(image)
+                %>" alt="帖子图片">
                 <% } %>
             </div>
             <% } %>
@@ -134,7 +140,11 @@
             <article class="comment-item">
                 <span class="avatar avatar-purple post-avatar">
                     <% if (comment.getAuthorAvatar() != null && !comment.getAuthorAvatar().isBlank()) { %>
-                    <img src="<%= contextPath %>/<%= HtmlUtils.escape(comment.getAuthorAvatar()) %>"
+                    <img src="<%= contextPath %><%=
+                            HtmlUtils.escape(HtmlUtils.resourcePath(
+                                    comment.getAuthorAvatar()
+                            ))
+                    %>"
                          alt="<%= HtmlUtils.escape(comment.getAuthorNickname()) %>">
                     <% } else { %>
                     <%= HtmlUtils.escape(comment.getAuthorInitial()) %>

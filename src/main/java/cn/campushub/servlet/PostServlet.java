@@ -34,14 +34,18 @@ public class PostServlet extends HttpServlet {
         String content = request.getParameter("content");
         String categoryId = request.getParameter("category_id");
         String topic = request.getParameter("topic");
+        String images = request.getParameter("images");
         request.setAttribute("title", title);
         request.setAttribute("content", content);
         request.setAttribute("categoryId", categoryId);
         request.setAttribute("topic", topic);
+        request.setAttribute("images", images);
 
         try {
             ServiceResult<Long> result =
-                    postService.publish(user.id(), title, content, categoryId, topic);
+                    postService.publish(
+                            user.id(), title, content, categoryId, topic, images
+                    );
             if (!result.success()) {
                 request.setAttribute("errorMessage", result.message());
                 showPublishPage(request, response);

@@ -38,7 +38,9 @@
         boolean owner =
                 postLoginUser != null && postLoginUser.id() == post.getUserId();
 %>
-    <article class="post-card card" data-post-id="<%= post.getId() %>">
+    <article class="post-card card"
+             data-post-id="<%= post.getId() %>"
+             data-images="<%= HtmlUtils.escape(post.getImages()) %>">
         <textarea class="post-raw-content" hidden><%=
                 HtmlUtils.escape(post.getContent())
         %></textarea>
@@ -46,8 +48,10 @@
             <span class="avatar avatar-blue post-avatar">
                 <% if (post.getAuthorAvatar() != null
                         && !post.getAuthorAvatar().isBlank()) { %>
-                <img src="<%= postContextPath %>/<%=
-                        HtmlUtils.escape(post.getAuthorAvatar())
+                <img src="<%= postContextPath %><%=
+                        HtmlUtils.escape(HtmlUtils.resourcePath(
+                                post.getAuthorAvatar()
+                        ))
                 %>" alt="<%= HtmlUtils.escape(post.getAuthorNickname()) %>">
                 <% } else { %>
                 <%= HtmlUtils.escape(post.getAuthorInitial()) %>
@@ -105,7 +109,9 @@
                 <% if (!post.getImageList().isEmpty()) { %>
                 <div class="database-photo-grid">
                     <% for (String image : post.getImageList()) { %>
-                    <img src="<%= postContextPath %>/<%=
+                    <img src="<%= postContextPath %><%=
+                            image.startsWith("/") ? "" : "/"
+                    %><%=
                             HtmlUtils.escape(image)
                     %>" alt="帖子图片" loading="lazy">
                     <% } %>

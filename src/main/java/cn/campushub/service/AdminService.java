@@ -2,15 +2,20 @@ package cn.campushub.service;
 
 import cn.campushub.dao.AdminDao;
 import cn.campushub.dao.JdbcAdminDao;
+import cn.campushub.model.ReportNotificationTarget;
 import cn.campushub.util.PasswordUtils;
 import cn.campushub.util.ValidationUtils;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class AdminService {
+    private static final Logger LOGGER = Logger.getLogger(AdminService.class.getName());
     private static final Set<String> ROLES = Set.of("student", "admin");
     private static final Set<String> GOODS_STATUSES =
             Set.of("on_sale", "reserved", "sold", "off_shelf");
@@ -29,13 +34,19 @@ public class AdminService {
             Set.of("post", "comment", "goods", "lost_found");
 
     private final AdminDao adminDao;
+    private final MessageService messageService;
 
     public AdminService() {
-        this(new JdbcAdminDao());
+        this(new JdbcAdminDao(), new MessageService());
     }
 
     AdminService(AdminDao adminDao) {
+        this(adminDao, null);
+    }
+
+    AdminService(AdminDao adminDao, MessageService messageService) {
         this.adminDao = adminDao;
+        this.messageService = messageService;
     }
 
     public Map<String, Long> dashboard() throws SQLException {
@@ -253,7 +264,11 @@ public class AdminService {
         if (id == null) {
             return ServiceResult.failure("举报参数无效");
         }
-        return result(adminDao.handleReport(id, adminId), "举报已处理");
+        if (!adminDao.handleReport(id, adminId)) {
+            return ServiceResult.failure("目标不存在或状态已发生变化");
+        }
+        notifyReportResult(id, true);
+        return ServiceResult.success("举报已处理", null);
     }
 
     public ServiceResult<Void> rejectReport(
@@ -264,7 +279,35 @@ public class AdminService {
         if (id == null) {
             return ServiceResult.failure("举报参数无效");
         }
-        return result(adminDao.rejectReport(id, adminId), "举报已驳回");
+        if (!adminDao.rejectReport(id, adminId)) {
+            return ServiceResult.failure("目标不存在或状态已发生变化");
+        }
+        notifyReportResult(id, false);
+        return ServiceResult.success("举报已驳回", null);
+    }
+
+    private void notifyReportResult(long reportId, boolean handled) {
+        if (messageService == null) {
+            return;
+        }
+        try {
+            Optional<ReportNotificationTarget> target =
+                    adminDao.findReportNotificationTarget(reportId);
+            if (target.isEmpty()) {
+                return;
+            }
+            ReportNotificationTarget value = target.get();
+            if (handled) {
+                messageService.notifyReportHandled(
+                        value.reporterId(),
+                        value.ownerId()
+                );
+            } else {
+                messageService.notifyReportRejected(value.reporterId());
+            }
+        } catch (SQLException exception) {
+            LOGGER.log(Level.WARNING, "举报状态已更新，但消息创建失败", exception);
+        }
     }
 
     private ServiceResult<String[]> noticeValues(

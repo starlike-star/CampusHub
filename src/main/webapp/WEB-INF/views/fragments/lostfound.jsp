@@ -116,9 +116,9 @@
         <article class="lostfound-card card" data-lostfound-card>
             <a class="lostfound-image"
                href="<%= lfContextPath %>/lostfound/detail?id=<%= item.getId() %>">
-                <img src="<%= lfContextPath %>/<%=
-                        HtmlUtils.escape(item.getFirstImage())
-                %>"
+                <img src="<%= lfContextPath %><%=
+                        item.getFirstImage().startsWith("/") ? "" : "/"
+                %><%= HtmlUtils.escape(item.getFirstImage()) %>"
                      onerror="this.onerror=null;this.src='<%= lfContextPath %>/images/default-lostfound.png';"
                      alt="<%= HtmlUtils.escape(item.getTitle()) %>">
                 <span class="lostfound-type-badge <%= item.getType() %>"><%=
@@ -253,9 +253,27 @@
                 </label>
             </div>
             <div class="lostfound-form-row">
-                <label>图片路径
-                    <input name="images" placeholder="可留空">
-                </label>
+                <div class="image-upload" data-image-upload="lost_found">
+                    <span>物品图片</span>
+                    <input type="hidden"
+                           name="images"
+                           data-image-upload-value>
+                    <div class="image-upload-controls">
+                        <input class="image-upload-file"
+                               type="file"
+                               multiple
+                               accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                               data-image-upload-input>
+                        <button class="image-upload-button"
+                                type="button"
+                                data-image-upload-button>选择图片</button>
+                        <small class="image-upload-status"
+                               data-image-upload-status>可多选，单张最大 5MB</small>
+                    </div>
+                    <div class="image-upload-preview"
+                         data-image-upload-preview
+                         hidden></div>
+                </div>
                 <label>联系方式
                     <input name="contact" maxlength="100" required>
                 </label>

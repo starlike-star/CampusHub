@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface MessageDao {
     void create(Message message) throws SQLException;
 
+    List<Long> findActiveAdminIds() throws SQLException;
+
     List<Message> findByUser(long userId, String type) throws SQLException;
 
     int countByUser(long userId) throws SQLException;

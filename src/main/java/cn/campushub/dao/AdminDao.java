@@ -1,8 +1,11 @@
 package cn.campushub.dao;
 
+import cn.campushub.model.ReportNotificationTarget;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface AdminDao {
     Map<String, Long> dashboard() throws SQLException;
@@ -58,4 +61,7 @@ public interface AdminDao {
     boolean handleReport(long reportId, long adminId) throws SQLException;
 
     boolean rejectReport(long reportId, long adminId) throws SQLException;
+
+    Optional<ReportNotificationTarget> findReportNotificationTarget(long reportId)
+            throws SQLException;
 }

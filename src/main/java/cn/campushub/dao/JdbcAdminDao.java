@@ -1,5 +1,6 @@
 package cn.campushub.dao;
 
+import cn.campushub.model.ReportNotificationTarget;
 import cn.campushub.util.JdbcUtils;
 
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class JdbcAdminDao implements AdminDao {
     @Override
@@ -375,6 +377,47 @@ public class JdbcAdminDao implements AdminDao {
                 SET status = 'rejected', handled_by = ?, handled_at = NOW()
                 WHERE id = ? AND status = 'pending'
                 """, adminId, reportId);
+    }
+
+    @Override
+    public Optional<ReportNotificationTarget> findReportNotificationTarget(long reportId)
+            throws SQLException {
+        String sql = """
+                SELECT r.user_id AS reporter_id,
+                       CASE r.target_type
+                           WHEN 'post' THEN (
+                               SELECT p.user_id FROM posts p WHERE p.id = r.target_id
+                           )
+                           WHEN 'comment' THEN (
+                               SELECT c.user_id FROM comments c WHERE c.id = r.target_id
+                           )
+                           WHEN 'goods' THEN (
+                               SELECT g.user_id FROM goods g WHERE g.id = r.target_id
+                           )
+                           WHEN 'lost_found' THEN (
+                               SELECT lf.user_id
+                               FROM lost_found lf
+                               WHERE lf.id = r.target_id
+                           )
+                       END AS owner_id
+                FROM reports r
+                WHERE r.id = ?
+                """;
+        try (Connection connection = JdbcUtils.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, reportId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    return Optional.empty();
+                }
+                long ownerId = resultSet.getLong("owner_id");
+                Long nullableOwnerId = resultSet.wasNull() ? null : ownerId;
+                return Optional.of(new ReportNotificationTarget(
+                        resultSet.getLong("reporter_id"),
+                        nullableOwnerId
+                ));
+            }
+        }
     }
 
     private long count(String sql) throws SQLException {

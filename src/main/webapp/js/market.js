@@ -131,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         updateTradePlaceHint(form);
+        window.CampusHubImageUpload?.sync(form);
         modal.hidden = false;
         document.body.classList.add("modal-open");
         window.resizeTextarea?.(form.elements.description);

@@ -61,11 +61,13 @@ public class PostService {
             String title,
             String content,
             String categoryIdValue,
-            String topic
+            String topic,
+            String images
     ) throws SQLException {
         title = ValidationUtils.trimToNull(title);
         content = ValidationUtils.trimToNull(content);
         topic = ValidationUtils.trimToNull(topic);
+        images = ValidationUtils.trimToNull(images);
 
         if (title == null || title.length() > 150) {
             return ServiceResult.failure("标题不能为空且不能超过 150 个字符");
@@ -87,7 +89,7 @@ public class PostService {
         post.setCategoryId(categoryId);
         post.setTitle(title);
         post.setContent(content);
-        post.setImages(null);
+        post.setImages(images);
         post.setTopic(topic);
         long postId = postDao.create(post);
         return ServiceResult.success("发布成功", postId);
@@ -160,11 +162,13 @@ public class PostService {
             String title,
             String content,
             String topic,
-            String categoryIdValue
+            String categoryIdValue,
+            String images
     ) throws SQLException {
         title = ValidationUtils.trimToNull(title);
         content = ValidationUtils.trimToNull(content);
         topic = normalizeTopic(topic);
+        images = ValidationUtils.trimToNull(images);
         ServiceResult<Void> validation =
                 validatePostFields(title, content, topic, categoryIdValue);
         if (!validation.success()) {
@@ -179,6 +183,7 @@ public class PostService {
         post.setContent(content);
         post.setTopic(topic);
         post.setCategoryId(categoryId);
+        post.setImages(images);
         Optional<Post> updated = postDao.updateOwnedPost(post);
         return updated
                 .map(value -> ServiceResult.success("更新成功", value))

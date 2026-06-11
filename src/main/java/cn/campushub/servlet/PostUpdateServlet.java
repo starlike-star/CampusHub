@@ -42,7 +42,8 @@ public class PostUpdateServlet extends HttpServlet {
                     request.getParameter("title"),
                     request.getParameter("content"),
                     request.getParameter("topic"),
-                    request.getParameter("categoryId")
+                    request.getParameter("categoryId"),
+                    request.getParameter("images")
             );
             if (!result.success()) {
                 PostJsonSupport.writeError(
@@ -72,6 +73,9 @@ public class PostUpdateServlet extends HttpServlet {
                                     "categoryId", post.getCategoryId(),
                                     "categoryName", PostJsonSupport.valueOrEmpty(
                                             post.getCategoryName()
+                                    ),
+                                    "images", PostJsonSupport.valueOrEmpty(
+                                            post.getImages()
                                     )
                             )
                     )

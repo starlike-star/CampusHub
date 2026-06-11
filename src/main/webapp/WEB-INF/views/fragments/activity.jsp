@@ -114,7 +114,9 @@
                href="<%= activityContextPath %>/activity/detail?id=<%=
                         activity.getId()
                %>">
-                <img src="<%= activityContextPath %>/<%= HtmlUtils.escape(cover) %>"
+                <img src="<%= activityContextPath %><%=
+                        cover.startsWith("/") ? "" : "/"
+                %><%= HtmlUtils.escape(cover) %>"
                      onerror="this.onerror=null;this.src='<%= activityContextPath %>/images/default-activity.png';"
                      alt="<%= HtmlUtils.escape(activity.getTitle()) %>">
                 <span class="activity-card-status <%= activity.getStatus() %>"><%=
@@ -208,9 +210,26 @@
                 <label>活动地点
                     <input type="text" name="location" maxlength="150" required>
                 </label>
-                <label>封面图片路径
-                    <input type="text" name="coverImage" maxlength="255">
-                </label>
+                <div class="image-upload" data-image-upload="activity">
+                    <span>活动封面</span>
+                    <input type="hidden"
+                           name="coverImage"
+                           data-image-upload-value>
+                    <div class="image-upload-controls">
+                        <input class="image-upload-file"
+                               type="file"
+                               accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                               data-image-upload-input>
+                        <button class="image-upload-button"
+                                type="button"
+                                data-image-upload-button>选择图片</button>
+                        <small class="image-upload-status"
+                               data-image-upload-status>支持重新选择，最大 5MB</small>
+                    </div>
+                    <div class="image-upload-preview"
+                         data-image-upload-preview
+                         hidden></div>
+                </div>
             </div>
             <div class="activity-form-row">
                 <label>开始时间

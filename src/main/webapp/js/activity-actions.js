@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         }
+        window.CampusHubImageUpload?.sync(form);
         modal.hidden = false;
     }
 

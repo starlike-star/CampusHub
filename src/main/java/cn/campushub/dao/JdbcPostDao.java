@@ -437,7 +437,7 @@ public class JdbcPostDao implements PostDao {
     public Optional<Post> updateOwnedPost(Post post) throws SQLException {
         String updateSql = """
                 UPDATE posts
-                SET title = ?, content = ?, topic = ?, category_id = ?
+                SET title = ?, content = ?, topic = ?, category_id = ?, images = ?
                 WHERE id = ? AND user_id = ? AND status = 1
                 """;
         try (Connection connection = JdbcUtils.getConnection();
@@ -446,8 +446,9 @@ public class JdbcPostDao implements PostDao {
             update.setString(2, post.getContent());
             update.setString(3, post.getTopic());
             update.setLong(4, post.getCategoryId());
-            update.setLong(5, post.getId());
-            update.setLong(6, post.getUserId());
+            update.setString(5, post.getImages());
+            update.setLong(6, post.getId());
+            update.setLong(7, post.getUserId());
             if (update.executeUpdate() != 1) {
                 return Optional.empty();
             }

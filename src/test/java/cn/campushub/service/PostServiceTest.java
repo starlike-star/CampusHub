@@ -19,12 +19,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PostServiceTest {
     @Test
-    void publishUsesSessionUserAndLeavesImagesEmpty() throws SQLException {
+    void publishUsesSessionUserAndStoresImages() throws SQLException {
         FakePostDao dao = new FakePostDao();
         PostService service = new PostService(dao);
 
         ServiceResult<Long> result =
-                service.publish(7L, " 标题 ", " 正文 ", "3", " 校园生活 ");
+                service.publish(
+                        7L,
+                        " 标题 ",
+                        " 正文 ",
+                        "3",
+                        " 校园生活 ",
+                        " /uploads/post/example.jpg "
+                );
 
         assertTrue(result.success());
         assertEquals(99L, result.data());
@@ -33,7 +40,7 @@ class PostServiceTest {
         assertEquals("标题", dao.createdPost.getTitle());
         assertEquals("正文", dao.createdPost.getContent());
         assertEquals("校园生活", dao.createdPost.getTopic());
-        assertNull(dao.createdPost.getImages());
+        assertEquals("/uploads/post/example.jpg", dao.createdPost.getImages());
     }
 
     @Test
@@ -43,7 +50,7 @@ class PostServiceTest {
         PostService service = new PostService(dao);
 
         ServiceResult<Long> result =
-                service.publish(7L, "标题", "正文", "3", null);
+                service.publish(7L, "标题", "正文", "3", null, null);
 
         assertFalse(result.success());
         assertNull(dao.createdPost);

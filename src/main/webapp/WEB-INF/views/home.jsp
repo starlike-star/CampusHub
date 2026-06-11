@@ -29,13 +29,14 @@
     <meta name="context-path" content="<%= contextPath %>">
     <title>CampusHub - 校园综合社区</title>
     <link rel="stylesheet"
-          href="<%= contextPath %>/css/index.css?v=20260610-global-search-v1">
+          href="<%= contextPath %>/css/index.css?v=20260611-campus-map">
     <link rel="stylesheet" href="<%= contextPath %>/css/profile.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/messages.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/lostfound.css">
     <link rel="stylesheet"
           href="<%= contextPath %>/css/activity.css?v=20260610-activity-sidebar-2">
     <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/image-upload.css">
 </head>
 <body data-report-authenticated="<%= loginUser != null %>">
 <svg class="svg-sprite" aria-hidden="true">
@@ -91,7 +92,7 @@
                 <a class="icon-button notification-button"
                    href="#messages"
                    data-route="messages"
-                   aria-label="消息中心">
+                   aria-label="我的消息">
                     <svg><use href="#icon-bell"></use></svg>
                     <span class="message-unread-badge"
                           data-unread-badge
@@ -102,9 +103,21 @@
                             id="accountMenuButton"
                             type="button"
                             aria-expanded="false">
-                        <span class="avatar avatar-blue"><%=
-                                HtmlUtils.escape(loginUser.avatarText())
-                        %></span>
+                        <span class="avatar avatar-blue"
+                              data-current-user-avatar>
+                            <% if (loginUser.avatar() != null
+                                    && !loginUser.avatar().isBlank()) { %>
+                            <img src="<%= contextPath %><%=
+                                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                                            loginUser.avatar()
+                                    ))
+                            %>" alt="<%= HtmlUtils.escape(
+                                    loginUser.nickname()
+                            ) %>">
+                            <% } else { %>
+                            <%= HtmlUtils.escape(loginUser.avatarText()) %>
+                            <% } %>
+                        </span>
                         <span class="user-name"><%=
                                 HtmlUtils.escape(loginUser.nickname())
                         %></span>
@@ -166,16 +179,6 @@
                 </a>
                 <span class="nav-divider"></span>
                 <a class="nav-item"
-                   href="#my-goods"
-                   data-route="my-goods">
-                    <svg><use href="#icon-bag"></use></svg><span>我的商品</span>
-                </a>
-                <a class="nav-item"
-                   href="#favorites"
-                   data-route="favorites">
-                    <svg><use href="#icon-bookmark"></use></svg><span>我的收藏</span>
-                </a>
-                <a class="nav-item"
                    href="#profile"
                    data-route="profile">
                     <svg><use href="#icon-user"></use></svg><span>个人中心</span>
@@ -183,32 +186,22 @@
                 <a class="nav-item"
                    href="#messages"
                    data-route="messages">
-                    <svg><use href="#icon-bell"></use></svg><span>消息中心</span>
+                    <svg><use href="#icon-bell"></use></svg><span>我的消息</span>
                 </a>
             </nav>
             <section class="campus-map card">
                 <div class="section-heading">
-                    <h2>校园地图</h2><a href="#">查看大图</a>
+                    <h2>校园地图</h2>
+                    <button type="button" data-campus-map-open>查看全图</button>
                 </div>
-                <div class="map-canvas" aria-label="校园地图示意图">
-                    <span class="map-road road-a"></span>
-                    <span class="map-road road-b"></span>
-                    <span class="map-lake"></span>
-                    <span class="map-building building-a">教学楼</span>
-                    <span class="map-building building-b">图书馆</span>
-                    <span class="map-building building-c">食堂</span>
-                    <span class="map-field">操场</span>
-                    <i class="map-pin pin-a"></i>
-                    <i class="map-pin pin-b"></i>
-                    <i class="map-pin pin-c"></i>
-                    <i class="map-pin pin-d"></i>
-                </div>
-                <div class="map-tags">
-                    <button type="button"><i class="dot blue"></i>图书馆</button>
-                    <button type="button"><i class="dot purple"></i>教学楼</button>
-                    <button type="button"><i class="dot orange"></i>食堂</button>
-                    <button type="button"><i class="dot green"></i>操场</button>
-                </div>
+                <button class="campus-map-thumbnail"
+                        type="button"
+                        data-campus-map-open
+                        aria-label="查看校园地图全图">
+                    <img src="<%= contextPath %>/images/map.png"
+                         alt="CampusHub 校园地图缩略图">
+                    <span>点击查看完整地图</span>
+                </button>
             </section>
         </aside>
 
@@ -342,8 +335,10 @@
                        %>"
                        class="home-activity-item">
                         <span class="home-activity-thumb">
-                            <img src="<%= contextPath %>/<%=
-                                    HtmlUtils.escape(homeActivityCover)
+                            <img src="<%= contextPath %><%=
+                                    homeActivityCover.startsWith("/")
+                                            ? HtmlUtils.escape(homeActivityCover)
+                                            : "/" + HtmlUtils.escape(homeActivityCover)
                             %>"
                                  onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-activity.png';"
                                  alt="">
@@ -422,6 +417,31 @@
     </div>
 </div>
 
+<div class="campus-map-modal"
+     data-campus-map-modal
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="campusMapTitle"
+     hidden>
+    <div class="campus-map-backdrop" data-campus-map-close></div>
+    <section class="campus-map-dialog">
+        <header class="campus-map-dialog-header">
+            <div>
+                <span>CAMPUS MAP</span>
+                <h2 id="campusMapTitle">校园地图</h2>
+            </div>
+            <button class="campus-map-close"
+                    type="button"
+                    data-campus-map-close
+                    aria-label="关闭校园地图">×</button>
+        </header>
+        <div class="campus-map-full-view">
+            <img src="<%= contextPath %>/images/map.png"
+                 alt="CampusHub 完整校园地图">
+        </div>
+    </section>
+</div>
+
 <div class="post-edit-modal" id="postEditModal" hidden>
     <div class="post-edit-backdrop" data-close-edit-modal></div>
     <section class="post-edit-dialog"
@@ -459,6 +479,27 @@
             <label>内容
                 <textarea name="content" rows="9" required></textarea>
             </label>
+            <div class="image-upload" data-image-upload="post">
+                <span>帖子图片</span>
+                <input type="hidden"
+                       name="images"
+                       data-image-upload-value>
+                <div class="image-upload-controls">
+                    <input class="image-upload-file"
+                           type="file"
+                           multiple
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           data-image-upload-input>
+                    <button class="image-upload-button"
+                            type="button"
+                            data-image-upload-button>选择图片</button>
+                    <small class="image-upload-status"
+                           data-image-upload-status>可多选，单张最大 5MB</small>
+                </div>
+                <div class="image-upload-preview"
+                     data-image-upload-preview
+                     hidden></div>
+            </div>
             <p class="edit-form-error" id="editFormError" hidden></p>
             <div class="post-edit-actions">
                 <button type="button" data-close-edit-modal>取消</button>
@@ -470,8 +511,9 @@
 
 <div class="toast" id="toast" role="status"></div>
 <script src="<%= contextPath %>/js/textarea-autosize.js"></script>
+<script src="<%= contextPath %>/js/image-upload.js"></script>
 <script src="<%= contextPath %>/js/index.js"></script>
-<script src="<%= contextPath %>/js/app-router.js"></script>
+<script src="<%= contextPath %>/js/app-router.js?v=20260611-campus-map-fix"></script>
 <script src="<%= contextPath %>/js/market.js"></script>
 <script src="<%= contextPath %>/js/profile-actions.js"></script>
 <script src="<%= contextPath %>/js/message-actions.js"></script>

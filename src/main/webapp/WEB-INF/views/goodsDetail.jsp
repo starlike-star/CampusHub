@@ -35,6 +35,7 @@
     <title><%= HtmlUtils.escape(goods.getTitle()) %> - CampusHub 二手市场</title>
     <link rel="stylesheet" href="<%= contextPath %>/css/index.css">
     <link rel="stylesheet" href="<%= contextPath %>/css/report.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/image-upload.css">
 </head>
 <body data-report-authenticated="<%= goodsLoginUser != null %>">
 <header class="simple-topbar">
@@ -80,17 +81,23 @@
                 String mainImage = detailImages.get(0);
             %>
             <img class="goods-main-image"
-                 src="<%= contextPath %>/<%= HtmlUtils.escape(mainImage) %>"
+                 src="<%= contextPath %><%= mainImage.startsWith("/") ? "" : "/" %><%=
+                        HtmlUtils.escape(mainImage)
+                 %>"
                  onerror="this.onerror=null;this.src='<%= contextPath %>/images/default-goods.png';"
                  alt="<%= HtmlUtils.escape(goods.getTitle()) %>">
             <% if (detailImages.size() > 1) { %>
             <div class="goods-thumbnails">
                 <% for (String image : detailImages) { %>
                 <button type="button"
-                        data-goods-thumbnail="<%= contextPath %>/<%=
+                        data-goods-thumbnail="<%= contextPath %><%=
+                                image.startsWith("/") ? "" : "/"
+                        %><%=
                                 HtmlUtils.escape(image)
                         %>">
-                    <img src="<%= contextPath %>/<%=
+                    <img src="<%= contextPath %><%=
+                            image.startsWith("/") ? "" : "/"
+                    %><%=
                             HtmlUtils.escape(image)
                     %>" alt="商品缩略图">
                 </button>
@@ -225,8 +232,10 @@
         <span class="goods-seller-avatar large">
             <% if (goods.getSellerAvatar() != null
                     && !goods.getSellerAvatar().isBlank()) { %>
-            <img src="<%= contextPath %>/<%=
-                    HtmlUtils.escape(goods.getSellerAvatar())
+            <img src="<%= contextPath %><%=
+                    HtmlUtils.escape(HtmlUtils.resourcePath(
+                            goods.getSellerAvatar()
+                    ))
             %>" alt="<%= HtmlUtils.escape(goods.getSellerNickname()) %>">
             <% } else { %>
             <%= HtmlUtils.escape(goods.getSellerInitial()) %>
@@ -315,9 +324,26 @@
             <label>商品描述
                 <textarea name="description" rows="6" required></textarea>
             </label>
-            <label>图片路径
-                <input type="text" name="images">
-            </label>
+            <div class="image-upload" data-image-upload="goods">
+                <span>商品封面</span>
+                <input type="hidden"
+                       name="images"
+                       data-image-upload-value>
+                <div class="image-upload-controls">
+                    <input class="image-upload-file"
+                           type="file"
+                           accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                           data-image-upload-input>
+                    <button class="image-upload-button"
+                            type="button"
+                            data-image-upload-button>选择图片</button>
+                    <small class="image-upload-status"
+                           data-image-upload-status>支持重新选择，最大 5MB</small>
+                </div>
+                <div class="image-upload-preview"
+                     data-image-upload-preview
+                     hidden></div>
+            </div>
             <p class="goods-trade-hint" data-trade-place-hint>
                 线下交易建议填写明确的交易地点。
             </p>
@@ -336,6 +362,7 @@
     </symbol>
 </svg>
 <div class="toast" id="toast" role="status"></div>
+<script src="<%= contextPath %>/js/image-upload.js"></script>
 <script src="<%= contextPath %>/js/market.js"></script>
 <script src="<%= contextPath %>/js/report.js"></script>
 </body>

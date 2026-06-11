@@ -32,6 +32,25 @@ public class JdbcMessageDao implements MessageDao {
     }
 
     @Override
+    public List<Long> findActiveAdminIds() throws SQLException {
+        String sql = """
+                SELECT id
+                FROM users
+                WHERE role = 'admin' AND status = 1
+                ORDER BY id
+                """;
+        List<Long> adminIds = new ArrayList<>();
+        try (Connection connection = JdbcUtils.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                adminIds.add(resultSet.getLong("id"));
+            }
+        }
+        return adminIds;
+    }
+
+    @Override
     public List<Message> findByUser(long userId, String type) throws SQLException {
         String sql = """
                 SELECT id, user_id, title, content, type, is_read, created_at

@@ -10,12 +10,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JdbcSearchDao implements SearchDao {
+    private static final DateTimeFormatter EXTRA_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     private static final String COUNT_SQL = """
             SELECT 'post' AS result_type, COUNT(*) AS total
             FROM posts p
@@ -215,6 +219,8 @@ public class JdbcSearchDao implements SearchDao {
             int maxMembers = resultSet.getInt("max_members");
             String memberText = resultSet.getInt("current_members") + "/"
                     + (maxMembers == 0 ? "不限" : maxMembers) + " 人";
+            LocalDateTime startTime =
+                    toLocalDateTime(resultSet.getTimestamp("start_time"));
             return new SearchResultVO(
                     resultSet.getLong("id"),
                     "activity",
@@ -224,6 +230,7 @@ public class JdbcSearchDao implements SearchDao {
                     valueOr(resultSet.getString("author_name"), "校园用户"),
                     activityStatusText(resultSet.getString("status")),
                     valueOr(resultSet.getString("location"), "地点待定")
+                            + " · " + formatStartTime(startTime)
                             + " · " + memberText,
                     "/activity/detail?id=" + resultSet.getLong("id"),
                     toLocalDateTime(resultSet.getTimestamp("created_at"))
@@ -365,6 +372,12 @@ public class JdbcSearchDao implements SearchDao {
             case "urgent" -> "紧急公告";
             default -> "系统公告";
         };
+    }
+
+    private String formatStartTime(LocalDateTime startTime) {
+        return startTime == null
+                ? "时间待定"
+                : startTime.format(EXTRA_TIME_FORMATTER);
     }
 
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
