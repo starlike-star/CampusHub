@@ -3,6 +3,7 @@ package cn.campushub.servlet;
 import cn.campushub.model.SessionUser;
 import cn.campushub.util.JsonUtils;
 import cn.campushub.util.SessionUtils;
+import cn.campushub.util.UploadStorage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,9 +25,6 @@ import java.util.UUID;
  */
 public class ImageUploadServlet extends HttpServlet {
     private static final long MAX_FILE_SIZE = 5L * 1024 * 1024;
-    private static final Set<String> ALLOWED_TYPES = Set.of(
-            "avatar", "post", "goods", "lost_found", "activity", "common"
-    );
     private static final Map<String, Set<String>> MIME_TYPES = Map.of(
             "jpg", Set.of("image/jpeg", "image/pjpeg"),
             "jpeg", Set.of("image/jpeg", "image/pjpeg"),
@@ -34,6 +32,14 @@ public class ImageUploadServlet extends HttpServlet {
             "webp", Set.of("image/webp")
     );
 
+    /**
+     * 处理`ImageUpload`相关的 HTTP POST 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -49,7 +55,7 @@ public class ImageUploadServlet extends HttpServlet {
         }
 
         String type = normalize(request.getParameter("type"));
-        if (!ALLOWED_TYPES.contains(type)) {
+        if (!UploadStorage.isAllowedType(type)) {
             writeError(response, HttpServletResponse.SC_BAD_REQUEST, "图片类型参数无效");
             return;
         }
@@ -108,17 +114,7 @@ public class ImageUploadServlet extends HttpServlet {
             return;
         }
 
-        String realDirectory = getServletContext().getRealPath("/uploads/" + type);
-        if (realDirectory == null || realDirectory.isBlank()) {
-            writeError(
-                    response,
-                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                    "服务器上传目录不可用"
-            );
-            return;
-        }
-
-        Path directory = Path.of(realDirectory).toAbsolutePath().normalize();
+        Path directory = UploadStorage.typeDirectory(type);
         try {
             Files.createDirectories(directory);
         } catch (IOException exception) {
@@ -155,12 +151,18 @@ public class ImageUploadServlet extends HttpServlet {
                 HttpServletResponse.SC_OK,
                 Map.of(
                         "success", true,
-                        "url", "/uploads/" + type + "/" + fileName,
+                        "url", UploadStorage.publicUrl(type, fileName),
                         "message", "上传成功"
                 )
         );
     }
 
+    /**
+     * 根据输入计算并返回 `extensionOf` 的处理结果。
+     *
+     * @param fileName 参数 `fileName`
+     * @return 方法处理结果
+     */
     private String extensionOf(String fileName) {
         if (fileName == null) {
             return "";
@@ -169,6 +171,13 @@ public class ImageUploadServlet extends HttpServlet {
         return index >= 0 ? normalize(fileName.substring(index + 1)) : "";
     }
 
+    /**
+     * 根据输入计算并返回 `detectImageType` 的处理结果。
+     *
+     * @param input 参数 `input`
+     * @return 方法处理结果
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     private String detectImageType(InputStream input) throws IOException {
         byte[] header = input.readNBytes(12);
         if (header.length >= 3
@@ -202,16 +211,37 @@ public class ImageUploadServlet extends HttpServlet {
         return "";
     }
 
+    /**
+     * 根据输入计算并返回 `matchesExtension` 的处理结果。
+     *
+     * @param extension 参数 `extension`
+     * @param detectedType 参数 `detectedType`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private boolean matchesExtension(String extension, String detectedType) {
         return ("jpg".equals(extension) || "jpeg".equals(extension))
                 ? "jpeg".equals(detectedType)
                 : extension.equals(detectedType);
     }
 
+    /**
+     * 规范化`ImageUpload`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String normalize(String value) {
         return value == null ? "" : value.trim().toLowerCase(Locale.ROOT);
     }
 
+    /**
+     * 写入`Error`。
+     *
+     * @param response HTTP 响应对象
+     * @param status 业务状态
+     * @param message 消息数据
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     private void writeError(
             HttpServletResponse response,
             int status,
@@ -220,6 +250,15 @@ public class ImageUploadServlet extends HttpServlet {
         writeError(response, status, message, false);
     }
 
+    /**
+     * 写入`Error`。
+     *
+     * @param response HTTP 响应对象
+     * @param status 业务状态
+     * @param message 消息数据
+     * @param needLogin 参数 `needLogin`
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     private void writeError(
             HttpServletResponse response,
             int status,

@@ -13,6 +13,9 @@ import java.util.Optional;
 public class PublicUserProfileService {
     private final PublicUserProfileDao profileDao;
 
+    /**
+     * 初始化公开用户个人资料对象及其运行所需依赖。
+     */
     public PublicUserProfileService() {
         this(new JdbcPublicUserProfileDao());
     }
@@ -21,6 +24,13 @@ public class PublicUserProfileService {
         this.profileDao = profileDao;
     }
 
+    /**
+     * 查询公开用户个人资料。
+     *
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<PublicUserProfile> find(long userId) throws SQLException {
         return userId > 0 ? profileDao.findActiveById(userId) : Optional.empty();
     }

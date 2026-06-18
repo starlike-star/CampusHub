@@ -13,6 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * 验证 后台管理相关逻辑的正常路径、边界条件和失败场景。
  */
 class AdminServiceTest {
+    /**
+     * 验证 `administratorCannotDisableOwnAccount` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void administratorCannotDisableOwnAccount() throws Exception {
         AtomicInteger updates = new AtomicInteger();
@@ -26,6 +31,11 @@ class AdminServiceTest {
         assertEquals(0, updates.get());
     }
 
+    /**
+     * 验证 `invalidContentStatusIsRejectedBeforeDaoCall` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void invalidContentStatusIsRejectedBeforeDaoCall() throws Exception {
         AtomicInteger updates = new AtomicInteger();
@@ -39,6 +49,12 @@ class AdminServiceTest {
         assertEquals(0, updates.get());
     }
 
+    /**
+     * 验证 `proxyDao` 场景下的业务行为与预期结果一致。
+     *
+     * @param updates 参数 `updates`
+     * @return 方法处理结果
+     */
     private AdminDao proxyDao(AtomicInteger updates) {
         return (AdminDao) Proxy.newProxyInstance(
                 AdminDao.class.getClassLoader(),

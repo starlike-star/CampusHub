@@ -18,6 +18,14 @@ import java.sql.SQLException;
 public class RegisterServlet extends HttpServlet {
     private final UserService userService = new UserService();
 
+    /**
+     * 处理`Register`相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -28,6 +36,14 @@ public class RegisterServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(request, response);
     }
 
+    /**
+     * 处理`Register`相关的 HTTP POST 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

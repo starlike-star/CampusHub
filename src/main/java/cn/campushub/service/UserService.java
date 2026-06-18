@@ -20,6 +20,9 @@ public class UserService {
 
     private final UserDao userDao;
 
+    /**
+     * 初始化用户对象及其运行所需依赖。
+     */
     public UserService() {
         this(new JdbcUserDao());
     }
@@ -28,6 +31,17 @@ public class UserService {
         this.userDao = userDao;
     }
 
+    /**
+     * 提交用户。
+     *
+     * @param username 用户名
+     * @param email 电子邮箱
+     * @param nickname 用户昵称
+     * @param password 密码
+     * @param confirmPassword 参数 `confirmPassword`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<SessionUser> register(
             String username,
             String email,
@@ -93,6 +107,14 @@ public class UserService {
         return ServiceResult.success("注册成功", SessionUser.from(user));
     }
 
+    /**
+     * 根据输入计算并返回 `login` 的处理结果。
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<SessionUser> login(String username, String password)
             throws SQLException {
         username = ValidationUtils.trimToNull(username);

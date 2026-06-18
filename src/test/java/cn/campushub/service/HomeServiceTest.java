@@ -28,6 +28,11 @@ class HomeServiceTest {
             ZoneOffset.UTC
     );
 
+    /**
+     * 验证 `guestSidebarDoesNotQueryCheckin` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void guestSidebarDoesNotQueryCheckin() throws SQLException {
         FakeHomeDao dao = new FakeHomeDao();
@@ -39,6 +44,11 @@ class HomeServiceTest {
         assertFalse(dao.checkinQueried);
     }
 
+    /**
+     * 验证 `signedInSidebarQueriesToday` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void signedInSidebarQueriesToday() throws SQLException {
         FakeHomeDao dao = new FakeHomeDao();
@@ -54,6 +64,11 @@ class HomeServiceTest {
         assertEquals(4, sidebar.checkin().continuousDays());
     }
 
+    /**
+     * 验证 `checkInUsesTodayAndFivePoints` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void checkInUsesTodayAndFivePoints() throws SQLException {
         FakeHomeDao dao = new FakeHomeDao();
@@ -72,21 +87,43 @@ class HomeServiceTest {
         private LocalDate requestedDate;
         private int requestedPoints;
 
+        /**
+         * 查询`LatestNotices`。
+         *
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<HomeSidebarVO.NoticeItem> findLatestNotices() {
             return List.of();
         }
 
+        /**
+         * 查询`RecommendedActivities`。
+         *
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<HomeSidebarVO.ActivityItem> findRecommendedActivities() {
             return List.of();
         }
 
+        /**
+         * 查询`LatestLostFound`。
+         *
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<HomeSidebarVO.LostFoundItem> findLatestLostFound() {
             return List.of();
         }
 
+        /**
+         * 查询签到。
+         *
+         * @param userId 用户编号
+         * @param date 参数 `date`
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<HomeSidebarVO.CheckinStatus> findCheckin(
                 long userId,
@@ -97,11 +134,25 @@ class HomeServiceTest {
             return checkinStatus;
         }
 
+        /**
+         * 查询经验值信息。
+         *
+         * @param userId 用户编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<ExperienceInfo> findExperienceInfo(long userId) {
             return Optional.of(LevelUtils.experienceInfo(0));
         }
 
+        /**
+         * 检查`In`。
+         *
+         * @param userId 用户编号
+         * @param date 参数 `date`
+         * @param points 参数 `points`
+         * @return 方法处理结果
+         */
         @Override
         public CheckinResult checkIn(long userId, LocalDate date, int points) {
             requestedDate = date;

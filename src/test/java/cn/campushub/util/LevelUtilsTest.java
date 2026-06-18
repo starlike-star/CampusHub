@@ -9,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * 验证 LevelUtils相关逻辑的正常路径、边界条件和失败场景。
  */
 class LevelUtilsTest {
+    /**
+     * 验证 `calculatesLevelsAtConfiguredThresholds` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void calculatesLevelsAtConfiguredThresholds() {
         assertEquals(1, LevelUtils.calculateLevel(0));
@@ -19,6 +22,9 @@ class LevelUtilsTest {
         assertEquals(5, LevelUtils.calculateLevel(800));
     }
 
+    /**
+     * 验证 `calculatesCurrentRangeAndProgress` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void calculatesCurrentRangeAndProgress() {
         ExperienceInfo info = LevelUtils.experienceInfo(150);
@@ -30,6 +36,9 @@ class LevelUtilsTest {
         assertEquals(50, info.progressPercent());
     }
 
+    /**
+     * 验证 `normalizesNegativeExperience` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void normalizesNegativeExperience() {
         ExperienceInfo info = LevelUtils.experienceInfo(-5);

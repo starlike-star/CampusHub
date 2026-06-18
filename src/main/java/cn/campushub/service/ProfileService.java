@@ -31,6 +31,9 @@ public class ProfileService {
     private final ProfileDao profileDao;
     private final ExperienceDao experienceDao;
 
+    /**
+     * 初始化个人资料对象及其运行所需依赖。
+     */
     public ProfileService() {
         this(new JdbcProfileDao(), new JdbcExperienceDao());
     }
@@ -44,10 +47,23 @@ public class ProfileService {
         this.experienceDao = experienceDao;
     }
 
+    /**
+     * 规范化`Tab`。
+     *
+     * @param tab 参数 `tab`
+     * @return 方法处理结果
+     */
     public String normalizeTab(String tab) {
         return tab != null && TABS.contains(tab) ? tab : "overview";
     }
 
+    /**
+     * 查询`overview`并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<ProfileOverviewVO> overview(long userId) throws SQLException {
         if (experienceDao != null) {
             experienceDao.reconcileCheckinExperience(userId);
@@ -55,31 +71,88 @@ public class ProfileService {
         return profileDao.findOverview(userId);
     }
 
+    /**
+     * 查询帖子列表并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Post> posts(long userId) throws SQLException {
         return profileDao.findPosts(userId);
     }
 
+    /**
+     * 查询`comments`并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<UserCommentVO> comments(long userId) throws SQLException {
         return profileDao.findComments(userId);
     }
 
+    /**
+     * 查询`favorites`并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<FavoriteItemVO> favorites(long userId) throws SQLException {
         return profileDao.findFavorites(userId);
     }
 
+    /**
+     * 查询`purchasedGoods`并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<PurchasedGoodsVO> purchasedGoods(long userId)
             throws SQLException {
         return profileDao.findPurchasedGoods(userId);
     }
 
+    /**
+     * 检查`ins`。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public UserCheckinStatsVO checkins(long userId) throws SQLException {
         return profileDao.findCheckins(userId);
     }
 
+    /**
+     * 查询活动列表并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<ProfileActivityVO> activities(long userId) throws SQLException {
         return profileDao.findActivities(userId);
     }
 
+    /**
+     * 更新个人资料。
+     *
+     * @param userId 用户编号
+     * @param nickname 用户昵称
+     * @param avatar 参数 `avatar`
+     * @param studentNo 参数 `studentNo`
+     * @param college 参数 `college`
+     * @param major 参数 `major`
+     * @param grade 参数 `grade`
+     * @param email 电子邮箱
+     * @param phone 参数 `phone`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<User> update(
             long userId,
             String nickname,
@@ -132,10 +205,23 @@ public class ProfileService {
                 .orElseGet(() -> ServiceResult.failure("用户不存在或账号不可用"));
     }
 
+    /**
+     * 规范化`Optional`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String normalizeOptional(String value) {
         return ValidationUtils.trimToNull(value);
     }
 
+    /**
+     * 根据输入计算并返回 `withinLimit` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @param limit 查询数量上限
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private boolean withinLimit(String value, int limit) {
         return value == null || value.length() <= limit;
     }

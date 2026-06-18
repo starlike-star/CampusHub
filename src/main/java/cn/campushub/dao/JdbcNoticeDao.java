@@ -15,6 +15,13 @@ import java.util.Optional;
  * 使用 JDBC 实现公告数据的查询与持久化操作。
  */
 public class JdbcNoticeDao implements NoticeDao {
+    /**
+     * 查询`VisibleNoticeById`。
+     *
+     * @param id 业务数据编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<Notice> findVisibleNoticeById(long id) throws SQLException {
         String sql = """
@@ -53,6 +60,12 @@ public class JdbcNoticeDao implements NoticeDao {
         }
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

@@ -57,6 +57,18 @@ public class JdbcGoodsDao implements GoodsDao {
                      u.nickname, u.avatar, u.college, c.name
             """;
 
+    /**
+     * 查询商品。
+     *
+     * @param currentUserId 当前用户编号
+     * @param keyword 搜索关键字
+     * @param categoryId 分类编号
+     * @param status 业务状态
+     * @param tradeMethod 参数 `tradeMethod`
+     * @param sort 排序方式
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Goods> findGoods(
             Long currentUserId,
@@ -115,6 +127,13 @@ public class JdbcGoodsDao implements GoodsDao {
         return goodsList;
     }
 
+    /**
+     * 查询`OwnGoods`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Goods> findOwnGoods(long userId) throws SQLException {
         String sql = BASE_LIST_SQL.replace(
@@ -124,6 +143,13 @@ public class JdbcGoodsDao implements GoodsDao {
         return queryByUser(sql, userId, true);
     }
 
+    /**
+     * 查询收藏商品。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Goods> findFavoriteGoods(long userId) throws SQLException {
         String sql = BASE_LIST_SQL + """
@@ -160,6 +186,12 @@ public class JdbcGoodsDao implements GoodsDao {
         return goodsList;
     }
 
+    /**
+     * 查询`ActiveGoodsCategories`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Category> findActiveGoodsCategories() throws SQLException {
         String sql = """
@@ -179,6 +211,13 @@ public class JdbcGoodsDao implements GoodsDao {
         return categories;
     }
 
+    /**
+     * 判断是否`ActiveGoodsCategory`。
+     *
+     * @param categoryId 分类编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean isActiveGoodsCategory(long categoryId) throws SQLException {
         String sql = """
@@ -196,6 +235,13 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 创建`JdbcGoods`。
+     *
+     * @param goods 商品数据
+     * @return 新建数据的编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public long create(Goods goods) throws SQLException {
         String sql = """
@@ -228,6 +274,14 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 查询`VisibleById`。
+     *
+     * @param goodsId 商品编号
+     * @param currentUserId 当前用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<Goods> findVisibleById(long goodsId, Long currentUserId)
             throws SQLException {
@@ -253,6 +307,14 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 切换收藏。
+     *
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public PostToggleResult toggleFavorite(long goodsId, long userId)
             throws SQLException {
@@ -296,6 +358,14 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 更新`JdbcGoods`。
+     *
+     * @param goods 商品数据
+     * @param admin 是否具有管理员权限
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<Goods> update(Goods goods, boolean admin) throws SQLException {
         String sql = """
@@ -327,6 +397,16 @@ public class JdbcGoodsDao implements GoodsDao {
         return findByIdIncludingOffShelf(goods.getId(), goods.getUserId());
     }
 
+    /**
+     * 更新状态。
+     *
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateStatus(
             long goodsId,
@@ -350,6 +430,12 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `orderBy` 的处理结果。
+     *
+     * @param sort 排序方式
+     * @return 方法处理结果
+     */
     private String orderBy(String sort) {
         return switch (sort) {
             case "price_asc" -> PRICE_ASC_ORDER;
@@ -359,6 +445,14 @@ public class JdbcGoodsDao implements GoodsDao {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `lockVisibleGoods` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean lockVisibleGoods(Connection connection, long goodsId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -375,6 +469,15 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 判断是否具有收藏。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasFavorite(
             Connection connection,
             long goodsId,
@@ -394,6 +497,14 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 统计`Favorites`。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int countFavorites(Connection connection, long goodsId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -409,6 +520,14 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 根据`IdIncludingOffShelf`查询`JdbcGoods`。
+     *
+     * @param goodsId 商品编号
+     * @param currentUserId 当前用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Optional<Goods> findByIdIncludingOffShelf(
             long goodsId,
             Long currentUserId
@@ -429,6 +548,13 @@ public class JdbcGoodsDao implements GoodsDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为商品。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Goods mapGoods(ResultSet resultSet) throws SQLException {
         Goods goods = new Goods();
         goods.setId(resultSet.getLong("id"));
@@ -455,6 +581,15 @@ public class JdbcGoodsDao implements GoodsDao {
         return goods;
     }
 
+    /**
+     * 查询`queryByUser`并返回结果。
+     *
+     * @param sql 参数 `sql`
+     * @param userId 用户编号
+     * @param ownerQuery 参数 `ownerQuery`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private List<Goods> queryByUser(
             String sql,
             long userId,
@@ -476,6 +611,13 @@ public class JdbcGoodsDao implements GoodsDao {
         return goodsList;
     }
 
+    /**
+     * 将数据库结果映射为分类。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Category mapCategory(ResultSet resultSet) throws SQLException {
         Category category = new Category();
         category.setId(resultSet.getLong("id"));
@@ -490,6 +632,12 @@ public class JdbcGoodsDao implements GoodsDao {
         return category;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private java.time.LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

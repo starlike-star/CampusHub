@@ -19,6 +19,9 @@ public class PrivateMessageService {
     private final PrivateConversationDao conversationDao;
     private final PrivateMessageDao messageDao;
 
+    /**
+     * 初始化`PrivateMessage`对象及其运行所需依赖。
+     */
     public PrivateMessageService() {
         this(new JdbcPrivateConversationDao(), new JdbcPrivateMessageDao());
     }
@@ -31,6 +34,14 @@ public class PrivateMessageService {
         this.messageDao = messageDao;
     }
 
+    /**
+     * 获取`OrCreateConversation`。
+     *
+     * @param currentUserId 当前用户编号
+     * @param receiverId `receiver`编号
+     * @return `OrCreateConversation`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public long getOrCreateConversation(long currentUserId, long receiverId)
             throws SQLException {
         validateUsers(currentUserId, receiverId);
@@ -39,11 +50,26 @@ public class PrivateMessageService {
         return conversationDao.getOrCreate(userAId, userBId);
     }
 
+    /**
+     * 查询`Conversations`。
+     *
+     * @param currentUserId 当前用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<PrivateConversation> listConversations(long currentUserId)
             throws SQLException {
         return conversationDao.findByUser(currentUserId);
     }
 
+    /**
+     * 查询会话。
+     *
+     * @param conversationId 会话编号
+     * @param currentUserId 当前用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<PrivateConversation> findConversation(
             long conversationId,
             long currentUserId
@@ -54,6 +80,14 @@ public class PrivateMessageService {
         return conversationDao.findByIdForUser(conversationId, currentUserId);
     }
 
+    /**
+     * 查询`Messages`。
+     *
+     * @param conversationId 会话编号
+     * @param currentUserId 当前用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<PrivateMessage> listMessages(
             long conversationId,
             long currentUserId
@@ -64,6 +98,15 @@ public class PrivateMessageService {
         return messageDao.findByConversation(conversationId, currentUserId);
     }
 
+    /**
+     * 发送消息。
+     *
+     * @param senderId `sender`编号
+     * @param receiverId `receiver`编号
+     * @param content 正文内容
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Long> sendMessage(
             long senderId,
             long receiverId,
@@ -85,6 +128,14 @@ public class PrivateMessageService {
         }
     }
 
+    /**
+     * 标记会话已读状态。
+     *
+     * @param conversationId 会话编号
+     * @param currentUserId 当前用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public int markConversationRead(long conversationId, long currentUserId)
             throws SQLException {
         if (findConversation(conversationId, currentUserId).isEmpty()) {
@@ -93,11 +144,25 @@ public class PrivateMessageService {
         return messageDao.markConversationRead(conversationId, currentUserId);
     }
 
+    /**
+     * 统计`UnreadPrivateMessages`。
+     *
+     * @param currentUserId 当前用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public int countUnreadPrivateMessages(long currentUserId)
             throws SQLException {
         return messageDao.countUnread(currentUserId);
     }
 
+    /**
+     * 校验用户列表。
+     *
+     * @param currentUserId 当前用户编号
+     * @param receiverId `receiver`编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void validateUsers(long currentUserId, long receiverId)
             throws SQLException {
         if (currentUserId <= 0 || receiverId <= 0) {

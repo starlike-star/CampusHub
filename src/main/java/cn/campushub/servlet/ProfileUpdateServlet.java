@@ -22,6 +22,14 @@ import java.util.Map;
 public class ProfileUpdateServlet extends HttpServlet {
     private final ProfileService profileService = new ProfileService();
 
+    /**
+     * 处理个人资料更新相关的 HTTP POST 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

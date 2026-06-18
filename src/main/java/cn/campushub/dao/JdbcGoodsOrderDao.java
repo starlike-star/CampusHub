@@ -26,6 +26,17 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
             JOIN goods g ON g.id = o.goods_id
             """;
 
+    /**
+     * 创建`Pending`。
+     *
+     * @param goodsId 商品编号
+     * @param buyerId `buyer`编号
+     * @param orderNo 参数 `orderNo`
+     * @param payToken 参数 `payToken`
+     * @param expireAt 参数 `expireAt`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public TradeOrderResult createPending(
             long goodsId,
@@ -101,6 +112,14 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 根据`OrderNo`查询`JdbcGoodsOrder`。
+     *
+     * @param orderNo 参数 `orderNo`
+     * @param buyerId `buyer`编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<GoodsOrder> findByOrderNo(String orderNo, long buyerId)
             throws SQLException {
@@ -117,6 +136,13 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 根据令牌查询`JdbcGoodsOrder`。
+     *
+     * @param token 参数 `token`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<GoodsOrder> findByToken(String token) throws SQLException {
         String sql = ORDER_COLUMNS + """
@@ -131,6 +157,14 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `confirmPaid` 的处理结果。
+     *
+     * @param token 参数 `token`
+     * @param now 参数 `now`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public TradeOrderResult confirmPaid(String token, LocalDateTime now)
             throws SQLException {
@@ -198,6 +232,15 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `expireIfNecessary` 的处理结果。
+     *
+     * @param orderNo 参数 `orderNo`
+     * @param buyerId `buyer`编号
+     * @param now 参数 `now`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean expireIfNecessary(
             String orderNo,
@@ -220,6 +263,15 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 校验`AndLockGoods`。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @param buyerId `buyer`编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private TradeOrderResult validateAndLockGoods(
             Connection connection,
             long goodsId,
@@ -270,6 +322,14 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 判断是否具有`PaidOrder`。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasPaidOrder(Connection connection, long goodsId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -285,6 +345,15 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 查询`ReusablePending`。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @param buyerId `buyer`编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Optional<GoodsOrder> findReusablePending(
             Connection connection,
             long goodsId,
@@ -305,6 +374,14 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 根据`TokenForUpdate`查询`JdbcGoodsOrder`。
+     *
+     * @param connection 数据库连接
+     * @param token 参数 `token`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Optional<GoodsOrder> findByTokenForUpdate(
             Connection connection,
             String token
@@ -321,6 +398,14 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockGoodsOnSale` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param goodsId 商品编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean lockGoodsOnSale(Connection connection, long goodsId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -337,6 +422,13 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 处理 `expire` 对应的业务流程。
+     *
+     * @param connection 数据库连接
+     * @param orderId 订单编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void expire(Connection connection, long orderId) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
                 UPDATE goods_orders
@@ -348,6 +440,13 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 查询`queryOne`并返回结果。
+     *
+     * @param statement 预编译 SQL 语句
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Optional<GoodsOrder> queryOne(PreparedStatement statement)
             throws SQLException {
         try (ResultSet resultSet = statement.executeQuery()) {
@@ -357,6 +456,13 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为订单。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private GoodsOrder mapOrder(ResultSet resultSet) throws SQLException {
         GoodsOrder order = new GoodsOrder();
         order.setId(resultSet.getLong("id"));
@@ -377,6 +483,12 @@ public class JdbcGoodsOrderDao implements GoodsOrderDao {
         return order;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

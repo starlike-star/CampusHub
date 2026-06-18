@@ -21,6 +21,14 @@ public class LostFoundDetailServlet extends HttpServlet {
     private final LostFoundService lostFoundService = new LostFoundService();
     private final ClaimRequestService claimService = new ClaimRequestService();
 
+    /**
+     * 处理`LostFoundDetail`相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

@@ -6,9 +6,18 @@ package cn.campushub.util;
 public final class HtmlUtils {
     private static final String DEFAULT_IMAGE_VERSION = "20260611";
 
+    /**
+     * 初始化`Html`对象及其运行所需依赖。
+     */
     private HtmlUtils() {
     }
 
+    /**
+     * 转义`Html`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public static String escape(String value) {
         if (value == null) {
             return "";
@@ -21,6 +30,12 @@ public final class HtmlUtils {
                 .replace("'", "&#39;");
     }
 
+    /**
+     * 根据输入计算并返回 `resourcePath` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public static String resourcePath(String value) {
         if (value == null || value.isBlank()) {
             return "";
@@ -32,6 +47,12 @@ public final class HtmlUtils {
         return path;
     }
 
+    /**
+     * 判断是否`DefaultImage`。
+     *
+     * @param path 资源路径
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private static boolean isDefaultImage(String path) {
         return switch (path) {
             case "/images/default-activity.png",

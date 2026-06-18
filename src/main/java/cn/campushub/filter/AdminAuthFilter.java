@@ -17,6 +17,15 @@ import java.io.IOException;
  * 拦截后台请求并校验当前用户是否具有管理员权限。
  */
 public class AdminAuthFilter implements Filter {
+    /**
+     * 对`AdminAuth`相关请求执行前置校验并决定是否继续过滤器链。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @param chain 过滤器链
+     * @throws IOException 读取请求或写入响应失败时抛出
+     * @throws ServletException Servlet 处理请求失败时抛出
+     */
     @Override
     public void doFilter(
             ServletRequest request,

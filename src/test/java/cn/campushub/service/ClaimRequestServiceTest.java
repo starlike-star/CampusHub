@@ -17,6 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 认领申请相关逻辑的正常路径、边界条件和失败场景。
  */
 class ClaimRequestServiceTest {
+    /**
+     * 验证 `duplicatePendingClaimReturnsFailure` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void duplicatePendingClaimReturnsFailure() throws SQLException {
         FakeClaimRequestDao dao = new FakeClaimRequestDao();
@@ -29,6 +34,11 @@ class ClaimRequestServiceTest {
         assertFalse(result.success());
     }
 
+    /**
+     * 验证 `validClaimReturnsSuccess` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void validClaimReturnsSuccess() throws SQLException {
         FakeClaimRequestDao dao = new FakeClaimRequestDao();
@@ -41,6 +51,11 @@ class ClaimRequestServiceTest {
         assertTrue(result.success());
     }
 
+    /**
+     * 验证 `handleRejectsUnknownAction` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void handleRejectsUnknownAction() throws SQLException {
         ClaimRequestService service =
@@ -53,6 +68,15 @@ class ClaimRequestServiceTest {
     private static class FakeClaimRequestDao implements ClaimRequestDao {
         private ClaimCreateResult createResult;
 
+        /**
+         * 创建`FakeClaimRequest`。
+         *
+         * @param lostFoundId `lostFound`编号
+         * @param userId 用户编号
+         * @param message 消息数据
+         * @param contact 参数 `contact`
+         * @return 方法处理结果
+         */
         @Override
         public ClaimCreateResult create(
                 long lostFoundId,
@@ -63,6 +87,13 @@ class ClaimRequestServiceTest {
             return createResult;
         }
 
+        /**
+         * 根据`LostFound`查询`FakeClaimRequest`。
+         *
+         * @param lostFoundId `lostFound`编号
+         * @param ownerId `owner`编号
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<ClaimRequest> findByLostFound(
                 long lostFoundId,
@@ -71,6 +102,14 @@ class ClaimRequestServiceTest {
             return List.of();
         }
 
+        /**
+         * 处理`FakeClaimRequest`。
+         *
+         * @param claimId 认领编号
+         * @param ownerId `owner`编号
+         * @param action 参数 `action`
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<ClaimHandleResult> handle(
                 long claimId,

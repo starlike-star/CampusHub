@@ -16,6 +16,9 @@ import java.util.Set;
 public class ActivityRegistrationService {
     private final ActivityRegistrationDao registrationDao;
 
+    /**
+     * 初始化活动报名对象及其运行所需依赖。
+     */
     public ActivityRegistrationService() {
         this(new JdbcActivityRegistrationDao());
     }
@@ -24,15 +27,39 @@ public class ActivityRegistrationService {
         this.registrationDao = registrationDao;
     }
 
+    /**
+     * 查询当前用户已报名的活动编号集合。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Set<Long> registeredActivityIds(long userId) throws SQLException {
         return registrationDao.findRegisteredActivityIds(userId);
     }
 
+    /**
+     * 判断是否已报名。
+     *
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public boolean isRegistered(long activityId, long userId)
             throws SQLException {
         return activityId > 0 && registrationDao.isRegistered(activityId, userId);
     }
 
+    /**
+     * 提交活动报名。
+     *
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @param nickname 用户昵称
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<ActivityRegistrationResult> register(
             long activityId,
             long userId,
@@ -51,6 +78,14 @@ public class ActivityRegistrationService {
         }
     }
 
+    /**
+     * 取消活动报名。
+     *
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<ActivityRegistrationResult> cancel(
             long activityId,
             long userId
@@ -68,11 +103,25 @@ public class ActivityRegistrationService {
         }
     }
 
+    /**
+     * 查询报名记录并返回结果。
+     *
+     * @param activityId 活动编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<ActivityRegistrationVO> registrations(long activityId)
             throws SQLException {
         return registrationDao.findRegistrations(activityId);
     }
 
+    /**
+     * 查询活动列表并返回结果。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<ProfileActivityVO> activities(long userId) throws SQLException {
         return registrationDao.findByUser(userId);
     }

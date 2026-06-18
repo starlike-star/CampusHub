@@ -13,6 +13,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 举报相关逻辑的正常路径、边界条件和失败场景。
  */
 class ReportServiceTest {
+    /**
+     * 验证 `createsPendingReportForValidTarget` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void createsPendingReportForValidTarget() throws SQLException {
         FakeReportDao dao = new FakeReportDao();
@@ -27,6 +32,11 @@ class ReportServiceTest {
         assertEquals("pending", dao.createdStatus);
     }
 
+    /**
+     * 验证 `rejectsOwnContent` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void rejectsOwnContent() throws SQLException {
         FakeReportDao dao = new FakeReportDao();
@@ -41,6 +51,11 @@ class ReportServiceTest {
         assertEquals(0, dao.createCount);
     }
 
+    /**
+     * 验证 `rejectsDuplicatePendingReport` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void rejectsDuplicatePendingReport() throws SQLException {
         FakeReportDao dao = new FakeReportDao();
@@ -59,6 +74,11 @@ class ReportServiceTest {
         assertEquals(0, dao.createCount);
     }
 
+    /**
+     * 验证 `validatesTypeTargetAndReason` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void validatesTypeTargetAndReason() throws SQLException {
         ReportService service = new ReportService(new FakeReportDao());
@@ -74,11 +94,26 @@ class ReportServiceTest {
         private int createCount;
         private String createdStatus;
 
+        /**
+         * 查询`TargetOwnerId`。
+         *
+         * @param targetType 参数 `targetType`
+         * @param targetId `target`编号
+         * @return 方法处理结果
+         */
         @Override
         public Long findTargetOwnerId(String targetType, long targetId) {
             return ownerId;
         }
 
+        /**
+         * 根据输入计算并返回 `existsPendingReport` 的处理结果。
+         *
+         * @param userId 用户编号
+         * @param targetType 参数 `targetType`
+         * @param targetId `target`编号
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean existsPendingReport(
                 long userId,
@@ -88,6 +123,15 @@ class ReportServiceTest {
             return pending;
         }
 
+        /**
+         * 创建举报。
+         *
+         * @param userId 用户编号
+         * @param targetType 参数 `targetType`
+         * @param targetId `target`编号
+         * @param reason 参数 `reason`
+         * @return 新建数据的编号
+         */
         @Override
         public int createReport(
                 long userId,

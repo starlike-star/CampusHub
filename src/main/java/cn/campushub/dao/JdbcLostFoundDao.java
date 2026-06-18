@@ -32,6 +32,17 @@ public class JdbcLostFoundDao implements LostFoundDao {
             LEFT JOIN categories c ON c.id = lf.category_id
             """;
 
+    /**
+     * 查询全部`JdbcLostFound`。
+     *
+     * @param type 参数 `type`
+     * @param status 业务状态
+     * @param keyword 搜索关键字
+     * @param categoryId 分类编号
+     * @param sort 排序方式
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<LostFound> findAll(
             String type,
@@ -72,6 +83,13 @@ public class JdbcLostFoundDao implements LostFoundDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 根据用户查询`JdbcLostFound`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<LostFound> findByUser(long userId) throws SQLException {
         return query(
@@ -80,6 +98,12 @@ public class JdbcLostFoundDao implements LostFoundDao {
         );
     }
 
+    /**
+     * 查询`ActiveCategories`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Category> findActiveCategories() throws SQLException {
         String sql = """
@@ -109,6 +133,13 @@ public class JdbcLostFoundDao implements LostFoundDao {
         return categories;
     }
 
+    /**
+     * 判断是否`ActiveCategory`。
+     *
+     * @param categoryId 分类编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean isActiveCategory(long categoryId) throws SQLException {
         String sql = """
@@ -125,6 +156,13 @@ public class JdbcLostFoundDao implements LostFoundDao {
         }
     }
 
+    /**
+     * 创建`JdbcLostFound`。
+     *
+     * @param lostFound 参数 `lostFound`
+     * @return 新建数据的编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public long create(LostFound lostFound) throws SQLException {
         String sql = """
@@ -149,6 +187,13 @@ public class JdbcLostFoundDao implements LostFoundDao {
         }
     }
 
+    /**
+     * 根据编号查询`JdbcLostFound`。
+     *
+     * @param id 业务数据编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<LostFound> findById(long id) throws SQLException {
         List<LostFound> result = query(
@@ -158,6 +203,14 @@ public class JdbcLostFoundDao implements LostFoundDao {
         return result.stream().findFirst();
     }
 
+    /**
+     * 更新`JdbcLostFound`。
+     *
+     * @param lostFound 参数 `lostFound`
+     * @param admin 是否具有管理员权限
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean update(LostFound lostFound, boolean admin) throws SQLException {
         String sql = """
@@ -178,6 +231,16 @@ public class JdbcLostFoundDao implements LostFoundDao {
         }
     }
 
+    /**
+     * 更新状态。
+     *
+     * @param id 业务数据编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateStatus(
             long id,
@@ -199,6 +262,15 @@ public class JdbcLostFoundDao implements LostFoundDao {
         }
     }
 
+    /**
+     * 设置`Fields`。
+     *
+     * @param statement 预编译 SQL 语句
+     * @param lostFound 参数 `lostFound`
+     * @param update 参数 `update`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int setFields(
             PreparedStatement statement,
             LostFound lostFound,
@@ -229,6 +301,14 @@ public class JdbcLostFoundDao implements LostFoundDao {
         return index;
     }
 
+    /**
+     * 查询`query`并返回结果。
+     *
+     * @param sql 参数 `sql`
+     * @param parameters 参数 `parameters`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private List<LostFound> query(String sql, List<Object> parameters)
             throws SQLException {
         List<LostFound> result = new ArrayList<>();
@@ -246,6 +326,13 @@ public class JdbcLostFoundDao implements LostFoundDao {
         return result;
     }
 
+    /**
+     * 将数据库结果映射为`JdbcLostFound`。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private LostFound map(ResultSet resultSet) throws SQLException {
         LostFound item = new LostFound();
         item.setId(resultSet.getLong("id"));
@@ -270,6 +357,12 @@ public class JdbcLostFoundDao implements LostFoundDao {
         return item;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp value) {
         return value == null ? null : value.toLocalDateTime();
     }

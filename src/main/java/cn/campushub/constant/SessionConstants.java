@@ -8,6 +8,9 @@ public final class SessionConstants {
     public static final String REDIRECT_AFTER_LOGIN = "redirectAfterLogin";
     public static final String LOGIN_CAPTCHA = "loginCaptcha";
 
+    /**
+     * 初始化`SessionConstants`对象及其运行所需依赖。
+     */
     private SessionConstants() {
     }
 }

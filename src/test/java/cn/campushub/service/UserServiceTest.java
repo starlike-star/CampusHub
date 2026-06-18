@@ -20,6 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 用户相关逻辑的正常路径、边界条件和失败场景。
  */
 class UserServiceTest {
+    /**
+     * 验证 `registerNormalizesCredentialsAndHashesPassword` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void registerNormalizesCredentialsAndHashesPassword() throws SQLException {
         FakeUserDao userDao = new FakeUserDao();
@@ -44,6 +49,11 @@ class UserServiceTest {
         assertTrue(PasswordUtils.matches("campus123", userDao.lastCreated.getPassword()));
     }
 
+    /**
+     * 验证 `loginAcceptsUsernameAndStoredPassword` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void loginAcceptsUsernameAndStoredPassword() throws SQLException {
         FakeUserDao userDao = new FakeUserDao();
@@ -58,6 +68,11 @@ class UserServiceTest {
         assertEquals(user.getId(), result.data().id());
     }
 
+    /**
+     * 验证 `loginRejectsDisabledUser` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void loginRejectsDisabledUser() throws SQLException {
         FakeUserDao userDao = new FakeUserDao();
@@ -73,6 +88,11 @@ class UserServiceTest {
         assertEquals("当前账号不可用，请联系管理员", result.message());
     }
 
+    /**
+     * 验证 `registerRejectsDuplicateUsername` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void registerRejectsDuplicateUsername() throws SQLException {
         FakeUserDao userDao = new FakeUserDao();
@@ -91,6 +111,11 @@ class UserServiceTest {
         assertEquals("该用户名已被使用", result.message());
     }
 
+    /**
+     * 验证 `registerRejectsWhitespaceInNickname` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void registerRejectsWhitespaceInNickname() throws SQLException {
         UserService service = new UserService(new FakeUserDao());
@@ -107,6 +132,11 @@ class UserServiceTest {
         assertTrue(result.message().contains("不能包含空格"));
     }
 
+    /**
+     * 验证 `registerRejectsWhitespaceAroundUsername` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void registerRejectsWhitespaceAroundUsername() throws SQLException {
         UserService service = new UserService(new FakeUserDao());
@@ -123,6 +153,11 @@ class UserServiceTest {
         assertEquals("用户名不能包含空格字符", result.message());
     }
 
+    /**
+     * 验证 `activeUser` 场景下的业务行为与预期结果一致。
+     *
+     * @return `activeUser`
+     */
     private User activeUser() {
         User user = new User();
         user.setId(7L);
@@ -140,6 +175,12 @@ class UserServiceTest {
         private final Map<String, User> users = new HashMap<>();
         private User lastCreated;
 
+        /**
+         * 根据编号查询模拟用户。
+         *
+         * @param id 业务数据编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<User> findById(long id) {
             return users.values().stream()
@@ -147,21 +188,45 @@ class UserServiceTest {
                     .findFirst();
         }
 
+        /**
+         * 根据用户名查询模拟用户。
+         *
+         * @param username 用户名
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<User> findByUsername(String username) {
             return Optional.ofNullable(users.get(username));
         }
 
+        /**
+         * 根据输入计算并返回 `existsByUsername` 的处理结果。
+         *
+         * @param username 用户名
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean existsByUsername(String username) {
             return users.containsKey(username);
         }
 
+        /**
+         * 根据输入计算并返回 `existsByEmail` 的处理结果。
+         *
+         * @param email 电子邮箱
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean existsByEmail(String email) {
             return users.containsKey(email);
         }
 
+        /**
+         * 创建模拟用户。
+         *
+         * @param user 用户数据
+         * @return 方法处理结果
+         */
         @Override
         public User create(User user) {
             user.setId(11L);

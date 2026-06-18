@@ -33,6 +33,14 @@ public class AdminServlet extends HttpServlet {
 
     private final AdminService adminService = new AdminService();
 
+    /**
+     * 处理管理员相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -62,6 +70,13 @@ public class AdminServlet extends HttpServlet {
                 .forward(request, response);
     }
 
+    /**
+     * 处理管理员相关的 HTTP POST 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -92,6 +107,13 @@ public class AdminServlet extends HttpServlet {
         );
     }
 
+    /**
+     * 加载`Section`。
+     *
+     * @param request HTTP 请求对象
+     * @param section 参数 `section`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void loadSection(HttpServletRequest request, String section)
             throws SQLException {
         switch (section) {
@@ -156,6 +178,15 @@ public class AdminServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `execute` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @param action 参数 `action`
+     * @param admin 是否具有管理员权限
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ServiceResult<Void> execute(
             HttpServletRequest request,
             String action,
@@ -219,6 +250,12 @@ public class AdminServlet extends HttpServlet {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `section` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @return 方法处理结果
+     */
     private String section(HttpServletRequest request) {
         String path = request.getPathInfo();
         if (path == null || "/".equals(path)) {
@@ -228,6 +265,12 @@ public class AdminServlet extends HttpServlet {
         return SECTIONS.contains(section) ? section : null;
     }
 
+    /**
+     * 根据输入计算并返回 `action` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @return 方法处理结果
+     */
     private String action(HttpServletRequest request) {
         String path = request.getPathInfo();
         if (path == null || path.length() <= 1) {
@@ -237,6 +280,13 @@ public class AdminServlet extends HttpServlet {
         return action.contains("/") ? action : null;
     }
 
+    /**
+     * 根据输入计算并返回 `value` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @param name 参数 `name`
+     * @return 方法处理结果
+     */
     private String value(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
         return value == null ? "" : value;

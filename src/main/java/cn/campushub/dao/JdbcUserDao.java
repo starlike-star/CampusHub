@@ -21,6 +21,13 @@ public class JdbcUserDao implements UserDao {
             created_at, updated_at
             """;
 
+    /**
+     * 根据编号查询`JdbcUser`。
+     *
+     * @param id 业务数据编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<User> findById(long id) throws SQLException {
         String sql = "SELECT " + USER_COLUMNS
@@ -34,6 +41,13 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    /**
+     * 根据用户名查询`JdbcUser`。
+     *
+     * @param username 用户名
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<User> findByUsername(String username) throws SQLException {
         String sql = "SELECT " + USER_COLUMNS
@@ -47,16 +61,38 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `existsByUsername` 的处理结果。
+     *
+     * @param username 用户名
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean existsByUsername(String username) throws SQLException {
         return exists("SELECT 1 FROM users WHERE username = ? LIMIT 1", username);
     }
 
+    /**
+     * 根据输入计算并返回 `existsByEmail` 的处理结果。
+     *
+     * @param email 电子邮箱
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean existsByEmail(String email) throws SQLException {
         return exists("SELECT 1 FROM users WHERE email = ? LIMIT 1", email);
     }
 
+    /**
+     * 根据输入计算并返回 `exists` 的处理结果。
+     *
+     * @param sql 参数 `sql`
+     * @param value 待处理的值
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean exists(String sql, String value) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -67,6 +103,13 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    /**
+     * 创建`JdbcUser`。
+     *
+     * @param user 用户数据
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public User create(User user) throws SQLException {
         String sql = """
@@ -102,6 +145,13 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为用户。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private User mapUser(ResultSet resultSet) throws SQLException {
         User user = new User();
         user.setId(resultSet.getLong("id"));
@@ -126,6 +176,12 @@ public class JdbcUserDao implements UserDao {
         return user;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private java.time.LocalDateTime toLocalDateTime(java.sql.Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

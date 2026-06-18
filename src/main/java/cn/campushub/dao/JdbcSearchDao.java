@@ -125,6 +125,13 @@ public class JdbcSearchDao implements SearchDao {
             LIMIT ?
             """;
 
+    /**
+     * 统计`Matches`。
+     *
+     * @param keyword 搜索关键字
+     * @return 按键组织的结果数据
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Map<String, Integer> countMatches(String keyword) throws SQLException {
         Map<String, Integer> counts = emptyCounts();
@@ -147,6 +154,14 @@ public class JdbcSearchDao implements SearchDao {
         return counts;
     }
 
+    /**
+     * 搜索帖子列表。
+     *
+     * @param keyword 搜索关键字
+     * @param limit 查询数量上限
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<SearchResultVO> searchPosts(String keyword, int limit)
             throws SQLException {
@@ -169,6 +184,14 @@ public class JdbcSearchDao implements SearchDao {
         });
     }
 
+    /**
+     * 搜索商品。
+     *
+     * @param keyword 搜索关键字
+     * @param limit 查询数量上限
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<SearchResultVO> searchGoods(String keyword, int limit)
             throws SQLException {
@@ -192,6 +215,14 @@ public class JdbcSearchDao implements SearchDao {
         });
     }
 
+    /**
+     * 搜索`LostFound`。
+     *
+     * @param keyword 搜索关键字
+     * @param limit 查询数量上限
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<SearchResultVO> searchLostFound(String keyword, int limit)
             throws SQLException {
@@ -215,6 +246,14 @@ public class JdbcSearchDao implements SearchDao {
         });
     }
 
+    /**
+     * 搜索活动列表。
+     *
+     * @param keyword 搜索关键字
+     * @param limit 查询数量上限
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<SearchResultVO> searchActivities(String keyword, int limit)
             throws SQLException {
@@ -241,6 +280,14 @@ public class JdbcSearchDao implements SearchDao {
         });
     }
 
+    /**
+     * 搜索公告列表。
+     *
+     * @param keyword 搜索关键字
+     * @param limit 查询数量上限
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<SearchResultVO> searchNotices(String keyword, int limit)
             throws SQLException {
@@ -260,6 +307,17 @@ public class JdbcSearchDao implements SearchDao {
         );
     }
 
+    /**
+     * 查询`query`并返回结果。
+     *
+     * @param sql 参数 `sql`
+     * @param keyword 搜索关键字
+     * @param patternOccurrences 参数 `patternOccurrences`
+     * @param limit 查询数量上限
+     * @param mapper 参数 `mapper`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private List<SearchResultVO> query(
             String sql,
             String keyword,
@@ -286,6 +344,16 @@ public class JdbcSearchDao implements SearchDao {
         return results;
     }
 
+    /**
+     * 设置`Pattern`。
+     *
+     * @param statement 预编译 SQL 语句
+     * @param startIndex 参数 `startIndex`
+     * @param pattern 参数 `pattern`
+     * @param occurrences 参数 `occurrences`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int setPattern(
             PreparedStatement statement,
             int startIndex,
@@ -299,10 +367,21 @@ public class JdbcSearchDao implements SearchDao {
         return index;
     }
 
+    /**
+     * 根据输入计算并返回 `likePattern` 的处理结果。
+     *
+     * @param keyword 搜索关键字
+     * @return 方法处理结果
+     */
     private String likePattern(String keyword) {
         return "%" + keyword + "%";
     }
 
+    /**
+     * 查询`emptyCounts`并返回结果。
+     *
+     * @return 按键组织的结果数据
+     */
     private Map<String, Integer> emptyCounts() {
         Map<String, Integer> counts = new LinkedHashMap<>();
         counts.put("post", 0);
@@ -313,6 +392,12 @@ public class JdbcSearchDao implements SearchDao {
         return counts;
     }
 
+    /**
+     * 根据输入计算并返回 `summary` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String summary(String value) {
         if (value == null) {
             return "";
@@ -323,6 +408,12 @@ public class JdbcSearchDao implements SearchDao {
                 : normalized.substring(0, 100) + "...";
     }
 
+    /**
+     * 根据输入计算并返回 `firstImage` 的处理结果。
+     *
+     * @param images 参数 `images`
+     * @return 方法处理结果
+     */
     private String firstImage(String images) {
         if (images == null || images.isBlank()) {
             return null;
@@ -331,10 +422,23 @@ public class JdbcSearchDao implements SearchDao {
         return first.isEmpty() ? null : first;
     }
 
+    /**
+     * 根据输入计算并返回 `valueOr` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @param fallback 参数 `fallback`
+     * @return 方法处理结果
+     */
     private String valueOr(String value, String fallback) {
         return value == null || value.isBlank() ? fallback : value;
     }
 
+    /**
+     * 根据输入计算并返回 `tradeMethodText` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String tradeMethodText(String value) {
         return switch (value == null ? "" : value) {
             case "online" -> "线上交易";
@@ -343,6 +447,12 @@ public class JdbcSearchDao implements SearchDao {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `goodsStatusText` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String goodsStatusText(String value) {
         return switch (value == null ? "" : value) {
             case "reserved" -> "已预订";
@@ -352,6 +462,12 @@ public class JdbcSearchDao implements SearchDao {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `lostFoundStatusText` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String lostFoundStatusText(String value) {
         return switch (value == null ? "" : value) {
             case "claiming" -> "认领中";
@@ -361,6 +477,12 @@ public class JdbcSearchDao implements SearchDao {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `activityStatusText` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String activityStatusText(String value) {
         return switch (value == null ? "" : value) {
             case "closed" -> "已截止";
@@ -370,6 +492,12 @@ public class JdbcSearchDao implements SearchDao {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `noticeTypeText` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String noticeTypeText(String value) {
         return switch (value == null ? "" : value) {
             case "teaching" -> "教务公告";
@@ -380,18 +508,37 @@ public class JdbcSearchDao implements SearchDao {
         };
     }
 
+    /**
+     * 根据输入计算并返回 `formatStartTime` 的处理结果。
+     *
+     * @param startTime 开始时间
+     * @return 方法处理结果
+     */
     private String formatStartTime(LocalDateTime startTime) {
         return startTime == null
                 ? "时间待定"
                 : startTime.format(EXTRA_TIME_FORMATTER);
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }
 
     @FunctionalInterface
     private interface RowMapper {
+        /**
+         * 将数据库结果映射为`RowMapper`。
+         *
+         * @param resultSet 数据库查询结果集
+         * @return 方法处理结果
+         * @throws SQLException 数据库访问失败时抛出
+         */
         SearchResultVO map(ResultSet resultSet) throws SQLException;
     }
 }

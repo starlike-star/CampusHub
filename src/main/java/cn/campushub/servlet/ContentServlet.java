@@ -45,6 +45,14 @@ public class ContentServlet extends HttpServlet {
     private final ActivityRegistrationService activityRegistrationService =
             new ActivityRegistrationService();
 
+    /**
+     * 处理`Content`相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -337,6 +345,15 @@ public class ContentServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 处理 `forward` 对应的业务流程。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @param fragment 参数 `fragment`
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     private void forward(
             HttpServletRequest request,
             HttpServletResponse response,

@@ -22,6 +22,15 @@ public class RememberMeFilter implements Filter {
     private final RememberMeService rememberMeService = new RememberMeService();
     private final AccountService accountService = new AccountService();
 
+    /**
+     * 对`RememberMe`相关请求执行前置校验并决定是否继续过滤器链。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @param chain 过滤器链
+     * @throws IOException 读取请求或写入响应失败时抛出
+     * @throws ServletException Servlet 处理请求失败时抛出
+     */
     @Override
     public void doFilter(
             ServletRequest request,
@@ -64,6 +73,12 @@ public class RememberMeFilter implements Filter {
         chain.doFilter(request, response);
     }
 
+    /**
+     * 判断是否需要`ValidateSession`。
+     *
+     * @param request HTTP 请求对象
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private boolean shouldValidateSession(HttpServletRequest request) {
         String path = request.getRequestURI()
                 .substring(request.getContextPath().length());

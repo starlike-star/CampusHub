@@ -21,6 +21,9 @@ public class SquareService {
 
     private final SquareDao squareDao;
 
+    /**
+     * 初始化`Square`对象及其运行所需依赖。
+     */
     public SquareService() {
         this(new JdbcSquareDao());
     }
@@ -29,10 +32,22 @@ public class SquareService {
         this.squareDao = squareDao;
     }
 
+    /**
+     * 规范化`Tab`。
+     *
+     * @param tab 参数 `tab`
+     * @return 方法处理结果
+     */
     public String normalizeTab(String tab) {
         return tab != null && ALL_TABS.contains(tab) ? tab : "latest";
     }
 
+    /**
+     * 规范化关键字。
+     *
+     * @param keyword 搜索关键字
+     * @return 方法处理结果
+     */
     public String normalizeKeyword(String keyword) {
         keyword = ValidationUtils.trimToNull(keyword);
         if (keyword == null) {
@@ -41,6 +56,15 @@ public class SquareService {
         return keyword.length() <= 100 ? keyword : keyword.substring(0, 100);
     }
 
+    /**
+     * 查询帖子列表。
+     *
+     * @param tab 参数 `tab`
+     * @param currentUserId 当前用户编号
+     * @param keyword 搜索关键字
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Post> listPosts(
             String tab,
             Long currentUserId,
@@ -57,6 +81,13 @@ public class SquareService {
         );
     }
 
+    /**
+     * 查询公告列表。
+     *
+     * @param keyword 搜索关键字
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Notice> listNotices(String keyword) throws SQLException {
         return squareDao.findNotices(normalizeKeyword(keyword));
     }

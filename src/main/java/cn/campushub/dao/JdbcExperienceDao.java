@@ -68,6 +68,15 @@ public class JdbcExperienceDao implements ExperienceDao {
             WHERE user_id = ? AND source = 'checkin'
             """;
 
+    /**
+     * 新增经验值。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param value 待处理的值
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public ExperienceInfo addExperience(
             Connection connection,
@@ -92,6 +101,16 @@ public class JdbcExperienceDao implements ExperienceDao {
         return LevelUtils.experienceInfo(info.experience());
     }
 
+    /**
+     * 新增`ExperienceLog`。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param changeValue 参数 `changeValue`
+     * @param source 参数 `source`
+     * @param description 描述内容
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void insertExperienceLog(
             Connection connection,
@@ -110,6 +129,14 @@ public class JdbcExperienceDao implements ExperienceDao {
         }
     }
 
+    /**
+     * 获取`RecentLogs`。
+     *
+     * @param userId 用户编号
+     * @param limit 查询数量上限
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<ExperienceLog> getRecentLogs(long userId, int limit)
             throws SQLException {
@@ -142,6 +169,13 @@ public class JdbcExperienceDao implements ExperienceDao {
         return List.copyOf(logs);
     }
 
+    /**
+     * 根据输入计算并返回 `reconcileCheckinExperience` 的处理结果。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int reconcileCheckinExperience(long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -198,6 +232,14 @@ public class JdbcExperienceDao implements ExperienceDao {
         }
     }
 
+    /**
+     * 更新用户等级。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param level 参数 `level`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void updateUserLevel(
             Connection connection,
@@ -214,6 +256,13 @@ public class JdbcExperienceDao implements ExperienceDao {
         }
     }
 
+    /**
+     * 获取用户经验值信息。
+     *
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ExperienceInfo> getUserExperienceInfo(long userId)
             throws SQLException {
@@ -222,6 +271,14 @@ public class JdbcExperienceDao implements ExperienceDao {
         }
     }
 
+    /**
+     * 获取用户经验值信息。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ExperienceInfo> getUserExperienceInfo(
             Connection connection,
@@ -241,10 +298,24 @@ public class JdbcExperienceDao implements ExperienceDao {
         }
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }
 
+    /**
+     * 根据输入计算并返回 `lockActiveUser` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean lockActiveUser(Connection connection, long userId)
             throws SQLException {
         try (PreparedStatement statement =
@@ -256,6 +327,15 @@ public class JdbcExperienceDao implements ExperienceDao {
         }
     }
 
+    /**
+     * 统计`ForUser`。
+     *
+     * @param connection 数据库连接
+     * @param sql 参数 `sql`
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int countForUser(
             Connection connection,
             String sql,

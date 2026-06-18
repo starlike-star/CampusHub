@@ -22,6 +22,14 @@ public class LoginServlet extends HttpServlet {
     private final UserService userService = new UserService();
     private final RememberMeService rememberMeService = new RememberMeService();
 
+    /**
+     * 处理登录相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,6 +40,14 @@ public class LoginServlet extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
     }
 
+    /**
+     * 处理登录相关的 HTTP POST 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -66,6 +82,12 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `captchaMatches` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private boolean captchaMatches(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Object expected = session == null
@@ -80,6 +102,14 @@ public class LoginServlet extends HttpServlet {
                 && code.equalsIgnoreCase(submitted.trim());
     }
 
+    /**
+     * 更新`RememberMe`。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @param user 用户数据
+     * @param rememberMe 参数 `rememberMe`
+     */
     private void updateRememberMe(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -97,6 +127,12 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `resolveRedirectTarget` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @return 方法处理结果
+     */
     private String resolveRedirectTarget(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         String contextPath = request.getContextPath();
@@ -111,6 +147,13 @@ public class LoginServlet extends HttpServlet {
         return contextPath + "/";
     }
 
+    /**
+     * 判断是否`LocalPath`。
+     *
+     * @param path 资源路径
+     * @param contextPath 参数 `contextPath`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private boolean isLocalPath(String path, String contextPath) {
         return path.startsWith(contextPath + "/")
                 && !path.startsWith("//")

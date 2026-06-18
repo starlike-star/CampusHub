@@ -20,6 +20,11 @@ public record PurchasedGoodsVO(
         String categoryName,
         LocalDateTime paidAt
 ) {
+    /**
+     * 获取`firstImage`。
+     *
+     * @return `firstImage`
+     */
     public String firstImage() {
         List<String> imageList = images == null || images.isBlank()
                 ? List.of()
@@ -32,6 +37,11 @@ public record PurchasedGoodsVO(
                 .orElse("images/default-goods.png");
     }
 
+    /**
+     * 获取`tradeMethodText`。
+     *
+     * @return `tradeMethodText`
+     */
     public String tradeMethodText() {
         return switch (tradeMethod) {
             case "online" -> "线上交易";

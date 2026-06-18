@@ -27,10 +27,20 @@ public record FavoriteItemVO(
         String status,
         LocalDateTime favoriteTime
 ) {
+    /**
+     * 判断是否帖子。
+     *
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     public boolean isPost() {
         return "post".equals(targetType);
     }
 
+    /**
+     * 获取`firstImage`。
+     *
+     * @return `firstImage`
+     */
     public String firstImage() {
         if (images == null || images.isBlank()) {
             return "images/default-goods.png";

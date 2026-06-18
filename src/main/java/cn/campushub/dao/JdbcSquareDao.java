@@ -51,6 +51,15 @@ public class JdbcSquareDao implements SquareDao {
             WHERE p.status = 1
             """;
 
+    /**
+     * 查询帖子列表。
+     *
+     * @param tab 参数 `tab`
+     * @param currentUserId 当前用户编号
+     * @param keyword 搜索关键字
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Post> findPosts(String tab, Long currentUserId, String keyword)
             throws SQLException {
@@ -96,6 +105,12 @@ public class JdbcSquareDao implements SquareDao {
         return posts;
     }
 
+    /**
+     * 根据输入计算并返回 `categoryName` 的处理结果。
+     *
+     * @param tab 参数 `tab`
+     * @return 方法处理结果
+     */
     private String categoryName(String tab) {
         return switch (tab) {
             case "study" -> "学习交流";
@@ -104,6 +119,13 @@ public class JdbcSquareDao implements SquareDao {
         };
     }
 
+    /**
+     * 查询公告列表。
+     *
+     * @param keyword 搜索关键字
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Notice> findNotices(String keyword) throws SQLException {
         boolean hasKeyword = keyword != null;
@@ -138,6 +160,13 @@ public class JdbcSquareDao implements SquareDao {
         return notices;
     }
 
+    /**
+     * 将数据库结果映射为帖子。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Post mapPost(ResultSet resultSet) throws SQLException {
         Post post = new Post();
         post.setId(resultSet.getLong("id"));
@@ -165,6 +194,13 @@ public class JdbcSquareDao implements SquareDao {
         return post;
     }
 
+    /**
+     * 将数据库结果映射为公告。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Notice mapNotice(ResultSet resultSet) throws SQLException {
         Notice notice = new Notice();
         notice.setId(resultSet.getLong("id"));
@@ -176,6 +212,12 @@ public class JdbcSquareDao implements SquareDao {
         return notice;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private java.time.LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

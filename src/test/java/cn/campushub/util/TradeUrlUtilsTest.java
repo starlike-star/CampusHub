@@ -9,6 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * 验证 TradeUrlUtils相关逻辑的正常路径、边界条件和失败场景。
  */
 class TradeUrlUtilsTest {
+    /**
+     * 验证 `appendsContextPathWhenConfiguredUrlOnlyContainsHostAndPort` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void appendsContextPathWhenConfiguredUrlOnlyContainsHostAndPort() {
         assertEquals(
@@ -20,6 +23,9 @@ class TradeUrlUtilsTest {
         );
     }
 
+    /**
+     * 验证 `keepsConfiguredApplicationPathWithoutDuplicatingContextPath` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void keepsConfiguredApplicationPathWithoutDuplicatingContextPath() {
         assertEquals(
@@ -31,6 +37,9 @@ class TradeUrlUtilsTest {
         );
     }
 
+    /**
+     * 验证 `rejectsRelativeOrQueryBasedConfiguration` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void rejectsRelativeOrQueryBasedConfiguration() {
         assertNull(TradeUrlUtils.normalizeConfiguredBaseUrl(

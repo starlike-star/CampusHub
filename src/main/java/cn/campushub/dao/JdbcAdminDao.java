@@ -19,6 +19,12 @@ import java.util.Optional;
  * 使用 JDBC 实现后台管理数据的查询与持久化操作。
  */
 public class JdbcAdminDao implements AdminDao {
+    /**
+     * 查询后台概览并返回结果。
+     *
+     * @return 按键组织的结果数据
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Map<String, Long> dashboard() throws SQLException {
         Map<String, Long> stats = new LinkedHashMap<>();
@@ -43,6 +49,15 @@ public class JdbcAdminDao implements AdminDao {
         return stats;
     }
 
+    /**
+     * 查询用户列表。
+     *
+     * @param keyword 搜索关键字
+     * @param role 参数 `role`
+     * @param status 业务状态
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findUsers(
             String keyword,
@@ -75,6 +90,15 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询帖子列表。
+     *
+     * @param keyword 搜索关键字
+     * @param status 业务状态
+     * @param categoryId 分类编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findPosts(
             String keyword,
@@ -110,6 +134,15 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询商品。
+     *
+     * @param keyword 搜索关键字
+     * @param status 业务状态
+     * @param tradeMethod 参数 `tradeMethod`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findGoods(
             String keyword,
@@ -145,6 +178,15 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询`LostFound`。
+     *
+     * @param keyword 搜索关键字
+     * @param type 参数 `type`
+     * @param status 业务状态
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findLostFound(
             String keyword,
@@ -179,6 +221,14 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询活动列表。
+     *
+     * @param keyword 搜索关键字
+     * @param status 业务状态
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findActivities(
             String keyword,
@@ -207,6 +257,13 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询公告列表。
+     *
+     * @param type 参数 `type`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findNotices(String type) throws SQLException {
         StringBuilder sql = new StringBuilder("""
@@ -225,6 +282,14 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询举报记录。
+     *
+     * @param status 业务状态
+     * @param targetType 参数 `targetType`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findReports(
             String status,
@@ -253,6 +318,13 @@ public class JdbcAdminDao implements AdminDao {
         return query(sql.toString(), parameters);
     }
 
+    /**
+     * 查询`Categories`。
+     *
+     * @param type 参数 `type`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Map<String, Object>> findCategories(String type) throws SQLException {
         return query(
@@ -262,6 +334,14 @@ public class JdbcAdminDao implements AdminDao {
         );
     }
 
+    /**
+     * 更新用户状态。
+     *
+     * @param userId 用户编号
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateUserStatus(long userId, int status) throws SQLException {
         return update(
@@ -271,6 +351,14 @@ public class JdbcAdminDao implements AdminDao {
         );
     }
 
+    /**
+     * 重置用户密码。
+     *
+     * @param userId 用户编号
+     * @param passwordHash 参数 `passwordHash`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean resetUserPassword(long userId, String passwordHash)
             throws SQLException {
@@ -281,28 +369,70 @@ public class JdbcAdminDao implements AdminDao {
         );
     }
 
+    /**
+     * 更新帖子状态。
+     *
+     * @param id 业务数据编号
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updatePostStatus(long id, int status) throws SQLException {
         return update("UPDATE posts SET status = ? WHERE id = ?", status, id);
     }
 
+    /**
+     * 更新商品状态。
+     *
+     * @param id 业务数据编号
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateGoodsStatus(long id, String status) throws SQLException {
         return update("UPDATE goods SET status = ? WHERE id = ?", status, id);
     }
 
+    /**
+     * 更新`LostFoundStatus`。
+     *
+     * @param id 业务数据编号
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateLostFoundStatus(long id, String status)
             throws SQLException {
         return update("UPDATE lost_found SET status = ? WHERE id = ?", status, id);
     }
 
+    /**
+     * 更新活动状态。
+     *
+     * @param id 业务数据编号
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateActivityStatus(long id, String status)
             throws SQLException {
         return update("UPDATE activities SET status = ? WHERE id = ?", status, id);
     }
 
+    /**
+     * 创建公告。
+     *
+     * @param title 标题
+     * @param content 正文内容
+     * @param type 参数 `type`
+     * @param createdBy 参数 `createdBy`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean createNotice(
             String title,
@@ -317,6 +447,16 @@ public class JdbcAdminDao implements AdminDao {
                 """, title, content, type, createdBy);
     }
 
+    /**
+     * 更新公告。
+     *
+     * @param id 业务数据编号
+     * @param title 标题
+     * @param content 正文内容
+     * @param type 参数 `type`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateNotice(
             long id,
@@ -331,16 +471,40 @@ public class JdbcAdminDao implements AdminDao {
                 """, title, content, type, id);
     }
 
+    /**
+     * 更新公告状态。
+     *
+     * @param id 业务数据编号
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateNoticeStatus(long id, int status) throws SQLException {
         return update("UPDATE notices SET status = ? WHERE id = ?", status, id);
     }
 
+    /**
+     * 更新`NoticeTop`。
+     *
+     * @param id 业务数据编号
+     * @param isTop 是否`Top`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateNoticeTop(long id, int isTop) throws SQLException {
         return update("UPDATE notices SET is_top = ? WHERE id = ?", isTop, id);
     }
 
+    /**
+     * 处理举报。
+     *
+     * @param reportId 举报编号
+     * @param adminId 管理员编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean handleReport(long reportId, long adminId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -377,6 +541,14 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 驳回举报。
+     *
+     * @param reportId 举报编号
+     * @param adminId 管理员编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean rejectReport(long reportId, long adminId) throws SQLException {
         return update("""
@@ -386,6 +558,13 @@ public class JdbcAdminDao implements AdminDao {
                 """, adminId, reportId);
     }
 
+    /**
+     * 查询`ReportNotificationTarget`。
+     *
+     * @param reportId 举报编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ReportNotificationTarget> findReportNotificationTarget(long reportId)
             throws SQLException {
@@ -427,6 +606,13 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 统计`JdbcAdmin`。
+     *
+     * @param sql 参数 `sql`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private long count(String sql) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql);
@@ -435,6 +621,14 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 查询`query`并返回结果。
+     *
+     * @param sql 参数 `sql`
+     * @param parameters 参数 `parameters`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private List<Map<String, Object>> query(
             String sql,
             List<Object> parameters
@@ -457,12 +651,29 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 更新`JdbcAdmin`。
+     *
+     * @param sql 参数 `sql`
+     * @param parameters 参数 `parameters`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean update(String sql, Object... parameters) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
             return update(connection, sql, parameters);
         }
     }
 
+    /**
+     * 更新`JdbcAdmin`。
+     *
+     * @param connection 数据库连接
+     * @param sql 参数 `sql`
+     * @param parameters 参数 `parameters`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean update(
             Connection connection,
             String sql,
@@ -474,6 +685,13 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 处理 `bind` 对应的业务流程。
+     *
+     * @param statement 预编译 SQL 语句
+     * @param parameters 参数 `parameters`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void bind(PreparedStatement statement, Object... parameters)
             throws SQLException {
         for (int i = 0; i < parameters.length; i++) {
@@ -486,6 +704,13 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 新增点赞。
+     *
+     * @param parameters 参数 `parameters`
+     * @param keyword 搜索关键字
+     * @param count 参数 `count`
+     */
     private void addLike(List<Object> parameters, String keyword, int count) {
         String value = "%" + keyword + "%";
         for (int i = 0; i < count; i++) {
@@ -493,6 +718,14 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockPendingReport` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param reportId 举报编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ReportTarget lockPendingReport(Connection connection, long reportId)
             throws SQLException {
         String sql = """
@@ -515,6 +748,13 @@ public class JdbcAdminDao implements AdminDao {
         }
     }
 
+    /**
+     * 处理 `moderateTarget` 对应的业务流程。
+     *
+     * @param connection 数据库连接
+     * @param target 参数 `target`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void moderateTarget(Connection connection, ReportTarget target)
             throws SQLException {
         String sql = switch (target.type()) {
@@ -527,6 +767,13 @@ public class JdbcAdminDao implements AdminDao {
         update(connection, sql, target.id());
     }
 
+    /**
+     * 根据输入计算并返回 `ReportTarget` 的处理结果。
+     *
+     * @param id 业务数据编号
+     * @param type 参数 `type`
+     * @return 方法处理结果
+     */
     private record ReportTarget(long id, String type) {
     }
 }

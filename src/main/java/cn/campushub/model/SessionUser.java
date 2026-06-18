@@ -16,6 +16,12 @@ public record SessionUser(
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 根据输入创建会话用户。
+     *
+     * @param user 用户数据
+     * @return 方法处理结果
+     */
     public static SessionUser from(User user) {
         String avatar = user.getAvatar();
         boolean defaultAvatar = avatar == null
@@ -36,6 +42,11 @@ public record SessionUser(
         );
     }
 
+    /**
+     * 获取`avatarText`。
+     *
+     * @return `avatarText`
+     */
     public String avatarText() {
         if (nickname == null || nickname.isBlank()) {
             return "U";

@@ -22,6 +22,9 @@ public class ReportService {
     private final ReportDao reportDao;
     private final MessageService messageService;
 
+    /**
+     * 初始化举报对象及其运行所需依赖。
+     */
     public ReportService() {
         this(new JdbcReportDao(), new MessageService());
     }
@@ -35,6 +38,16 @@ public class ReportService {
         this.messageService = messageService;
     }
 
+    /**
+     * 创建举报。
+     *
+     * @param userId 用户编号
+     * @param targetIdValue 参数 `targetIdValue`
+     * @param targetType 参数 `targetType`
+     * @param reason 参数 `reason`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> create(
             long userId,
             String targetIdValue,
@@ -79,6 +92,11 @@ public class ReportService {
         );
     }
 
+    /**
+     * 发送通知：`Admins`。
+     *
+     * @param targetType 参数 `targetType`
+     */
     private void notifyAdmins(String targetType) {
         if (messageService == null) {
             return;
@@ -90,6 +108,12 @@ public class ReportService {
         }
     }
 
+    /**
+     * 解析`PositiveLong`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private Long parsePositiveLong(String value) {
         try {
             long parsed = Long.parseLong(value);

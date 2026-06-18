@@ -28,6 +28,15 @@ public class JdbcActivityDao implements ActivityDao {
             LEFT JOIN users u ON a.created_by = u.id
             """;
 
+    /**
+     * 查询全部`JdbcActivity`。
+     *
+     * @param status 业务状态
+     * @param keyword 搜索关键字
+     * @param sort 排序方式
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<ActivityVO> findAll(String status, String keyword, String sort)
             throws SQLException {
@@ -70,6 +79,13 @@ public class JdbcActivityDao implements ActivityDao {
         return activities;
     }
 
+    /**
+     * 根据编号查询`JdbcActivity`。
+     *
+     * @param id 业务数据编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ActivityVO> findById(long id) throws SQLException {
         String sql = SELECT_FIELDS + " WHERE a.id = ? LIMIT 1";
@@ -84,6 +100,13 @@ public class JdbcActivityDao implements ActivityDao {
         }
     }
 
+    /**
+     * 创建`JdbcActivity`。
+     *
+     * @param activity 活动数据
+     * @return 新建数据的编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public long create(Activity activity) throws SQLException {
         String sql = """
@@ -109,6 +132,15 @@ public class JdbcActivityDao implements ActivityDao {
         }
     }
 
+    /**
+     * 更新`JdbcActivity`。
+     *
+     * @param activity 活动数据
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean update(Activity activity, long userId, boolean admin)
             throws SQLException {
@@ -130,6 +162,16 @@ public class JdbcActivityDao implements ActivityDao {
         }
     }
 
+    /**
+     * 更新状态。
+     *
+     * @param id 业务数据编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param status 业务状态
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean updateStatus(
             long id,
@@ -153,6 +195,14 @@ public class JdbcActivityDao implements ActivityDao {
         }
     }
 
+    /**
+     * 设置`EditableFields`。
+     *
+     * @param statement 预编译 SQL 语句
+     * @param activity 活动数据
+     * @param includeId 是否同时设置编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void setEditableFields(
             PreparedStatement statement,
             Activity activity,
@@ -171,6 +221,13 @@ public class JdbcActivityDao implements ActivityDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为活动。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ActivityVO mapActivity(ResultSet resultSet) throws SQLException {
         Activity activity = new Activity();
         activity.setId(resultSet.getLong("id"));
@@ -196,6 +253,12 @@ public class JdbcActivityDao implements ActivityDao {
         );
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

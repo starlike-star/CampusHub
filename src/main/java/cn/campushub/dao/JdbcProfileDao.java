@@ -148,6 +148,13 @@ public class JdbcProfileDao implements ProfileDao {
             WHERE id = ? AND status = 1
             """;
 
+    /**
+     * 查询`Overview`。
+     *
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ProfileOverviewVO> findOverview(long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -171,6 +178,13 @@ public class JdbcProfileDao implements ProfileDao {
         }
     }
 
+    /**
+     * 查询帖子列表。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Post> findPosts(long userId) throws SQLException {
         List<Post> posts = new ArrayList<>();
@@ -186,6 +200,13 @@ public class JdbcProfileDao implements ProfileDao {
         return posts;
     }
 
+    /**
+     * 查询`Comments`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<UserCommentVO> findComments(long userId) throws SQLException {
         List<UserCommentVO> comments = new ArrayList<>();
@@ -208,6 +229,13 @@ public class JdbcProfileDao implements ProfileDao {
         return comments;
     }
 
+    /**
+     * 查询`Favorites`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<FavoriteItemVO> findFavorites(long userId) throws SQLException {
         List<FavoriteItemVO> favorites = new ArrayList<>();
@@ -269,6 +297,13 @@ public class JdbcProfileDao implements ProfileDao {
         return favorites;
     }
 
+    /**
+     * 查询`PurchasedGoods`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<PurchasedGoodsVO> findPurchasedGoods(long userId)
             throws SQLException {
@@ -297,6 +332,13 @@ public class JdbcProfileDao implements ProfileDao {
         return goods;
     }
 
+    /**
+     * 查询`Checkins`。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public UserCheckinStatsVO findCheckins(long userId) throws SQLException {
         int totalDays = 0;
@@ -340,6 +382,13 @@ public class JdbcProfileDao implements ProfileDao {
         );
     }
 
+    /**
+     * 查询活动列表。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<ProfileActivityVO> findActivities(long userId)
             throws SQLException {
@@ -370,6 +419,13 @@ public class JdbcProfileDao implements ProfileDao {
         return activities;
     }
 
+    /**
+     * 更新个人资料。
+     *
+     * @param user 用户数据
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<User> updateProfile(User user) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -391,6 +447,13 @@ public class JdbcProfileDao implements ProfileDao {
         return findOverview(user.getId()).map(ProfileOverviewVO::user);
     }
 
+    /**
+     * 将数据库结果映射为用户。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private User mapUser(ResultSet resultSet) throws SQLException {
         User user = new User();
         user.setId(resultSet.getLong("id"));
@@ -413,6 +476,13 @@ public class JdbcProfileDao implements ProfileDao {
         return user;
     }
 
+    /**
+     * 将数据库结果映射为帖子。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Post mapPost(ResultSet resultSet) throws SQLException {
         Post post = new Post();
         post.setId(resultSet.getLong("id"));
@@ -438,6 +508,12 @@ public class JdbcProfileDao implements ProfileDao {
         return post;
     }
 
+    /**
+     * 根据输入计算并返回 `summarize` 的处理结果。
+     *
+     * @param content 正文内容
+     * @return 方法处理结果
+     */
     private String summarize(String content) {
         if (content == null) {
             return "";
@@ -448,6 +524,12 @@ public class JdbcProfileDao implements ProfileDao {
                 : normalized.substring(0, 120) + "...";
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

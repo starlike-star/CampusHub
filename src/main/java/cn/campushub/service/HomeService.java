@@ -20,6 +20,9 @@ public class HomeService {
     private final HomeDao homeDao;
     private final Clock clock;
 
+    /**
+     * 初始化首页对象及其运行所需依赖。
+     */
     public HomeService() {
         this(new JdbcHomeDao(), Clock.systemDefaultZone());
     }
@@ -29,6 +32,13 @@ public class HomeService {
         this.clock = clock;
     }
 
+    /**
+     * 加载`Sidebar`。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public HomeSidebarVO loadSidebar(Long userId) throws SQLException {
         HomeSidebarVO.CheckinStatus checkin = userId == null
                 ? HomeSidebarVO.CheckinStatus.guest()
@@ -47,6 +57,13 @@ public class HomeService {
         );
     }
 
+    /**
+     * 检查`In`。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public CheckinResult checkIn(long userId) throws SQLException {
         return homeDao.checkIn(userId, LocalDate.now(clock), DAILY_POINTS);
     }

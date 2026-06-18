@@ -20,6 +20,13 @@ import java.util.Set;
  * 使用 JDBC 实现活动报名数据的查询与持久化操作。
  */
 public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
+    /**
+     * 查询`RegisteredActivityIds`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Set<Long> findRegisteredActivityIds(long userId) throws SQLException {
         String sql = """
@@ -40,6 +47,14 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         return Set.copyOf(ids);
     }
 
+    /**
+     * 判断是否已报名。
+     *
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean isRegistered(long activityId, long userId)
             throws SQLException {
@@ -59,6 +74,15 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 提交`JdbcActivityRegistration`。
+     *
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @param userNickname 参数 `userNickname`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public ActivityRegistrationResult register(
             long activityId,
@@ -122,6 +146,14 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 取消`JdbcActivityRegistration`。
+     *
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public ActivityRegistrationResult cancel(long activityId, long userId)
             throws SQLException {
@@ -154,6 +186,13 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 查询报名记录。
+     *
+     * @param activityId 活动编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<ActivityRegistrationVO> findRegistrations(long activityId)
             throws SQLException {
@@ -192,6 +231,13 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         return registrations;
     }
 
+    /**
+     * 根据用户查询`JdbcActivityRegistration`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<ProfileActivityVO> findByUser(long userId) throws SQLException {
         String sql = """
@@ -230,6 +276,14 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         return activities;
     }
 
+    /**
+     * 根据输入计算并返回 `lockActivity` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param activityId 活动编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private LockedActivity lockActivity(Connection connection, long activityId)
             throws SQLException {
         String sql = """
@@ -258,6 +312,15 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 查询报名状态。
+     *
+     * @param connection 数据库连接
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private String findRegistrationStatus(
             Connection connection,
             long activityId,
@@ -278,6 +341,14 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 新增报名。
+     *
+     * @param connection 数据库连接
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void insertRegistration(
             Connection connection,
             long activityId,
@@ -294,6 +365,15 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 更新报名。
+     *
+     * @param connection 数据库连接
+     * @param activityId 活动编号
+     * @param userId 用户编号
+     * @param status 业务状态
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void updateRegistration(
             Connection connection,
             long activityId,
@@ -313,6 +393,14 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 更新成员数量。
+     *
+     * @param connection 数据库连接
+     * @param activityId 活动编号
+     * @param currentMembers 当前人数
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void updateMemberCount(
             Connection connection,
             long activityId,
@@ -327,6 +415,15 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 新增消息。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param title 标题
+     * @param content 正文内容
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void insertMessage(
             Connection connection,
             long userId,
@@ -345,10 +442,27 @@ public class JdbcActivityRegistrationDao implements ActivityRegistrationDao {
         }
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }
 
+    /**
+     * 根据输入计算并返回 `LockedActivity` 的处理结果。
+     *
+     * @param title 标题
+     * @param deadline 截止时间
+     * @param maxMembers 人数上限
+     * @param currentMembers 当前人数
+     * @param status 业务状态
+     * @param createdBy 参数 `createdBy`
+     * @return 方法处理结果
+     */
     private record LockedActivity(
             String title,
             LocalDateTime deadline,

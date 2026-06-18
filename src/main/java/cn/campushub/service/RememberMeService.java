@@ -35,6 +35,9 @@ public class RememberMeService {
     private final UserDao userDao;
     private final SecureRandom secureRandom;
 
+    /**
+     * 初始化`RememberMe`对象及其运行所需依赖。
+     */
     public RememberMeService() {
         this(new JdbcRememberTokenDao(), new JdbcUserDao(), new SecureRandom());
     }
@@ -49,6 +52,14 @@ public class RememberMeService {
         this.secureRandom = secureRandom;
     }
 
+    /**
+     * 创建记住登录令牌。
+     *
+     * @param user 用户数据
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void createRememberToken(
             SessionUser user,
             HttpServletRequest request,
@@ -70,6 +81,14 @@ public class RememberMeService {
         addCookie(response, request, selector + ":" + token, MAX_AGE_SECONDS);
     }
 
+    /**
+     * 查询`autoLogin`并返回结果。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<SessionUser> autoLogin(
             HttpServletRequest request,
             HttpServletResponse response
@@ -114,6 +133,13 @@ public class RememberMeService {
         return Optional.of(SessionUser.from(optionalUser.get()));
     }
 
+    /**
+     * 处理 `logout` 对应的业务流程。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void logout(
             HttpServletRequest request,
             HttpServletResponse response
@@ -122,6 +148,12 @@ public class RememberMeService {
         clearCookie(response, request);
     }
 
+    /**
+     * 处理 `clearRememberCookie` 对应的业务流程。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     */
     public void clearRememberCookie(
             HttpServletRequest request,
             HttpServletResponse response
@@ -129,6 +161,12 @@ public class RememberMeService {
         clearCookie(response, request);
     }
 
+    /**
+     * 处理 `revokeCurrentToken` 对应的业务流程。
+     *
+     * @param request HTTP 请求对象
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void revokeCurrentToken(HttpServletRequest request) throws SQLException {
         ParsedCookie parsed = parseCookie(findCookieValue(request));
         if (parsed == null) {
@@ -142,6 +180,13 @@ public class RememberMeService {
         }
     }
 
+    /**
+     * 转换为`kenMatches`。
+     *
+     * @param token 参数 `token`
+     * @param storedHash 参数 `storedHash`
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     private boolean tokenMatches(String token, String storedHash) {
         if (storedHash == null) {
             return false;
@@ -152,6 +197,12 @@ public class RememberMeService {
         );
     }
 
+    /**
+     * 判断是否具有`hToken`。
+     *
+     * @param token 参数 `token`
+     * @return 方法处理结果
+     */
     static String hashToken(String token) {
         try {
             byte[] digest = MessageDigest.getInstance("SHA-256")
@@ -162,12 +213,24 @@ public class RememberMeService {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `randomValue` 的处理结果。
+     *
+     * @param byteCount 参数 `byteCount`
+     * @return 方法处理结果
+     */
     private String randomValue(int byteCount) {
         byte[] bytes = new byte[byteCount];
         secureRandom.nextBytes(bytes);
         return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
     }
 
+    /**
+     * 查询`CookieValue`。
+     *
+     * @param request HTTP 请求对象
+     * @return 方法处理结果
+     */
     private String findCookieValue(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
@@ -181,6 +244,12 @@ public class RememberMeService {
         return null;
     }
 
+    /**
+     * 解析`Cookie`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private ParsedCookie parseCookie(String value) {
         if (value == null) {
             return null;
@@ -197,6 +266,12 @@ public class RememberMeService {
         );
     }
 
+    /**
+     * 处理 `clearCookie` 对应的业务流程。
+     *
+     * @param response HTTP 响应对象
+     * @param request HTTP 请求对象
+     */
     private void clearCookie(
             HttpServletResponse response,
             HttpServletRequest request
@@ -204,6 +279,14 @@ public class RememberMeService {
         addCookie(response, request, "", 0);
     }
 
+    /**
+     * 新增`Cookie`。
+     *
+     * @param response HTTP 响应对象
+     * @param request HTTP 请求对象
+     * @param value 待处理的值
+     * @param maxAge 参数 `maxAge`
+     */
     private void addCookie(
             HttpServletResponse response,
             HttpServletRequest request,
@@ -219,11 +302,24 @@ public class RememberMeService {
         response.addCookie(cookie);
     }
 
+    /**
+     * 根据输入计算并返回 `cookiePath` 的处理结果。
+     *
+     * @param request HTTP 请求对象
+     * @return 方法处理结果
+     */
     private String cookiePath(HttpServletRequest request) {
         String contextPath = request.getContextPath();
         return contextPath == null || contextPath.isEmpty() ? "/" : contextPath;
     }
 
+    /**
+     * 按长度限制截断`RememberMe`。
+     *
+     * @param value 待处理的值
+     * @param maximumLength 参数 `maximumLength`
+     * @return 方法处理结果
+     */
     private String truncate(String value, int maximumLength) {
         if (value == null || value.length() <= maximumLength) {
             return value;
@@ -231,6 +327,13 @@ public class RememberMeService {
         return value.substring(0, maximumLength);
     }
 
+    /**
+     * 根据输入计算并返回 `ParsedCookie` 的处理结果。
+     *
+     * @param selector 参数 `selector`
+     * @param token 参数 `token`
+     * @return 方法处理结果
+     */
     private record ParsedCookie(String selector, String token) {
     }
 }

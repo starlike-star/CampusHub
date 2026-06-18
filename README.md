@@ -1,143 +1,78 @@
 # CampusHub
 
-> A course project for *Comprehensive Java Web Project Development Practice* at Jiangxi Modern Polytechnic College.
+CampusHub is a Java Web campus service platform built for coursework demonstration and acceptance testing. It integrates campus community posts, second-hand trading, lost-and-found services, activity registration, announcements, notifications, private messages, global search, daily check-ins, user levels, and administrator moderation.
 
-CampusHub is an integrated campus community platform for students and administrators. Centered around a campus social feed, it combines community posts, second-hand trading, lost-and-found services, campus activities, announcements, messaging, global search, daily check-ins, user levels, and administrative moderation in one system.
+Chinese documentation is available in [README-ZN.md](README-ZN.md).
 
-## Project Information
+## Highlights
 
-| Item | Details |
-| --- | --- |
-| Project | CampusHub Integrated Campus Community Platform |
-| Course | Comprehensive Java Web Project Development Practice |
-| School | School of Information Engineering |
-| Class | 2024 Software Technology (Sino-Foreign Cooperation), Class 1 |
-| Group | Group 14 |
-| Student | Xu Yiwen |
-| Student ID | 230628720242 |
-| Instructor | Hu Caiming |
-| Project Type | Maven WAR Web Application |
+- Traditional Java Web architecture: JSP, Servlet, Service, DAO, JDBC, and MySQL.
+- Student-facing workflows: registration, login, posts, comments, likes, favorites, reports, goods trading, simulated payment, lost-and-found claims, activity registration, notifications, and private messages.
+- Administrator workflows: dashboard statistics, user management, content moderation, announcement management, and report handling.
+- MySQL scripts delivered for both formal handoff restoration and clean development initialization.
+- External upload storage so user-uploaded images survive rebuilds and Tomcat redeployments.
+- Unit tests for services and utility classes.
 
-## Features
+## Feature Overview
 
-### Student-Facing System
+### Student System
 
-- User registration, CAPTCHA login, logout, and Remember Me authentication
-- Home feed, campus map, announcements, activity recommendations, and lost-item updates
-- Campus square, post publishing, comments, likes, favorites, and reports
-- Second-hand item publishing, filtering, editing, favorites, status management, and seller messaging
-- Offline trading and simulated QR-code payment with order and item status transitions
-- Lost-and-found publishing, claim requests, and claim processing
-- Campus activity publishing, registration, cancellation, deadlines, and capacity limits
-- Daily check-ins, consecutive-day tracking, experience points, and user levels
-- Personal profile, user-generated content, purchase history, and public user pages
-- System notifications, unread counters, and one-to-one private messaging
-- Global search across posts, goods, lost-and-found records, activities, and announcements
-- Account soft deletion with password confirmation, anonymization, and related-data cleanup
+- Registration, CAPTCHA login, logout, and Remember Me authentication.
+- Campus home feed, announcements, activity recommendations, and lost-and-found updates.
+- Campus square, post publishing, comments, likes, favorites, and reports.
+- Second-hand goods publishing, filtering, editing, favorites, status management, seller messaging, and simulated QR payment.
+- Lost-and-found publishing, claim requests, and claim handling.
+- Activity publishing, registration, cancellation, deadline checks, and capacity limits.
+- Daily check-ins, consecutive-day tracking, experience points, and user levels.
+- Personal profile, user-generated content, purchase history, and public user pages.
+- Notifications, unread counters, one-to-one private messages, and global search.
+- Account soft deletion with password confirmation, anonymization, and related-data cleanup.
 
-![CampusHub student-facing feature map](docs/images/frontend-feature-map.png)
+![CampusHub frontend feature map](docs/images/frontend-feature-map.png)
 
 ### Administration System
 
-- Platform statistics dashboard
-- User activation, suspension, status inspection, and password reset
-- Post, goods, lost-and-found, and activity moderation
-- Announcement publishing, editing, visibility control, and pinning
-- Report review, approval, rejection, and reported-content moderation
-- Administrator authorization filters and report notifications
+- Platform statistics dashboard.
+- User activation, suspension, status inspection, and password reset.
+- Post, goods, lost-and-found, and activity moderation.
+- Announcement publishing, editing, visibility control, and pinning.
+- Report review, approval, rejection, and reported-content moderation.
+- Administrator authorization filter and report notifications.
 
 ![CampusHub administration feature map](docs/images/admin-feature-map.png)
 
 ## Technology Stack
 
-| Category | Technology |
+| Area | Technology |
 | --- | --- |
 | Backend | Java 21, Servlet 4.0, JSP, JDBC |
 | Frontend | HTML, CSS, JavaScript, Fetch API |
 | Database | MySQL 8 |
 | Web Container | Apache Tomcat 9 |
-| Build Tool | Maven 3.9+ |
-| Security | BCrypt, Session, Cookie, CAPTCHA, Remember Me Token |
-| QR Codes | ZXing 3.5.3 |
+| Build Tool | Maven |
+| Security | BCrypt, Session, Cookie, CAPTCHA, Remember Me token |
+| QR Code | ZXing |
 | Testing | JUnit 5 |
 
-The project follows a traditional Java Web stack without Spring, Vue, or React. Its SPA-Lite interface uses `ContentServlet` to load JSP fragments dynamically, while the Fetch API handles partial asynchronous updates.
+CampusHub uses the `javax.servlet` API and should be deployed on Tomcat 9. Tomcat 10+ uses `jakarta.servlet` by default and is not directly compatible.
 
 ## Architecture
 
-```text
-Browser
-  |
-  +-- JSP / CSS / JavaScript
-  |
-Filters (encoding, login restoration, user authorization, admin authorization)
-  |
-Servlets (request handling and view dispatch)
-  |
-Services (validation and business rules)
-  |
-DAO / JDBC (SQL and transactions)
-  |
-MySQL
-```
+The backend follows a `Servlet -> Service -> DAO -> Model` structure. JSP pages render server-side views, while JavaScript and Fetch API handle partial asynchronous updates.
 
-The backend follows a `Servlet -> Service -> DAO -> Model` structure. Database access uses parameterized `PreparedStatement` queries. Multi-table operations such as simulated payments, activity registration, check-in experience updates, and account cancellation use JDBC transactions to maintain consistency.
+![System architecture](docs/figures/figure-2-1-system-architecture.png)
+
+Request processing is centralized through Tomcat mappings, filters, Servlet controllers, services, DAO classes, and MySQL.
+
+![Request flow](docs/figures/figure-2-2-request-flow.png)
 
 ## Database Model
 
-The `users` table is the central entity. It connects community content, marketplace orders, lost-and-found claims, activity registrations, notifications, private conversations, reports, and check-ins.
+The `users` table is the core account table. Business tables are organized around posts, comments, goods, orders, lost-and-found records, claim requests, activities, registrations, messages, reports, and notices.
 
-![CampusHub database relationship diagram](docs/images/database-relationships.png)
+![Database relationship diagram](docs/figures/figure-3-1-database-er.png)
 
-The primary user entity stores identity, academic profile, account status, experience, level, and soft-deletion metadata.
-
-![CampusHub users entity fields](docs/images/users-entity.png)
-
-## Project Structure
-
-```text
-CampusHub/
-|-- database/
-|   `-- migrations/             # Incremental database migrations
-|-- docs/
-|   `-- images/                 # README diagrams
-|-- src/
-|   |-- main/
-|   |   |-- java/cn/campushub/
-|   |   |   |-- config/        # Database configuration
-|   |   |   |-- constant/      # Shared constants
-|   |   |   |-- dao/           # DAO interfaces and JDBC implementations
-|   |   |   |-- filter/        # Encoding and authorization filters
-|   |   |   |-- model/         # Entities, view objects, and result models
-|   |   |   |-- service/       # Business services
-|   |   |   |-- servlet/       # Web request controllers
-|   |   |   `-- util/          # Validation, password, JSON, and QR utilities
-|   |   |-- resources/
-|   |   |   |-- database.properties
-|   |   |   `-- database/schema.sql
-|   |   `-- webapp/
-|   |       |-- WEB-INF/views/ # JSP pages and fragments
-|   |       |-- css/
-|   |       |-- js/
-|   |       `-- images/
-|   `-- test/java/cn/campushub/ # Service and utility unit tests
-|-- database-schema.md          # Complete current database specification
-|-- pom.xml
-`-- README.md
-```
-
-## Requirements
-
-- JDK 21
-- Maven 3.9+
-- MySQL 8.0+
-- Apache Tomcat 9.0+
-
-This project uses `javax.servlet` and should be deployed on Tomcat 9. Tomcat 10 and later use `jakarta.servlet` by default and are not directly compatible.
-
-## Database Setup
-
-The database is named `campushub` and contains the following main tables:
+The complete schema contains the following main tables:
 
 ```text
 users, categories, posts, comments, likes, favorites, goods,
@@ -147,17 +82,86 @@ private_conversations, private_messages, user_experience_logs,
 goods_orders, account_cancel_logs
 ```
 
-1. Create a MySQL database named `campushub`.
-2. Create the business tables according to [database-schema.md](database-schema.md).
-3. If the `goods` table does not contain the transaction-method field, run:
+## Project Structure
 
-   ```sql
-   SOURCE database/migrations/20260610_add_goods_trade_method.sql;
-   ```
+```text
+CampusHub/
+|-- database/
+|   |-- demo-data.sql              # Optional demo content for an existing local database
+|   `-- migrations/                # Historical incremental migration notes
+|-- docs/
+|   |-- acceptance-checklist.md     # Manual acceptance checklist
+|   |-- figures/                   # Report figures
+|   `-- images/                    # README diagrams
+|-- src/
+|   |-- main/
+|   |   |-- java/cn/campushub/
+|   |   |   |-- config/            # Database configuration
+|   |   |   |-- constant/          # Shared constants
+|   |   |   |-- dao/               # DAO interfaces and JDBC implementations
+|   |   |   |-- filter/            # Encoding and authorization filters
+|   |   |   |-- model/             # Entities, VOs, and result models
+|   |   |   |-- service/           # Business services
+|   |   |   |-- servlet/           # Request controllers
+|   |   |   `-- util/              # Validation, password, JSON, QR, upload utilities
+|   |   |-- resources/
+|   |   |   |-- database.properties
+|   |   |   `-- database/
+|   |   |       |-- campushub.sql    # Formal handoff dump exported from the current MySQL database
+|   |   |       `-- schema.sql      # Clean development database schema
+|   |   `-- webapp/
+|   |       |-- WEB-INF/views/      # JSP pages and fragments
+|   |       |-- css/
+|   |       |-- js/
+|   |       `-- images/
+|   `-- test/java/cn/campushub/     # Unit tests
+|-- database-schema.md
+|-- pom.xml
+|-- README.md
+`-- README-ZN.md
+```
 
-> `src/main/resources/database/schema.sql` is an earlier base schema and does not contain every table and field used by the current application. Use `database-schema.md` together with `database/migrations/` when reproducing the current database.
+## Requirements
 
-The repository does not include a fixed administrator account. Register a normal user first, then promote that account in MySQL:
+- JDK 21 or later
+- Maven 3.9+
+- MySQL 8.0+
+- Apache Tomcat 9.0+
+- IntelliJ IDEA is optional but recommended for local Tomcat deployment
+
+## Database Setup
+
+For formal handoff, restore the database from the exported MySQL dump:
+
+```sql
+CREATE DATABASE IF NOT EXISTS campushub
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+USE campushub;
+SOURCE C:/Users/1/IdeaProjects/CampusHub/src/main/resources/database/campushub.sql;
+```
+
+`src/main/resources/database/campushub.sql` is the recommended script for final delivery and demonstration. It was exported from the current local MySQL database and contains the current table structure plus demonstration records.
+
+The dump does not create the database by itself, so run `CREATE DATABASE` and `USE campushub` before `SOURCE`.
+
+For development from an empty schema without the exported demonstration state, use:
+
+```sql
+SOURCE C:/Users/1/IdeaProjects/CampusHub/src/main/resources/database/schema.sql;
+```
+
+`src/main/resources/database/schema.sql` creates the database, all current business tables, indexes, foreign keys, and base category data used by the application.
+
+Files under `database/migrations/` are retained as historical incremental records for existing databases. For formal handoff, use `campushub.sql`; for clean development initialization, use `schema.sql`.
+
+For an existing local database that already contains the expected demo users, you can add demonstration content:
+
+```sql
+SOURCE C:/Users/1/IdeaProjects/CampusHub/database/demo-data.sql;
+```
+
+The project does not include a fixed administrator account. Register a normal user first, then promote it in MySQL:
 
 ```sql
 UPDATE users
@@ -165,23 +169,26 @@ SET role = 'admin'
 WHERE username = 'your_username';
 ```
 
-## Database Configuration
+## Configuration
 
-The default connection settings are stored in:
+Default database configuration is stored in:
 
 ```text
 src/main/resources/database.properties
 ```
 
-Use local configuration or environment variables instead of committing real database credentials:
+The committed file must not contain real passwords. Use environment variables or JVM system properties for local secrets.
 
-| Environment Variable | Description |
+### Environment Variables
+
+| Variable | Description |
 | --- | --- |
 | `CAMPUSHUB_DB_DRIVER` | JDBC driver, normally `com.mysql.cj.jdbc.Driver` |
-| `CAMPUSHUB_DB_URL` | MySQL JDBC connection URL |
+| `CAMPUSHUB_DB_URL` | MySQL JDBC URL |
 | `CAMPUSHUB_DB_USERNAME` | Database username |
 | `CAMPUSHUB_DB_PASSWORD` | Database password |
-| `CAMPUSHUB_PUBLIC_BASE_URL` | Public or LAN base URL used by mobile QR payment pages |
+| `CAMPUSHUB_UPLOAD_DIR` | External directory for uploaded images |
+| `CAMPUSHUB_PUBLIC_BASE_URL` | Public or LAN base URL for QR payment pages |
 
 PowerShell example:
 
@@ -189,23 +196,55 @@ PowerShell example:
 $env:CAMPUSHUB_DB_URL="jdbc:mysql://localhost:3306/campushub?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true"
 $env:CAMPUSHUB_DB_USERNAME="root"
 $env:CAMPUSHUB_DB_PASSWORD="your_password"
+$env:CAMPUSHUB_UPLOAD_DIR="C:\CampusHub\uploads"
 ```
+
+If `CAMPUSHUB_DB_PASSWORD` is not set and `db.password` is still `PLEASE_SET_ENV`, the application fails fast with a configuration error.
+
+### IntelliJ IDEA Tomcat Configuration
+
+If Tomcat launched by IDEA cannot read system environment variables, add these VM options to the Tomcat run configuration:
+
+```text
+-Dcampushub.db.url=jdbc:mysql://localhost:3306/campushub?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+-Dcampushub.db.username=root
+-Dcampushub.db.password=your_password
+-Dcampushub.upload.dir=C:\CampusHub\uploads
+```
+
+## Uploaded Images
+
+Uploaded files are stored outside the deployed WAR or exploded artifact.
+
+Priority:
+
+1. JVM property `campushub.upload.dir`
+2. Environment variable `CAMPUSHUB_UPLOAD_DIR`
+3. Default directory `%USERPROFILE%\CampusHub\uploads`
+
+The public URL remains:
+
+```text
+/uploads/{type}/{filename}
+```
+
+`UploadedFileServlet` reads files from the external upload directory. Keep this directory outside Tomcat `webapps` and Maven `target` so uploaded images are not lost after rebuilds or redeployments.
 
 ## Build and Test
 
-Run the unit tests:
+Run unit tests:
 
 ```shell
-mvn test
+mvn "-Dmaven.repo.local=target\m2" test
 ```
 
 Build the WAR package:
 
 ```shell
-mvn clean package
+mvn "-Dmaven.repo.local=target\m2" -DskipTests package
 ```
 
-The generated deployment artifact is:
+Generated artifact:
 
 ```text
 target/CampusHub.war
@@ -213,15 +252,57 @@ target/CampusHub.war
 
 ## Deployment
 
-1. Copy `target/CampusHub.war` to the Tomcat 9 `webapps` directory.
-2. Start Tomcat.
-3. Open:
+### Formal Handoff Deployment
+
+1. Install JDK 21+, Maven 3.9+, MySQL 8.0+, and Apache Tomcat 9.
+2. Create and select the `campushub` database, then restore the exported handoff script:
+
+   ```sql
+   CREATE DATABASE IF NOT EXISTS campushub
+     DEFAULT CHARACTER SET utf8mb4
+     COLLATE utf8mb4_unicode_ci;
+   USE campushub;
+   SOURCE C:/Users/1/IdeaProjects/CampusHub/src/main/resources/database/campushub.sql;
+   ```
+
+3. Configure the runtime database connection. In PowerShell:
+
+   ```powershell
+   $env:CAMPUSHUB_DB_URL="jdbc:mysql://localhost:3306/campushub?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true"
+   $env:CAMPUSHUB_DB_USERNAME="root"
+   $env:CAMPUSHUB_DB_PASSWORD="your_password"
+   $env:CAMPUSHUB_UPLOAD_DIR="C:\CampusHub\uploads"
+   ```
+
+4. Build and verify the project:
+
+   ```shell
+   mvn "-Dmaven.repo.local=target\m2" test
+   mvn "-Dmaven.repo.local=target\m2" -DskipTests package
+   ```
+
+5. Deploy `target/CampusHub.war` to Tomcat 9 `webapps`, or deploy `CampusHub:war exploded` from IntelliJ IDEA.
+6. Start Tomcat and open:
 
    ```text
    http://localhost:8080/CampusHub/
    ```
 
-Alternatively, configure Tomcat 9 in IntelliJ IDEA and deploy the `CampusHub:war exploded` artifact.
+### IntelliJ IDEA Tomcat Deployment
+
+1. Open the project in IntelliJ IDEA.
+2. Configure Project SDK as JDK 21 or later.
+3. Add a local Tomcat 9 server in Run/Debug Configurations.
+4. Add the `CampusHub:war exploded` artifact in the Deployment tab.
+5. Add database and upload settings through environment variables or VM options.
+6. Start the Tomcat run configuration.
+
+### WAR Deployment
+
+1. Build `target/CampusHub.war`.
+2. Copy it to the Tomcat 9 `webapps` directory.
+3. Start Tomcat.
+4. Access `/CampusHub/` in the browser.
 
 Common entry points:
 
@@ -229,17 +310,41 @@ Common entry points:
 | --- | --- |
 | Home | `/CampusHub/` |
 | Login | `/CampusHub/login` |
-| Registration | `/CampusHub/register` |
-| Administration | `/CampusHub/admin` |
+| Register | `/CampusHub/register` |
+| Admin | `/CampusHub/admin` |
 | Private Messages | `/CampusHub/private-messages` |
+
+Servlet and filter mapping summary:
+
+![Servlet and filter configuration](docs/figures/figure-5-1-servlet-filter-config.png)
+
+## Local Acceptance Checklist
+
+Before demonstration or grading, run:
+
+```text
+docs/acceptance-checklist.md
+```
+
+The checklist covers:
+
+- Fresh MySQL initialization.
+- Environment variable or VM option configuration.
+- Maven test and package verification.
+- Tomcat deployment.
+- Registration, login, posts, comments, likes, favorites.
+- Goods publishing and simulated payment.
+- Lost-and-found claims.
+- Activity registration.
+- Notifications, private messages, search, and administrator moderation.
 
 ## Simulated QR Payment
 
-The payment workflow is for course-project demonstration only. It does not call the WeChat Pay API or transfer real money.
+The payment workflow is for coursework demonstration only. It does not call WeChat Pay or transfer real money.
 
-To scan an order QR code with a phone:
+To scan a QR code with a phone:
 
-1. Connect the phone and server to the same local network.
+1. Connect the phone and server to the same LAN.
 2. Set `CAMPUSHUB_PUBLIC_BASE_URL` to an address accessible from the phone:
 
    ```powershell
@@ -248,37 +353,23 @@ To scan an order QR code with a phone:
 
 3. Restart Tomcat and create a new order QR code.
 
-Do not use `localhost` in a QR code intended for another device.
+Do not use `localhost` in QR codes intended for another device.
 
-## Image Uploads
+## Security Notes
 
-- Maximum file size: 5 MB
-- Maximum request size: 6 MB
-- Supported use cases include avatars, post images, goods images, lost-and-found images, and activity covers
-- Uploaded files are stored under the expanded Tomcat application's `uploads` directory
-- Redeploying or cleaning the application directory may remove uploaded files
-
-This storage approach is suitable for classroom demonstrations. A production deployment should use a persistent external directory or object storage.
-
-## Security and Data Handling
-
-- Passwords are hashed and verified with BCrypt.
-- Sessions maintain authenticated user state.
-- Remember Me cookies never store plaintext passwords.
-- Parameterized SQL queries reduce injection risk.
-- Separate filters protect authenticated-user and administrator routes.
-- Content removal and account cancellation primarily use status changes, anonymization, and soft deletion.
-- Completed orders and report records remain available after account cancellation for traceability.
+- Passwords are hashed with BCrypt.
+- Remember Me cookies do not store plaintext passwords.
+- SQL uses parameterized `PreparedStatement` queries.
+- Filters protect authenticated user routes and administrator routes separately.
+- Account cancellation uses soft deletion, anonymization, and related-data cleanup.
+- Real database credentials should be provided locally and must not be committed.
 
 ## Documentation
 
-- [Database Schema Specification](database-schema.md)
-- [Source File Reference](CODE_FILES.md)
+- [Database schema specification](database-schema.md)
+- [Acceptance checklist](docs/acceptance-checklist.md)
+- [Source file reference](CODE_FILES.md)
 
 ## Limitations
 
-CampusHub is intended for Java Web coursework and project demonstrations. Simulated payments, application-local upload storage, and single-node sessions are teaching-oriented implementations and should not be used directly in production.
-
-## Acknowledgements
-
-Special thanks to [colbymchenry/codegraph](https://github.com/colbymchenry/codegraph). Its code-intelligence tools reduced token usage and made repository exploration significantly more efficient.
+CampusHub is a Java Web coursework project. Simulated payments, single-node sessions, and local upload storage are suitable for classroom demonstration but are not production-grade replacements for real payment, distributed session management, or object storage.

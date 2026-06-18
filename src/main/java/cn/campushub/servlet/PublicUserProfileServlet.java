@@ -20,6 +20,14 @@ public class PublicUserProfileServlet extends HttpServlet {
     private final PublicUserProfileService service =
             new PublicUserProfileService();
 
+    /**
+     * 处理公开用户个人资料相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,6 +65,12 @@ public class PublicUserProfileServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 解析`PositiveLong`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private Long parsePositiveLong(String value) {
         try {
             long parsed = Long.parseLong(value);

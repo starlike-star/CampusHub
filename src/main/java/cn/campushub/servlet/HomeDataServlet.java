@@ -20,6 +20,13 @@ import java.util.Map;
 public class HomeDataServlet extends HttpServlet {
     private final PostService postService = new PostService();
 
+    /**
+     * 处理首页数据相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -54,6 +61,12 @@ public class HomeDataServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 转换为`PostMap`。
+     *
+     * @param post 帖子数据
+     * @return 按键组织的结果数据
+     */
     private Map<String, Object> toPostMap(Post post) {
         return Map.ofEntries(
                 Map.entry("id", post.getId()),
@@ -79,6 +92,12 @@ public class HomeDataServlet extends HttpServlet {
         );
     }
 
+    /**
+     * 根据输入计算并返回 `valueOrEmpty` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String valueOrEmpty(String value) {
         return value == null ? "" : value;
     }

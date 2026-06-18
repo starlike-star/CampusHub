@@ -11,9 +11,20 @@ import java.util.Map;
  * 提供 JSON 字符串转义、响应输出和简单数据序列化能力。
  */
 public final class JsonUtils {
+    /**
+     * 初始化`Json`对象及其运行所需依赖。
+     */
     private JsonUtils() {
     }
 
+    /**
+     * 写入`Json`。
+     *
+     * @param response HTTP 响应对象
+     * @param status 业务状态
+     * @param value 待处理的值
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     public static void write(HttpServletResponse response, int status, Object value)
             throws IOException {
         response.setStatus(status);
@@ -22,6 +33,12 @@ public final class JsonUtils {
         response.getWriter().write(toJson(value));
     }
 
+    /**
+     * 转换为`Json`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public static String toJson(Object value) {
         if (value == null) {
             return "null";
@@ -60,6 +77,12 @@ public final class JsonUtils {
         throw new IllegalArgumentException("不支持的 JSON 类型：" + value.getClass().getName());
     }
 
+    /**
+     * 根据输入计算并返回 `quote` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private static String quote(String value) {
         StringBuilder builder = new StringBuilder(value.length() + 2).append('"');
         for (int i = 0; i < value.length(); i++) {

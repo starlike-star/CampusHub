@@ -15,6 +15,17 @@ import java.util.List;
  * 使用 JDBC 实现账号数据的查询与持久化操作。
  */
 public class JdbcAccountDao implements AccountDao {
+    /**
+     * 取消账号。
+     *
+     * @param userId 用户编号
+     * @param password 密码
+     * @param reason 参数 `reason`
+     * @param ipAddress 参数 `ipAddress`
+     * @param userAgent 参数 `userAgent`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public AccountCancelResult cancelAccount(
             long userId,
@@ -77,6 +88,13 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /**
+     * 判断是否`Active`。
+     *
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean isActive(long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -93,6 +111,14 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockUser` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private LockedUser lockUser(Connection connection, long userId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -117,6 +143,13 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /**
+     * 取消活动报名记录。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void cancelActivityRegistrations(
             Connection connection,
             long userId
@@ -159,6 +192,13 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /**
+     * 处理 `hideOwnedContent` 对应的业务流程。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void hideOwnedContent(Connection connection, long userId)
             throws SQLException {
         execute(connection, "UPDATE posts SET status = 0 WHERE user_id = ?", userId);
@@ -193,6 +233,13 @@ public class JdbcAccountDao implements AccountDao {
         );
     }
 
+    /**
+     * 处理 `clearBehaviorAndPrivateData` 对应的业务流程。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void clearBehaviorAndPrivateData(
             Connection connection,
             long userId
@@ -227,6 +274,13 @@ public class JdbcAccountDao implements AccountDao {
         execute(connection, "DELETE FROM remember_tokens WHERE user_id = ?", userId);
     }
 
+    /**
+     * 取消`PendingOrders`。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void cancelPendingOrders(Connection connection, long userId)
             throws SQLException {
         execute(
@@ -242,6 +296,14 @@ public class JdbcAccountDao implements AccountDao {
         );
     }
 
+    /**
+     * 处理 `anonymizeUser` 对应的业务流程。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param reason 参数 `reason`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void anonymizeUser(
             Connection connection,
             long userId,
@@ -270,6 +332,18 @@ public class JdbcAccountDao implements AccountDao {
         );
     }
 
+    /**
+     * 新增`CancelLog`。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param username 用户名
+     * @param nickname 用户昵称
+     * @param reason 参数 `reason`
+     * @param ipAddress 参数 `ipAddress`
+     * @param userAgent 参数 `userAgent`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void insertCancelLog(
             Connection connection,
             long userId,
@@ -296,6 +370,13 @@ public class JdbcAccountDao implements AccountDao {
         );
     }
 
+    /**
+     * 判断是否具有`CancelLogTable`。
+     *
+     * @param connection 数据库连接
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasCancelLogTable(Connection connection)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -310,6 +391,15 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `execute` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param sql 参数 `sql`
+     * @param values 参数 `values`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int execute(
             Connection connection,
             String sql,
@@ -323,6 +413,16 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `LockedUser` 的处理结果。
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param nickname 用户昵称
+     * @param role 参数 `role`
+     * @param status 业务状态
+     * @return 方法处理结果
+     */
     private record LockedUser(
             String username,
             String password,

@@ -10,9 +10,18 @@ import java.util.Map;
  * 为站内通知接口提供统一的 JSON 响应和参数处理辅助能力。
  */
 final class MessageJsonSupport {
+    /**
+     * 初始化`MessageJsonSupport`对象及其运行所需依赖。
+     */
     private MessageJsonSupport() {
     }
 
+    /**
+     * 写入`NeedLogin`。
+     *
+     * @param response HTTP 响应对象
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     static void writeNeedLogin(HttpServletResponse response) throws IOException {
         JsonUtils.write(
                 response,
@@ -26,6 +35,14 @@ final class MessageJsonSupport {
         );
     }
 
+    /**
+     * 写入`Error`。
+     *
+     * @param response HTTP 响应对象
+     * @param status 业务状态
+     * @param message 消息数据
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     static void writeError(
             HttpServletResponse response,
             int status,
@@ -38,6 +55,12 @@ final class MessageJsonSupport {
         );
     }
 
+    /**
+     * 解析`PositiveId`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     static Long parsePositiveId(String value) {
         try {
             long id = Long.parseLong(value);

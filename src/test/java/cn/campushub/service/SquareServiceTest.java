@@ -14,6 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * 验证 校园广场相关逻辑的正常路径、边界条件和失败场景。
  */
 class SquareServiceTest {
+    /**
+     * 验证 `invalidTabFallsBackToLatest` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void invalidTabFallsBackToLatest() throws Exception {
         FakeSquareDao dao = new FakeSquareDao();
@@ -24,6 +29,11 @@ class SquareServiceTest {
         assertEquals("latest", dao.tab);
     }
 
+    /**
+     * 验证 `noticeTabDoesNotQueryPosts` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void noticeTabDoesNotQueryPosts() throws Exception {
         FakeSquareDao dao = new FakeSquareDao();
@@ -33,6 +43,11 @@ class SquareServiceTest {
         assertNull(dao.tab);
     }
 
+    /**
+     * 验证 `tradeTabQueriesSecondHandTradePosts` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void tradeTabQueriesSecondHandTradePosts() throws Exception {
         FakeSquareDao dao = new FakeSquareDao();
@@ -43,6 +58,11 @@ class SquareServiceTest {
         assertEquals("trade", dao.tab);
     }
 
+    /**
+     * 验证 `keywordIsTrimmedAndLimited` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void keywordIsTrimmedAndLimited() throws Exception {
         FakeSquareDao dao = new FakeSquareDao();
@@ -59,6 +79,14 @@ class SquareServiceTest {
         private String tab;
         private String keyword;
 
+        /**
+         * 查询帖子列表。
+         *
+         * @param tab 参数 `tab`
+         * @param currentUserId 当前用户编号
+         * @param keyword 搜索关键字
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Post> findPosts(
                 String tab,
@@ -70,6 +98,12 @@ class SquareServiceTest {
             return List.of();
         }
 
+        /**
+         * 查询公告列表。
+         *
+         * @param keyword 搜索关键字
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Notice> findNotices(String keyword) {
             this.keyword = keyword;

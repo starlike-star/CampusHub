@@ -29,6 +29,9 @@ public class GoodsService {
 
     private final GoodsDao goodsDao;
 
+    /**
+     * 初始化商品对象及其运行所需依赖。
+     */
     public GoodsService() {
         this(new JdbcGoodsDao());
     }
@@ -37,6 +40,18 @@ public class GoodsService {
         this.goodsDao = goodsDao;
     }
 
+    /**
+     * 查询商品。
+     *
+     * @param currentUserId 当前用户编号
+     * @param keyword 搜索关键字
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @param status 业务状态
+     * @param tradeMethod 参数 `tradeMethod`
+     * @param sort 排序方式
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Goods> list(
             Long currentUserId,
             String keyword,
@@ -59,18 +74,46 @@ public class GoodsService {
         );
     }
 
+    /**
+     * 查询`OwnGoods`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Goods> listOwnGoods(long userId) throws SQLException {
         return goodsDao.findOwnGoods(userId);
     }
 
+    /**
+     * 查询收藏商品。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Goods> listFavoriteGoods(long userId) throws SQLException {
         return goodsDao.findFavoriteGoods(userId);
     }
 
+    /**
+     * 查询`Categories`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Category> listCategories() throws SQLException {
         return goodsDao.findActiveGoodsCategories();
     }
 
+    /**
+     * 查询商品详情。
+     *
+     * @param goodsId 商品编号
+     * @param currentUserId 当前用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<Goods> detail(long goodsId, Long currentUserId)
             throws SQLException {
         if (goodsId <= 0) {
@@ -79,6 +122,22 @@ public class GoodsService {
         return goodsDao.findVisibleById(goodsId, currentUserId);
     }
 
+    /**
+     * 创建商品。
+     *
+     * @param userId 用户编号
+     * @param title 标题
+     * @param description 描述内容
+     * @param priceValue 参数 `priceValue`
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @param conditionLevel 参数 `conditionLevel`
+     * @param images 参数 `images`
+     * @param tradePlace 参数 `tradePlace`
+     * @param tradeMethod 参数 `tradeMethod`
+     * @param contact 参数 `contact`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Long> create(
             long userId,
             String title,
@@ -111,6 +170,14 @@ public class GoodsService {
         return ServiceResult.success("商品发布成功", goodsDao.create(goods));
     }
 
+    /**
+     * 切换收藏。
+     *
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<PostToggleResult> toggleFavorite(
             long goodsId,
             long userId
@@ -125,6 +192,24 @@ public class GoodsService {
         );
     }
 
+    /**
+     * 更新商品。
+     *
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param title 标题
+     * @param description 描述内容
+     * @param priceValue 参数 `priceValue`
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @param conditionLevel 参数 `conditionLevel`
+     * @param images 参数 `images`
+     * @param tradePlace 参数 `tradePlace`
+     * @param tradeMethod 参数 `tradeMethod`
+     * @param contact 参数 `contact`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Goods> update(
             long goodsId,
             long userId,
@@ -165,6 +250,16 @@ public class GoodsService {
                 .orElseGet(() -> ServiceResult.failure("商品不存在或无权编辑"));
     }
 
+    /**
+     * 更新状态。
+     *
+     * @param goodsId 商品编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param status 业务状态
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateStatus(
             long goodsId,
             long userId,
@@ -187,6 +282,12 @@ public class GoodsService {
         );
     }
 
+    /**
+     * 规范化关键字。
+     *
+     * @param keyword 搜索关键字
+     * @return 方法处理结果
+     */
     public String normalizeKeyword(String keyword) {
         keyword = ValidationUtils.trimToNull(keyword);
         if (keyword == null) {
@@ -195,24 +296,64 @@ public class GoodsService {
         return keyword.length() <= 100 ? keyword : keyword.substring(0, 100);
     }
 
+    /**
+     * 规范化列表状态。
+     *
+     * @param status 业务状态
+     * @return 方法处理结果
+     */
     public String normalizeListStatus(String status) {
         return status != null && LIST_STATUSES.contains(status) ? status : null;
     }
 
+    /**
+     * 规范化排序方式。
+     *
+     * @param sort 排序方式
+     * @return 方法处理结果
+     */
     public String normalizeSort(String sort) {
         return sort != null && SORTS.contains(sort) ? sort : "latest";
     }
 
+    /**
+     * 规范化`TradeMethodFilter`。
+     *
+     * @param tradeMethod 参数 `tradeMethod`
+     * @return 方法处理结果
+     */
     public String normalizeTradeMethodFilter(String tradeMethod) {
         return tradeMethod != null && TRADE_METHODS.contains(tradeMethod)
                 ? tradeMethod
                 : null;
     }
 
+    /**
+     * 规范化分类编号。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public Long normalizeCategoryId(String value) {
         return parseOptionalPositiveLong(value);
     }
 
+    /**
+     * 填充并校验商品数据。
+     *
+     * @param goods 商品数据
+     * @param title 标题
+     * @param description 描述内容
+     * @param priceValue 参数 `priceValue`
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @param conditionLevel 参数 `conditionLevel`
+     * @param images 参数 `images`
+     * @param tradePlace 参数 `tradePlace`
+     * @param tradeMethod 参数 `tradeMethod`
+     * @param contact 参数 `contact`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ServiceResult<Void> populateAndValidate(
             Goods goods,
             String title,
@@ -273,6 +414,12 @@ public class GoodsService {
         return ServiceResult.success("验证通过", null);
     }
 
+    /**
+     * 解析`Price`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private BigDecimal parsePrice(String value) {
         try {
             return new BigDecimal(value).setScale(2);
@@ -281,6 +428,12 @@ public class GoodsService {
         }
     }
 
+    /**
+     * 解析`OptionalPositiveLong`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private Long parseOptionalPositiveLong(String value) {
         if (ValidationUtils.trimToNull(value) == null) {
             return null;

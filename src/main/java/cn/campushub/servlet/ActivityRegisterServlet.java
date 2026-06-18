@@ -22,6 +22,14 @@ public class ActivityRegisterServlet extends HttpServlet {
     private final ActivityRegistrationService registrationService =
             new ActivityRegistrationService();
 
+    /**
+     * 处理`ActivityRegister`相关的 HTTP POST 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,6 +65,13 @@ public class ActivityRegisterServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 写入结果。
+     *
+     * @param response HTTP 响应对象
+     * @param result 参数 `result`
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     static void writeResult(
             HttpServletResponse response,
             ServiceResult<ActivityRegistrationResult> result

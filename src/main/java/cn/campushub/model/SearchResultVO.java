@@ -17,6 +17,11 @@ public record SearchResultVO(
         String targetUrl,
         LocalDateTime createdAt
 ) {
+    /**
+     * 获取`typeLabel`。
+     *
+     * @return `typeLabel`
+     */
     public String typeLabel() {
         return switch (type) {
             case "post" -> "帖子";

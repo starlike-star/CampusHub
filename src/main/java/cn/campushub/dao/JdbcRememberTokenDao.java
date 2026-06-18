@@ -15,6 +15,17 @@ import java.util.Optional;
  * 使用 JDBC 实现记住登录令牌数据的查询与持久化操作。
  */
 public class JdbcRememberTokenDao implements RememberTokenDao {
+    /**
+     * 创建令牌。
+     *
+     * @param userId 用户编号
+     * @param selector 参数 `selector`
+     * @param tokenHash 参数 `tokenHash`
+     * @param expiresAt 参数 `expiresAt`
+     * @param userAgent 参数 `userAgent`
+     * @param ipAddress 参数 `ipAddress`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void createToken(
             long userId,
@@ -42,6 +53,13 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         }
     }
 
+    /**
+     * 根据`Selector`查询`JdbcRememberToken`。
+     *
+     * @param selector 参数 `selector`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<RememberToken> findBySelector(String selector)
             throws SQLException {
@@ -63,6 +81,12 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         }
     }
 
+    /**
+     * 更新`LastUsed`。
+     *
+     * @param selector 参数 `selector`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void updateLastUsed(String selector) throws SQLException {
         executeUpdate(
@@ -72,11 +96,23 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         );
     }
 
+    /**
+     * 删除`BySelector`。
+     *
+     * @param selector 参数 `selector`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void deleteBySelector(String selector) throws SQLException {
         executeUpdate("DELETE FROM remember_tokens WHERE selector = ?", selector);
     }
 
+    /**
+     * 删除`ExpiredTokens`。
+     *
+     * @return `deleteExpiredTokens`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int deleteExpiredTokens() throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -87,6 +123,12 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         }
     }
 
+    /**
+     * 删除`ByUserId`。
+     *
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void deleteByUserId(long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -98,6 +140,13 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         }
     }
 
+    /**
+     * 处理 `executeUpdate` 对应的业务流程。
+     *
+     * @param sql 参数 `sql`
+     * @param selector 参数 `selector`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void executeUpdate(String sql, String selector) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -106,6 +155,13 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为令牌。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private RememberToken mapToken(ResultSet resultSet) throws SQLException {
         return new RememberToken(
                 resultSet.getLong("id"),
@@ -120,6 +176,12 @@ public class JdbcRememberTokenDao implements RememberTokenDao {
         );
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

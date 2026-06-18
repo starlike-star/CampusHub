@@ -37,6 +37,14 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
             WHERE (c.user_a_id = ? OR c.user_b_id = ?)
             """;
 
+    /**
+     * 获取`OrCreate`。
+     *
+     * @param userAId `userA`编号
+     * @param userBId `userB`编号
+     * @return `OrCreate`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public long getOrCreate(long userAId, long userBId) throws SQLException {
         String sql = """
@@ -61,6 +69,14 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         return findPairId(userAId, userBId);
     }
 
+    /**
+     * 根据`IdForUser`查询`JdbcPrivateConversation`。
+     *
+     * @param conversationId 会话编号
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<PrivateConversation> findByIdForUser(
             long conversationId,
@@ -79,6 +95,13 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         }
     }
 
+    /**
+     * 根据用户查询`JdbcPrivateConversation`。
+     *
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<PrivateConversation> findByUser(long userId) throws SQLException {
         String sql = SELECT_CONVERSATION + """
@@ -97,6 +120,13 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         return conversations;
     }
 
+    /**
+     * 判断是否`ActiveUser`。
+     *
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean isActiveUser(long userId) throws SQLException {
         String sql = "SELECT 1 FROM users WHERE id = ? AND status = 1 LIMIT 1";
@@ -109,6 +139,14 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         }
     }
 
+    /**
+     * 查询`PairId`。
+     *
+     * @param userAId `userA`编号
+     * @param userBId `userB`编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private long findPairId(long userAId, long userBId) throws SQLException {
         String sql = """
                 SELECT id
@@ -129,6 +167,13 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         throw new SQLException("创建私信会话后未获得主键");
     }
 
+    /**
+     * 设置`UserParameters`。
+     *
+     * @param statement 预编译 SQL 语句
+     * @param userId 用户编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void setUserParameters(PreparedStatement statement, long userId)
             throws SQLException {
         statement.setLong(1, userId);
@@ -137,6 +182,13 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         statement.setLong(4, userId);
     }
 
+    /**
+     * 将数据库结果映射为会话。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private PrivateConversation mapConversation(ResultSet resultSet)
             throws SQLException {
         return new PrivateConversation(
@@ -153,6 +205,12 @@ public class JdbcPrivateConversationDao implements PrivateConversationDao {
         );
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

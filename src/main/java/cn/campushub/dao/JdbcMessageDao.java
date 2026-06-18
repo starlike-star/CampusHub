@@ -18,6 +18,12 @@ import java.util.Optional;
  * 使用 JDBC 实现站内通知数据的查询与持久化操作。
  */
 public class JdbcMessageDao implements MessageDao {
+    /**
+     * 创建`JdbcMessage`。
+     *
+     * @param message 消息数据
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public void create(Message message) throws SQLException {
         String sql = """
@@ -34,6 +40,12 @@ public class JdbcMessageDao implements MessageDao {
         }
     }
 
+    /**
+     * 查询`ActiveAdminIds`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Long> findActiveAdminIds() throws SQLException {
         String sql = """
@@ -53,6 +65,14 @@ public class JdbcMessageDao implements MessageDao {
         return adminIds;
     }
 
+    /**
+     * 根据用户查询`JdbcMessage`。
+     *
+     * @param userId 用户编号
+     * @param type 参数 `type`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Message> findByUser(long userId, String type) throws SQLException {
         String sql = """
@@ -79,6 +99,13 @@ public class JdbcMessageDao implements MessageDao {
         return messages;
     }
 
+    /**
+     * 统计`ByUser`。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int countByUser(long userId) throws SQLException {
         return count(
@@ -87,6 +114,13 @@ public class JdbcMessageDao implements MessageDao {
         );
     }
 
+    /**
+     * 统计未读。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int countUnread(long userId) throws SQLException {
         return count(
@@ -95,6 +129,14 @@ public class JdbcMessageDao implements MessageDao {
         );
     }
 
+    /**
+     * 标记已读状态。
+     *
+     * @param userId 用户编号
+     * @param messageId 消息编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean markRead(long userId, long messageId) throws SQLException {
         String sql = """
@@ -110,6 +152,14 @@ public class JdbcMessageDao implements MessageDao {
         }
     }
 
+    /**
+     * 标记全部数据已读状态。
+     *
+     * @param userId 用户编号
+     * @param type 参数 `type`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int markAllRead(long userId, String type) throws SQLException {
         String sql = """
@@ -127,6 +177,13 @@ public class JdbcMessageDao implements MessageDao {
         }
     }
 
+    /**
+     * 查询`PostTarget`。
+     *
+     * @param postId 帖子编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<NotificationTarget> findPostTarget(long postId)
             throws SQLException {
@@ -141,6 +198,13 @@ public class JdbcMessageDao implements MessageDao {
         );
     }
 
+    /**
+     * 查询`GoodsTarget`。
+     *
+     * @param goodsId 商品编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<NotificationTarget> findGoodsTarget(long goodsId)
             throws SQLException {
@@ -155,6 +219,13 @@ public class JdbcMessageDao implements MessageDao {
         );
     }
 
+    /**
+     * 查询`CommentTarget`。
+     *
+     * @param commentId 评论编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<NotificationTarget> findCommentTarget(long commentId)
             throws SQLException {
@@ -168,6 +239,14 @@ public class JdbcMessageDao implements MessageDao {
         return findTarget(sql, commentId);
     }
 
+    /**
+     * 统计`JdbcMessage`。
+     *
+     * @param sql 参数 `sql`
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int count(String sql, long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -178,6 +257,14 @@ public class JdbcMessageDao implements MessageDao {
         }
     }
 
+    /**
+     * 查询`Target`。
+     *
+     * @param sql 参数 `sql`
+     * @param targetId `target`编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Optional<NotificationTarget> findTarget(String sql, long targetId)
             throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -195,6 +282,13 @@ public class JdbcMessageDao implements MessageDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为消息。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Message mapMessage(ResultSet resultSet) throws SQLException {
         Message message = new Message();
         message.setId(resultSet.getLong("id"));
@@ -207,6 +301,12 @@ public class JdbcMessageDao implements MessageDao {
         return message;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

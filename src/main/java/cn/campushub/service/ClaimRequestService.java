@@ -19,6 +19,9 @@ public class ClaimRequestService {
     private static final Set<String> ACTIONS = Set.of("approve", "reject");
     private final ClaimRequestDao claimRequestDao;
 
+    /**
+     * 初始化`ClaimRequest`对象及其运行所需依赖。
+     */
     public ClaimRequestService() {
         this(new JdbcClaimRequestDao());
     }
@@ -27,6 +30,16 @@ public class ClaimRequestService {
         this.claimRequestDao = claimRequestDao;
     }
 
+    /**
+     * 创建`ClaimRequest`。
+     *
+     * @param lostFoundId `lostFound`编号
+     * @param userId 用户编号
+     * @param message 消息数据
+     * @param contact 参数 `contact`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<ClaimCreateResult> create(
             long lostFoundId,
             long userId,
@@ -55,11 +68,28 @@ public class ClaimRequestService {
         return ServiceResult.success("认领申请已提交", result);
     }
 
+    /**
+     * 查询`ClaimRequest`。
+     *
+     * @param lostFoundId `lostFound`编号
+     * @param ownerId `owner`编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<ClaimRequest> list(long lostFoundId, long ownerId)
             throws SQLException {
         return claimRequestDao.findByLostFound(lostFoundId, ownerId);
     }
 
+    /**
+     * 处理`ClaimRequest`。
+     *
+     * @param claimId 认领编号
+     * @param ownerId `owner`编号
+     * @param action 参数 `action`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<ClaimHandleResult> handle(
             long claimId,
             long ownerId,

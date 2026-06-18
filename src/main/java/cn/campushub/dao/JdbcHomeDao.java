@@ -66,6 +66,12 @@ public class JdbcHomeDao implements HomeDao {
             VALUES (?, ?, ?, ?)
             """;
 
+    /**
+     * 查询`LatestNotices`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<HomeSidebarVO.NoticeItem> findLatestNotices() throws SQLException {
         List<HomeSidebarVO.NoticeItem> notices = new ArrayList<>();
@@ -84,6 +90,12 @@ public class JdbcHomeDao implements HomeDao {
         return notices;
     }
 
+    /**
+     * 查询`RecommendedActivities`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<HomeSidebarVO.ActivityItem> findRecommendedActivities()
             throws SQLException {
@@ -106,6 +118,12 @@ public class JdbcHomeDao implements HomeDao {
         return activities;
     }
 
+    /**
+     * 查询`LatestLostFound`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<HomeSidebarVO.LostFoundItem> findLatestLostFound()
             throws SQLException {
@@ -126,6 +144,14 @@ public class JdbcHomeDao implements HomeDao {
         return items;
     }
 
+    /**
+     * 查询签到。
+     *
+     * @param userId 用户编号
+     * @param date 参数 `date`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<HomeSidebarVO.CheckinStatus> findCheckin(
             long userId,
@@ -136,6 +162,13 @@ public class JdbcHomeDao implements HomeDao {
         }
     }
 
+    /**
+     * 查询经验值信息。
+     *
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ExperienceInfo> findExperienceInfo(long userId)
             throws SQLException {
@@ -143,6 +176,15 @@ public class JdbcHomeDao implements HomeDao {
         return experienceDao.getUserExperienceInfo(userId);
     }
 
+    /**
+     * 检查`In`。
+     *
+     * @param userId 用户编号
+     * @param date 参数 `date`
+     * @param points 参数 `points`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public CheckinResult checkIn(long userId, LocalDate date, int points)
             throws SQLException {
@@ -214,6 +256,16 @@ public class JdbcHomeDao implements HomeDao {
         }
     }
 
+    /**
+     * 新增签到。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param date 参数 `date`
+     * @param points 参数 `points`
+     * @param continuousDays 参数 `continuousDays`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void insertCheckin(
             Connection connection,
             long userId,
@@ -231,6 +283,15 @@ public class JdbcHomeDao implements HomeDao {
         }
     }
 
+    /**
+     * 查询签到。
+     *
+     * @param connection 数据库连接
+     * @param userId 用户编号
+     * @param date 参数 `date`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Optional<HomeSidebarVO.CheckinStatus> findCheckin(
             Connection connection,
             long userId,
@@ -253,6 +314,12 @@ public class JdbcHomeDao implements HomeDao {
         }
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

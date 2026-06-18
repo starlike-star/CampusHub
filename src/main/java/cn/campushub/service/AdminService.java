@@ -39,6 +39,9 @@ public class AdminService {
     private final AdminDao adminDao;
     private final MessageService messageService;
 
+    /**
+     * 初始化管理员对象及其运行所需依赖。
+     */
     public AdminService() {
         this(new JdbcAdminDao(), new MessageService());
     }
@@ -52,10 +55,25 @@ public class AdminService {
         this.messageService = messageService;
     }
 
+    /**
+     * 查询后台概览并返回结果。
+     *
+     * @return 按键组织的结果数据
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Map<String, Long> dashboard() throws SQLException {
         return adminDao.dashboard();
     }
 
+    /**
+     * 查询用户列表并返回结果。
+     *
+     * @param keyword 搜索关键字
+     * @param role 参数 `role`
+     * @param status 业务状态
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> users(
             String keyword,
             String role,
@@ -68,6 +86,15 @@ public class AdminService {
         );
     }
 
+    /**
+     * 查询帖子列表并返回结果。
+     *
+     * @param keyword 搜索关键字
+     * @param status 业务状态
+     * @param categoryId 分类编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> posts(
             String keyword,
             String status,
@@ -80,6 +107,15 @@ public class AdminService {
         );
     }
 
+    /**
+     * 查询商品并返回结果。
+     *
+     * @param keyword 搜索关键字
+     * @param status 业务状态
+     * @param tradeMethod 参数 `tradeMethod`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> goods(
             String keyword,
             String status,
@@ -92,6 +128,15 @@ public class AdminService {
         );
     }
 
+    /**
+     * 查询`lostFound`并返回结果。
+     *
+     * @param keyword 搜索关键字
+     * @param type 参数 `type`
+     * @param status 业务状态
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> lostFound(
             String keyword,
             String type,
@@ -104,6 +149,14 @@ public class AdminService {
         );
     }
 
+    /**
+     * 查询活动列表并返回结果。
+     *
+     * @param keyword 搜索关键字
+     * @param status 业务状态
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> activities(
             String keyword,
             String status
@@ -114,10 +167,25 @@ public class AdminService {
         );
     }
 
+    /**
+     * 查询公告列表并返回结果。
+     *
+     * @param type 参数 `type`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> notices(String type) throws SQLException {
         return adminDao.findNotices(allowed(type, NOTICE_TYPES));
     }
 
+    /**
+     * 查询举报记录并返回结果。
+     *
+     * @param status 业务状态
+     * @param targetType 参数 `targetType`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> reports(
             String status,
             String targetType
@@ -128,10 +196,25 @@ public class AdminService {
         );
     }
 
+    /**
+     * 查询`postCategories`并返回结果。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Map<String, Object>> postCategories() throws SQLException {
         return adminDao.findCategories("post");
     }
 
+    /**
+     * 更新用户状态。
+     *
+     * @param currentAdminId 当前管理员编号
+     * @param userIdValue 参数 `userIdValue`
+     * @param statusValue 参数 `statusValue`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateUserStatus(
             long currentAdminId,
             String userIdValue,
@@ -148,6 +231,14 @@ public class AdminService {
         return result(adminDao.updateUserStatus(userId, status), "用户状态已更新");
     }
 
+    /**
+     * 重置密码。
+     *
+     * @param userIdValue 参数 `userIdValue`
+     * @param password 密码
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> resetPassword(
             String userIdValue,
             String password
@@ -162,6 +253,14 @@ public class AdminService {
         );
     }
 
+    /**
+     * 更新帖子状态。
+     *
+     * @param idValue 参数 `idValue`
+     * @param statusValue 参数 `statusValue`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updatePostStatus(String idValue, String statusValue)
             throws SQLException {
         Long id = positiveLongOrNull(idValue);
@@ -172,6 +271,14 @@ public class AdminService {
         return result(adminDao.updatePostStatus(id, status), "帖子状态已更新");
     }
 
+    /**
+     * 更新商品状态。
+     *
+     * @param idValue 参数 `idValue`
+     * @param status 业务状态
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateGoodsStatus(String idValue, String status)
             throws SQLException {
         Long id = positiveLongOrNull(idValue);
@@ -182,6 +289,14 @@ public class AdminService {
         return result(adminDao.updateGoodsStatus(id, status), "商品状态已更新");
     }
 
+    /**
+     * 更新`LostFoundStatus`。
+     *
+     * @param idValue 参数 `idValue`
+     * @param status 业务状态
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateLostFoundStatus(String idValue, String status)
             throws SQLException {
         Long id = positiveLongOrNull(idValue);
@@ -192,6 +307,14 @@ public class AdminService {
         return result(adminDao.updateLostFoundStatus(id, status), "信息状态已更新");
     }
 
+    /**
+     * 更新活动状态。
+     *
+     * @param idValue 参数 `idValue`
+     * @param status 业务状态
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateActivityStatus(String idValue, String status)
             throws SQLException {
         Long id = positiveLongOrNull(idValue);
@@ -202,6 +325,16 @@ public class AdminService {
         return result(adminDao.updateActivityStatus(id, status), "活动状态已更新");
     }
 
+    /**
+     * 创建公告。
+     *
+     * @param title 标题
+     * @param content 正文内容
+     * @param type 参数 `type`
+     * @param adminId 管理员编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> createNotice(
             String title,
             String content,
@@ -219,6 +352,16 @@ public class AdminService {
         );
     }
 
+    /**
+     * 更新公告。
+     *
+     * @param idValue 参数 `idValue`
+     * @param title 标题
+     * @param content 正文内容
+     * @param type 参数 `type`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateNotice(
             String idValue,
             String title,
@@ -239,6 +382,14 @@ public class AdminService {
         );
     }
 
+    /**
+     * 更新公告状态。
+     *
+     * @param idValue 参数 `idValue`
+     * @param value 待处理的值
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateNoticeStatus(String idValue, String value)
             throws SQLException {
         Long id = positiveLongOrNull(idValue);
@@ -249,6 +400,14 @@ public class AdminService {
         return result(adminDao.updateNoticeStatus(id, status), "公告状态已更新");
     }
 
+    /**
+     * 更新`NoticeTop`。
+     *
+     * @param idValue 参数 `idValue`
+     * @param value 待处理的值
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateNoticeTop(String idValue, String value)
             throws SQLException {
         Long id = positiveLongOrNull(idValue);
@@ -259,6 +418,14 @@ public class AdminService {
         return result(adminDao.updateNoticeTop(id, top), "公告置顶状态已更新");
     }
 
+    /**
+     * 处理举报。
+     *
+     * @param idValue 参数 `idValue`
+     * @param adminId 管理员编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> handleReport(
             String idValue,
             long adminId
@@ -274,6 +441,14 @@ public class AdminService {
         return ServiceResult.success("举报已处理", null);
     }
 
+    /**
+     * 驳回举报。
+     *
+     * @param idValue 参数 `idValue`
+     * @param adminId 管理员编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> rejectReport(
             String idValue,
             long adminId
@@ -289,6 +464,12 @@ public class AdminService {
         return ServiceResult.success("举报已驳回", null);
     }
 
+    /**
+     * 发送通知：举报结果。
+     *
+     * @param reportId 举报编号
+     * @param handled 参数 `handled`
+     */
     private void notifyReportResult(long reportId, boolean handled) {
         if (messageService == null) {
             return;
@@ -313,6 +494,14 @@ public class AdminService {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `noticeValues` 的处理结果。
+     *
+     * @param title 标题
+     * @param content 正文内容
+     * @param type 参数 `type`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     */
     private ServiceResult<String[]> noticeValues(
             String title,
             String content,
@@ -333,12 +522,25 @@ public class AdminService {
         return ServiceResult.success("验证通过", new String[]{title, content, type});
     }
 
+    /**
+     * 根据输入计算并返回 `result` 的处理结果。
+     *
+     * @param changed 参数 `changed`
+     * @param successMessage 参数 `successMessage`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     */
     private ServiceResult<Void> result(boolean changed, String successMessage) {
         return changed
                 ? ServiceResult.success(successMessage, null)
                 : ServiceResult.failure("目标不存在或状态已发生变化");
     }
 
+    /**
+     * 根据输入计算并返回 `keyword` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String keyword(String value) {
         value = ValidationUtils.trimToNull(value);
         if (value == null) {
@@ -347,10 +549,24 @@ public class AdminService {
         return value.length() <= 100 ? value : value.substring(0, 100);
     }
 
+    /**
+     * 根据输入计算并返回 `allowed` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @param values 参数 `values`
+     * @return 方法处理结果
+     */
     private String allowed(String value, Set<String> values) {
         return value != null && values.contains(value) ? value : null;
     }
 
+    /**
+     * 根据输入计算并返回 `integer` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @param values 参数 `values`
+     * @return 方法处理结果
+     */
     private Integer integer(String value, Set<Integer> values) {
         try {
             int parsed = Integer.parseInt(value);
@@ -360,6 +576,12 @@ public class AdminService {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `positiveLongOrNull` 的处理结果。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private Long positiveLongOrNull(String value) {
         try {
             long parsed = Long.parseLong(value);

@@ -17,6 +17,14 @@ import java.util.Optional;
 public class NoticeDetailServlet extends HttpServlet {
     private final NoticeService noticeService = new NoticeService();
 
+    /**
+     * 处理公告详情相关的 HTTP GET 请求并生成响应。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -50,6 +58,15 @@ public class NoticeDetailServlet extends HttpServlet {
         }
     }
 
+    /**
+     * 处理 `showUnavailable` 对应的业务流程。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @param status 业务状态
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     private void showUnavailable(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -60,6 +77,14 @@ public class NoticeDetailServlet extends HttpServlet {
         forward(request, response);
     }
 
+    /**
+     * 处理 `forward` 对应的业务流程。
+     *
+     * @param request HTTP 请求对象
+     * @param response HTTP 响应对象
+     * @throws ServletException Servlet 处理请求失败时抛出
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     private void forward(
             HttpServletRequest request,
             HttpServletResponse response
@@ -68,6 +93,12 @@ public class NoticeDetailServlet extends HttpServlet {
                 .forward(request, response);
     }
 
+    /**
+     * 解析编号。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private Long parseId(String value) {
         try {
             long parsed = Long.parseLong(value);

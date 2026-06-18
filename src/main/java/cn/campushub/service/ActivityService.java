@@ -23,6 +23,9 @@ public class ActivityService {
 
     private final ActivityDao activityDao;
 
+    /**
+     * 初始化活动对象及其运行所需依赖。
+     */
     public ActivityService() {
         this(new JdbcActivityDao());
     }
@@ -31,6 +34,15 @@ public class ActivityService {
         this.activityDao = activityDao;
     }
 
+    /**
+     * 查询活动。
+     *
+     * @param status 业务状态
+     * @param keyword 搜索关键字
+     * @param sort 排序方式
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<ActivityVO> list(String status, String keyword, String sort)
             throws SQLException {
         return activityDao.findAll(
@@ -40,10 +52,32 @@ public class ActivityService {
         );
     }
 
+    /**
+     * 查询活动详情。
+     *
+     * @param id 业务数据编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<ActivityVO> detail(long id) throws SQLException {
         return id > 0 ? activityDao.findById(id) : Optional.empty();
     }
 
+    /**
+     * 创建活动。
+     *
+     * @param userId 用户编号
+     * @param title 标题
+     * @param content 正文内容
+     * @param coverImage 封面图片地址
+     * @param location 参数 `location`
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param deadline 截止时间
+     * @param maxMembers 人数上限
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Long> create(
             long userId,
             String title,
@@ -74,6 +108,23 @@ public class ActivityService {
         return ServiceResult.success("活动发布成功", activityDao.create(activity));
     }
 
+    /**
+     * 更新活动。
+     *
+     * @param id 业务数据编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param title 标题
+     * @param content 正文内容
+     * @param coverImage 封面图片地址
+     * @param location 参数 `location`
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param deadline 截止时间
+     * @param maxMembers 人数上限
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Activity> update(
             long id,
             long userId,
@@ -120,6 +171,16 @@ public class ActivityService {
         return ServiceResult.success("活动已更新", activity);
     }
 
+    /**
+     * 更新状态。
+     *
+     * @param id 业务数据编号
+     * @param userId 用户编号
+     * @param admin 是否具有管理员权限
+     * @param status 业务状态
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> updateStatus(
             long id,
             long userId,
@@ -135,14 +196,32 @@ public class ActivityService {
         return ServiceResult.success("状态已更新", null);
     }
 
+    /**
+     * 规范化状态值。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public String normalizeStatusValue(String value) {
         return value != null && STATUSES.contains(value) ? value : "all";
     }
 
+    /**
+     * 规范化排序方式。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public String normalizeSort(String value) {
         return value != null && SORTS.contains(value) ? value : "latest";
     }
 
+    /**
+     * 规范化关键字。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public String normalizeKeyword(String value) {
         value = ValidationUtils.trimToNull(value);
         return value != null && value.length() > 100
@@ -150,10 +229,30 @@ public class ActivityService {
                 : value;
     }
 
+    /**
+     * 规范化`StatusFilter`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String normalizeStatusFilter(String value) {
         return value != null && STATUSES.contains(value) ? value : null;
     }
 
+    /**
+     * 填充并校验活动数据。
+     *
+     * @param activity 活动数据
+     * @param title 标题
+     * @param content 正文内容
+     * @param coverImage 封面图片地址
+     * @param location 参数 `location`
+     * @param startTimeValue 参数 `startTimeValue`
+     * @param endTimeValue 参数 `endTimeValue`
+     * @param deadlineValue 参数 `deadlineValue`
+     * @param maxMembersValue 参数 `maxMembersValue`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     */
     private ServiceResult<Void> populateAndValidate(
             Activity activity,
             String title,
@@ -210,6 +309,12 @@ public class ActivityService {
         return ServiceResult.success("验证通过", null);
     }
 
+    /**
+     * 解析日期时间。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private LocalDateTime parseDateTime(String value) {
         value = ValidationUtils.trimToNull(value);
         if (value == null) {
@@ -222,6 +327,12 @@ public class ActivityService {
         }
     }
 
+    /**
+     * 解析非负数整数。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private Integer parseNonNegativeInt(String value) {
         try {
             int parsed = Integer.parseInt(value);

@@ -15,6 +15,13 @@ import java.util.Optional;
  * 使用 JDBC 实现公开用户主页数据的查询与持久化操作。
  */
 public class JdbcPublicUserProfileDao implements PublicUserProfileDao {
+    /**
+     * 查询`ActiveById`。
+     *
+     * @param userId 用户编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<PublicUserProfile> findActiveById(long userId)
             throws SQLException {
@@ -44,6 +51,12 @@ public class JdbcPublicUserProfileDao implements PublicUserProfileDao {
         }
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

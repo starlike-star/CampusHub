@@ -18,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 商品相关逻辑的正常路径、边界条件和失败场景。
  */
 class GoodsServiceTest {
+    /**
+     * 验证 `createUsesSessionUserAndOnSaleData` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void createUsesSessionUserAndOnSaleData() throws Exception {
         FakeGoodsDao dao = new FakeGoodsDao();
@@ -42,6 +47,11 @@ class GoodsServiceTest {
         assertEquals("教材", dao.created.getTitle());
     }
 
+    /**
+     * 验证 `createRejectsInvalidCategory` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void createRejectsInvalidCategory() throws Exception {
         FakeGoodsDao dao = new FakeGoodsDao();
@@ -56,6 +66,11 @@ class GoodsServiceTest {
         assertFalse(result.success());
     }
 
+    /**
+     * 验证 `listNormalizesFilters` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void listNormalizesFilters() throws Exception {
         FakeGoodsDao dao = new FakeGoodsDao();
@@ -72,6 +87,11 @@ class GoodsServiceTest {
         assertEquals(null, dao.categoryId);
     }
 
+    /**
+     * 验证 `listIgnoresInactiveCategory` 场景下的业务行为与预期结果一致。
+     *
+     * @throws Exception 处理过程中发生该异常时抛出
+     */
     @Test
     void listIgnoresInactiveCategory() throws Exception {
         FakeGoodsDao dao = new FakeGoodsDao();
@@ -94,6 +114,17 @@ class GoodsServiceTest {
         private String tradeMethod;
         private String sort;
 
+        /**
+         * 查询商品。
+         *
+         * @param currentUserId 当前用户编号
+         * @param keyword 搜索关键字
+         * @param categoryId 分类编号
+         * @param status 业务状态
+         * @param tradeMethod 参数 `tradeMethod`
+         * @param sort 排序方式
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Goods> findGoods(
                 Long currentUserId,
@@ -111,47 +142,106 @@ class GoodsServiceTest {
             return List.of();
         }
 
+        /**
+         * 查询`OwnGoods`。
+         *
+         * @param userId 用户编号
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Goods> findOwnGoods(long userId) {
             return List.of();
         }
 
+        /**
+         * 查询收藏商品。
+         *
+         * @param userId 用户编号
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Goods> findFavoriteGoods(long userId) {
             return List.of();
         }
 
+        /**
+         * 查询`ActiveGoodsCategories`。
+         *
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Category> findActiveGoodsCategories() {
             return List.of();
         }
 
+        /**
+         * 判断是否`ActiveGoodsCategory`。
+         *
+         * @param categoryId 分类编号
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean isActiveGoodsCategory(long categoryId) {
             return activeCategory;
         }
 
+        /**
+         * 创建模拟商品。
+         *
+         * @param goods 商品数据
+         * @return 新建数据的编号
+         */
         @Override
         public long create(Goods goods) {
             created = goods;
             return 99L;
         }
 
+        /**
+         * 查询`VisibleById`。
+         *
+         * @param goodsId 商品编号
+         * @param currentUserId 当前用户编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<Goods> findVisibleById(long goodsId, Long currentUserId) {
             return Optional.empty();
         }
 
+        /**
+         * 切换收藏。
+         *
+         * @param goodsId 商品编号
+         * @param userId 用户编号
+         * @return 方法处理结果
+         */
         @Override
         public PostToggleResult toggleFavorite(long goodsId, long userId) {
             return new PostToggleResult(true, 1);
         }
 
+        /**
+         * 更新模拟商品。
+         *
+         * @param goods 商品数据
+         * @param admin 是否具有管理员权限
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<Goods> update(Goods goods, boolean admin) {
             return Optional.of(goods);
         }
 
+        /**
+         * 更新状态。
+         *
+         * @param goodsId 商品编号
+         * @param userId 用户编号
+         * @param admin 是否具有管理员权限
+         * @param status 业务状态
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean updateStatus(
                 long goodsId,

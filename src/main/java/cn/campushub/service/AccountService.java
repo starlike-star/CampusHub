@@ -18,6 +18,9 @@ public class AccountService {
 
     private final AccountDao accountDao;
 
+    /**
+     * 初始化账号对象及其运行所需依赖。
+     */
     public AccountService() {
         this(new JdbcAccountDao());
     }
@@ -26,6 +29,18 @@ public class AccountService {
         this.accountDao = accountDao;
     }
 
+    /**
+     * 取消账号。
+     *
+     * @param user 用户数据
+     * @param password 密码
+     * @param reason 参数 `reason`
+     * @param confirm 参数 `confirm`
+     * @param ipAddress 参数 `ipAddress`
+     * @param userAgent 参数 `userAgent`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public AccountCancelResult cancelAccount(
             SessionUser user,
             String password,
@@ -61,10 +76,24 @@ public class AccountService {
         );
     }
 
+    /**
+     * 判断是否`Active`。
+     *
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public boolean isActive(long userId) throws SQLException {
         return userId > 0 && accountDao.isActive(userId);
     }
 
+    /**
+     * 按长度限制截断账号。
+     *
+     * @param value 待处理的值
+     * @param maximumLength 参数 `maximumLength`
+     * @return 方法处理结果
+     */
     private String truncate(String value, int maximumLength) {
         return value == null || value.length() <= maximumLength
                 ? value

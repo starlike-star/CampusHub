@@ -25,6 +25,9 @@ public class SearchService {
 
     private final SearchDao searchDao;
 
+    /**
+     * 初始化搜索对象及其运行所需依赖。
+     */
     public SearchService() {
         this(new JdbcSearchDao());
     }
@@ -33,6 +36,14 @@ public class SearchService {
         this.searchDao = searchDao;
     }
 
+    /**
+     * 搜索搜索。
+     *
+     * @param keywordValue 参数 `keywordValue`
+     * @param typeValue 参数 `typeValue`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public SearchPageVO search(String keywordValue, String typeValue)
             throws SQLException {
         String keyword = normalizeKeyword(keywordValue);
@@ -72,10 +83,24 @@ public class SearchService {
         return new SearchPageVO(keyword, type, counts, results, null);
     }
 
+    /**
+     * 规范化`Type`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     public String normalizeType(String value) {
         return value != null && ALLOWED_TYPES.contains(value) ? value : "all";
     }
 
+    /**
+     * 搜索`Type`。
+     *
+     * @param keyword 搜索关键字
+     * @param type 参数 `type`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private List<SearchResultVO> searchType(String keyword, String type)
             throws SQLException {
         return switch (type) {
@@ -91,6 +116,12 @@ public class SearchService {
         };
     }
 
+    /**
+     * 规范化关键字。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private String normalizeKeyword(String value) {
         if (value == null) {
             return null;
@@ -99,6 +130,14 @@ public class SearchService {
         return normalized.isEmpty() ? null : normalized;
     }
 
+    /**
+     * 根据输入计算并返回 `emptyPage` 的处理结果。
+     *
+     * @param keyword 搜索关键字
+     * @param type 参数 `type`
+     * @param validationMessage 参数 `validationMessage`
+     * @return 方法处理结果
+     */
     private SearchPageVO emptyPage(
             String keyword,
             String type,
@@ -115,6 +154,11 @@ public class SearchService {
         );
     }
 
+    /**
+     * 查询`emptyResults`并返回结果。
+     *
+     * @return 符合条件的数据列表
+     */
     private Map<String, List<SearchResultVO>> emptyResults() {
         Map<String, List<SearchResultVO>> results = new LinkedHashMap<>();
         RESULT_TYPES.forEach(type -> results.put(type, List.of()));

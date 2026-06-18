@@ -17,6 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * 验证 站内通知相关逻辑的正常路径、边界条件和失败场景。
  */
 class MessageServiceTest {
+    /**
+     * 验证 `postLikeCreatesNotificationForOwner` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void postLikeCreatesNotificationForOwner() throws SQLException {
         FakeMessageDao dao = new FakeMessageDao();
@@ -31,6 +36,11 @@ class MessageServiceTest {
         assertEquals("小明 点赞了你的帖子《测试帖子》。", dao.created.getContent());
     }
 
+    /**
+     * 验证 `selfInteractionDoesNotCreateNotification` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void selfInteractionDoesNotCreateNotification() throws SQLException {
         FakeMessageDao dao = new FakeMessageDao();
@@ -42,6 +52,9 @@ class MessageServiceTest {
         assertNull(dao.created);
     }
 
+    /**
+     * 验证 `markAllReadRejectsUnknownType` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void markAllReadRejectsUnknownType() {
         MessageService service = new MessageService(new FakeMessageDao());
@@ -52,6 +65,9 @@ class MessageServiceTest {
         );
     }
 
+    /**
+     * 验证 `claimIsAValidMessageFilter` 场景下的业务行为与预期结果一致。
+     */
     @Test
     void claimIsAValidMessageFilter() {
         MessageService service = new MessageService(new FakeMessageDao());
@@ -60,6 +76,11 @@ class MessageServiceTest {
         assertEquals("activity", service.normalizeTab("activity"));
     }
 
+    /**
+     * 验证 `reportSubmissionNotifiesEveryActiveAdmin` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void reportSubmissionNotifiesEveryActiveAdmin() throws SQLException {
         FakeMessageDao dao = new FakeMessageDao();
@@ -77,6 +98,11 @@ class MessageServiceTest {
         );
     }
 
+    /**
+     * 验证 `handledReportDoesNotNotifyReporterTwiceWhenTheyOwnTarget` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void handledReportDoesNotNotifyReporterTwiceWhenTheyOwnTarget()
             throws SQLException {
@@ -89,6 +115,11 @@ class MessageServiceTest {
         assertEquals("你的举报已处理", dao.createdMessages.get(0).getTitle());
     }
 
+    /**
+     * 验证 `rejectedReportOnlyNotifiesReporter` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void rejectedReportOnlyNotifiesReporter() throws SQLException {
         FakeMessageDao dao = new FakeMessageDao();
@@ -106,52 +137,113 @@ class MessageServiceTest {
         private final List<Message> createdMessages = new java.util.ArrayList<>();
         private Optional<NotificationTarget> postTarget = Optional.empty();
 
+        /**
+         * 创建模拟消息。
+         *
+         * @param message 消息数据
+         */
         @Override
         public void create(Message message) {
             created = message;
             createdMessages.add(message);
         }
 
+        /**
+         * 查询`ActiveAdminIds`。
+         *
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Long> findActiveAdminIds() {
             return adminIds;
         }
 
+        /**
+         * 根据用户查询模拟消息。
+         *
+         * @param userId 用户编号
+         * @param type 参数 `type`
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<Message> findByUser(long userId, String type) {
             return List.of();
         }
 
+        /**
+         * 统计`ByUser`。
+         *
+         * @param userId 用户编号
+         * @return 方法处理结果
+         */
         @Override
         public int countByUser(long userId) {
             return 0;
         }
 
+        /**
+         * 统计未读。
+         *
+         * @param userId 用户编号
+         * @return 方法处理结果
+         */
         @Override
         public int countUnread(long userId) {
             return 0;
         }
 
+        /**
+         * 标记已读状态。
+         *
+         * @param userId 用户编号
+         * @param messageId 消息编号
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean markRead(long userId, long messageId) {
             return true;
         }
 
+        /**
+         * 标记全部数据已读状态。
+         *
+         * @param userId 用户编号
+         * @param type 参数 `type`
+         * @return 方法处理结果
+         */
         @Override
         public int markAllRead(long userId, String type) {
             return 0;
         }
 
+        /**
+         * 查询`PostTarget`。
+         *
+         * @param postId 帖子编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<NotificationTarget> findPostTarget(long postId) {
             return postTarget;
         }
 
+        /**
+         * 查询`GoodsTarget`。
+         *
+         * @param goodsId 商品编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<NotificationTarget> findGoodsTarget(long goodsId) {
             return Optional.empty();
         }
 
+        /**
+         * 查询`CommentTarget`。
+         *
+         * @param commentId 评论编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<NotificationTarget> findCommentTarget(long commentId) {
             return Optional.empty();

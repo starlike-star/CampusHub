@@ -22,6 +22,9 @@ public class MessageService {
 
     private final MessageDao messageDao;
 
+    /**
+     * 初始化消息对象及其运行所需依赖。
+     */
     public MessageService() {
         this(new JdbcMessageDao());
     }
@@ -30,10 +33,22 @@ public class MessageService {
         this.messageDao = messageDao;
     }
 
+    /**
+     * 规范化`Tab`。
+     *
+     * @param tab 参数 `tab`
+     * @return 方法处理结果
+     */
     public String normalizeTab(String tab) {
         return tab != null && FILTER_TYPES.contains(tab) ? tab : "all";
     }
 
+    /**
+     * 规范化`OptionalType`。
+     *
+     * @param type 参数 `type`
+     * @return 方法处理结果
+     */
     public String normalizeOptionalType(String type) {
         type = ValidationUtils.trimToNull(type);
         if (type == null) {
@@ -45,6 +60,14 @@ public class MessageService {
         return type;
     }
 
+    /**
+     * 查询`Messages`。
+     *
+     * @param userId 用户编号
+     * @param tab 参数 `tab`
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Message> listMessages(long userId, String tab) throws SQLException {
         String normalized = normalizeTab(tab);
         return messageDao.findByUser(
@@ -53,22 +76,61 @@ public class MessageService {
         );
     }
 
+    /**
+     * 统计`Messages`。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public int countMessages(long userId) throws SQLException {
         return messageDao.countByUser(userId);
     }
 
+    /**
+     * 统计未读。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public int countUnread(long userId) throws SQLException {
         return messageDao.countUnread(userId);
     }
 
+    /**
+     * 标记已读状态。
+     *
+     * @param userId 用户编号
+     * @param messageId 消息编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public boolean markRead(long userId, long messageId) throws SQLException {
         return messageId > 0 && messageDao.markRead(userId, messageId);
     }
 
+    /**
+     * 标记全部数据已读状态。
+     *
+     * @param userId 用户编号
+     * @param type 参数 `type`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public int markAllRead(long userId, String type) throws SQLException {
         return messageDao.markAllRead(userId, normalizeOptionalType(type));
     }
 
+    /**
+     * 创建消息。
+     *
+     * @param userId 用户编号
+     * @param title 标题
+     * @param content 正文内容
+     * @param type 参数 `type`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void createMessage(
             long userId,
             String title,
@@ -89,6 +151,12 @@ public class MessageService {
         messageDao.create(message);
     }
 
+    /**
+     * 发送通知：`AdminsOfReport`。
+     *
+     * @param targetType 参数 `targetType`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyAdminsOfReport(String targetType) throws SQLException {
         String targetName = switch (targetType) {
             case "post" -> "帖子";
@@ -107,6 +175,13 @@ public class MessageService {
         }
     }
 
+    /**
+     * 发送通知：`ReportHandled`。
+     *
+     * @param reporterId `reporter`编号
+     * @param ownerId `owner`编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyReportHandled(long reporterId, Long ownerId)
             throws SQLException {
         createMessage(
@@ -125,6 +200,12 @@ public class MessageService {
         }
     }
 
+    /**
+     * 发送通知：`ReportRejected`。
+     *
+     * @param reporterId `reporter`编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyReportRejected(long reporterId) throws SQLException {
         createMessage(
                 reporterId,
@@ -134,6 +215,15 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：帖子评论。
+     *
+     * @param postId 帖子编号
+     * @param actorId `actor`编号
+     * @param actorNickname 参数 `actorNickname`
+     * @param commentContent 参数 `commentContent`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyPostComment(
             long postId,
             long actorId,
@@ -150,6 +240,14 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：帖子点赞。
+     *
+     * @param postId 帖子编号
+     * @param actorId `actor`编号
+     * @param actorNickname 参数 `actorNickname`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyPostLike(long postId, long actorId, String actorNickname)
             throws SQLException {
         notifyTarget(
@@ -161,6 +259,14 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：评论点赞。
+     *
+     * @param commentId 评论编号
+     * @param actorId `actor`编号
+     * @param actorNickname 参数 `actorNickname`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyCommentLike(
             long commentId,
             long actorId,
@@ -175,6 +281,14 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：帖子收藏。
+     *
+     * @param postId 帖子编号
+     * @param actorId `actor`编号
+     * @param actorNickname 参数 `actorNickname`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyPostFavorite(
             long postId,
             long actorId,
@@ -189,6 +303,14 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：商品收藏。
+     *
+     * @param goodsId 商品编号
+     * @param actorId `actor`编号
+     * @param actorNickname 参数 `actorNickname`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyGoodsFavorite(
             long goodsId,
             long actorId,
@@ -203,6 +325,14 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：`TradePaid`。
+     *
+     * @param buyerId `buyer`编号
+     * @param sellerId `seller`编号
+     * @param goodsTitle 参数 `goodsTitle`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public void notifyTradePaid(
             long buyerId,
             long sellerId,
@@ -222,6 +352,16 @@ public class MessageService {
         );
     }
 
+    /**
+     * 发送通知：`Target`。
+     *
+     * @param target 参数 `target`
+     * @param actorId `actor`编号
+     * @param title 标题
+     * @param contentTemplate 参数 `contentTemplate`
+     * @param type 参数 `type`
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void notifyTarget(
             Optional<NotificationTarget> target,
             long actorId,
@@ -241,11 +381,23 @@ public class MessageService {
         );
     }
 
+    /**
+     * 根据输入计算并返回 `safeNickname` 的处理结果。
+     *
+     * @param nickname 用户昵称
+     * @return 方法处理结果
+     */
     private String safeNickname(String nickname) {
         nickname = ValidationUtils.trimToNull(nickname);
         return nickname == null ? "一位用户" : nickname;
     }
 
+    /**
+     * 根据输入计算并返回 `summarize` 的处理结果。
+     *
+     * @param content 正文内容
+     * @return 方法处理结果
+     */
     private String summarize(String content) {
         content = ValidationUtils.trimToNull(content);
         if (content == null) {

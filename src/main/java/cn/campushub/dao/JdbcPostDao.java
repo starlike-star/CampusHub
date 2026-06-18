@@ -62,6 +62,13 @@ public class JdbcPostDao implements PostDao {
             LIMIT 1
             """;
 
+    /**
+     * 查询`ActivePosts`。
+     *
+     * @param currentUserId 当前用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Post> findActivePosts(Long currentUserId) throws SQLException {
         List<Post> posts = new ArrayList<>();
@@ -79,6 +86,13 @@ public class JdbcPostDao implements PostDao {
         return posts;
     }
 
+    /**
+     * 查询`ActivePostById`。
+     *
+     * @param postId 帖子编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<Post> findActivePostById(long postId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection();
@@ -90,6 +104,12 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 查询`ActivePostCategories`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Category> findActivePostCategories() throws SQLException {
         String sql = """
@@ -109,6 +129,13 @@ public class JdbcPostDao implements PostDao {
         return categories;
     }
 
+    /**
+     * 判断是否`ActivePostCategory`。
+     *
+     * @param categoryId 分类编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean isActivePostCategory(long categoryId) throws SQLException {
         String sql = """
@@ -125,6 +152,13 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 创建`JdbcPost`。
+     *
+     * @param post 帖子数据
+     * @return 新建数据的编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public long create(Post post) throws SQLException {
         String sql = """
@@ -152,6 +186,13 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 增加`ViewCount`。
+     *
+     * @param postId 帖子编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean incrementViewCount(long postId) throws SQLException {
         String sql = """
@@ -166,6 +207,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 查询`ActiveComments`。
+     *
+     * @param postId 帖子编号
+     * @param currentUserId 当前用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<Comment> findActiveComments(long postId, Long currentUserId)
             throws SQLException {
@@ -198,6 +247,15 @@ public class JdbcPostDao implements PostDao {
         return comments;
     }
 
+    /**
+     * 新增评论。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @param content 正文内容
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public CommentCreateResult addComment(long postId, long userId, String content)
             throws SQLException {
@@ -246,6 +304,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 切换帖子点赞。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public PostToggleResult togglePostLike(long postId, long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -304,6 +370,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 判断是否具有帖子点赞。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean hasPostLike(long postId, long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -311,6 +385,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 判断是否具有帖子收藏。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean hasPostFavorite(long postId, long userId) throws SQLException {
         try (Connection connection = JdbcUtils.getConnection()) {
@@ -318,6 +400,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 切换帖子收藏。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public PostToggleResult togglePostFavorite(long postId, long userId)
             throws SQLException {
@@ -377,6 +467,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 切换评论点赞。
+     *
+     * @param commentId 评论编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public PostToggleResult toggleCommentLike(long commentId, long userId)
             throws SQLException {
@@ -436,6 +534,13 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 更新`OwnedPost`。
+     *
+     * @param post 帖子数据
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<Post> updateOwnedPost(Post post) throws SQLException {
         String updateSql = """
@@ -459,6 +564,14 @@ public class JdbcPostDao implements PostDao {
         return findActivePostById(post.getId());
     }
 
+    /**
+     * 删除`OwnedPost`。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public boolean deleteOwnedPost(long postId, long userId) throws SQLException {
         String sql = """
@@ -474,6 +587,15 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 判断是否具有帖子点赞。
+     *
+     * @param connection 数据库连接
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasPostLike(Connection connection, long postId, long userId)
             throws SQLException {
         String sql = """
@@ -490,6 +612,15 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 判断是否具有帖子收藏。
+     *
+     * @param connection 数据库连接
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasPostFavorite(Connection connection, long postId, long userId)
             throws SQLException {
         String sql = """
@@ -506,6 +637,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockActiveComment` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param commentId 评论编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean lockActiveComment(Connection connection, long commentId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -521,6 +660,15 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 判断是否具有评论点赞。
+     *
+     * @param connection 数据库连接
+     * @param commentId 评论编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasCommentLike(
             Connection connection,
             long commentId,
@@ -540,6 +688,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 查询评论点赞数量。
+     *
+     * @param connection 数据库连接
+     * @param commentId 评论编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int findCommentLikeCount(Connection connection, long commentId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -557,6 +713,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockActivePost` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param postId 帖子编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean lockActivePost(Connection connection, long postId) throws SQLException {
         String sql = "SELECT status FROM posts WHERE id = ? FOR UPDATE";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -567,6 +731,15 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 查询帖子数量。
+     *
+     * @param connection 数据库连接
+     * @param postId 帖子编号
+     * @param column 参数 `column`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private int findPostCount(Connection connection, long postId, String column)
             throws SQLException {
         String sql = "SELECT " + column + " FROM posts WHERE id = ?";
@@ -581,6 +754,14 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 查询`CreatedComment`。
+     *
+     * @param connection 数据库连接
+     * @param commentId 评论编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Comment findCreatedComment(Connection connection, long commentId)
             throws SQLException {
         String sql = """
@@ -604,6 +785,13 @@ public class JdbcPostDao implements PostDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为帖子。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Post mapPost(ResultSet resultSet) throws SQLException {
         Post post = new Post();
         post.setId(resultSet.getLong("id"));
@@ -631,6 +819,13 @@ public class JdbcPostDao implements PostDao {
         return post;
     }
 
+    /**
+     * 将数据库结果映射为分类。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Category mapCategory(ResultSet resultSet) throws SQLException {
         Category category = new Category();
         category.setId(resultSet.getLong("id"));
@@ -643,6 +838,13 @@ public class JdbcPostDao implements PostDao {
         return category;
     }
 
+    /**
+     * 将数据库结果映射为评论。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private Comment mapComment(ResultSet resultSet) throws SQLException {
         Comment comment = new Comment();
         comment.setId(resultSet.getLong("id"));
@@ -664,6 +866,12 @@ public class JdbcPostDao implements PostDao {
         return comment;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private java.time.LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

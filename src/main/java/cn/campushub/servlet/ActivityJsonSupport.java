@@ -12,9 +12,18 @@ import java.util.Map;
  * 为活动接口提供统一的 JSON 响应和参数处理辅助能力。
  */
 final class ActivityJsonSupport {
+    /**
+     * 初始化`ActivityJsonSupport`对象及其运行所需依赖。
+     */
     private ActivityJsonSupport() {
     }
 
+    /**
+     * 解析编号。
+     *
+     * @param request HTTP 请求对象
+     * @return 解析后的值；输入无效时返回 null
+     */
     static Long parseId(HttpServletRequest request) {
         String value = request.getParameter("activityId");
         if (value == null) {
@@ -28,10 +37,22 @@ final class ActivityJsonSupport {
         }
     }
 
+    /**
+     * 判断是否管理员。
+     *
+     * @param user 用户数据
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     */
     static boolean isAdmin(SessionUser user) {
         return user != null && "admin".equalsIgnoreCase(user.role());
     }
 
+    /**
+     * 写入`NeedLogin`。
+     *
+     * @param response HTTP 响应对象
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     static void writeNeedLogin(HttpServletResponse response) throws IOException {
         JsonUtils.write(
                 response,
@@ -44,6 +65,14 @@ final class ActivityJsonSupport {
         );
     }
 
+    /**
+     * 写入`Error`。
+     *
+     * @param response HTTP 响应对象
+     * @param status 业务状态
+     * @param message 消息数据
+     * @throws IOException 读取请求或写入响应失败时抛出
+     */
     static void writeError(
             HttpServletResponse response,
             int status,

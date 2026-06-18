@@ -19,6 +19,16 @@ import java.util.Optional;
  * 使用 JDBC 实现认领申请数据的查询与持久化操作。
  */
 public class JdbcClaimRequestDao implements ClaimRequestDao {
+    /**
+     * 创建`JdbcClaimRequest`。
+     *
+     * @param lostFoundId `lostFound`编号
+     * @param userId 用户编号
+     * @param message 消息数据
+     * @param contact 参数 `contact`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public ClaimCreateResult create(
             long lostFoundId,
@@ -71,6 +81,14 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 根据`LostFound`查询`JdbcClaimRequest`。
+     *
+     * @param lostFoundId `lostFound`编号
+     * @param ownerId `owner`编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<ClaimRequest> findByLostFound(long lostFoundId, long ownerId)
             throws SQLException {
@@ -100,6 +118,15 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         return result;
     }
 
+    /**
+     * 处理`JdbcClaimRequest`。
+     *
+     * @param claimId 认领编号
+     * @param ownerId `owner`编号
+     * @param action 参数 `action`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public Optional<ClaimHandleResult> handle(
             long claimId,
@@ -141,6 +168,14 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockTarget` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param id 业务数据编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ClaimTarget lockTarget(Connection connection, long id)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -160,6 +195,15 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 判断是否具有`Pending`。
+     *
+     * @param connection 数据库连接
+     * @param lostFoundId `lostFound`编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasPending(Connection connection, long lostFoundId, long userId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -175,6 +219,15 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `lockClaim` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param claimId 认领编号
+     * @param ownerId `owner`编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private HandleTarget lockClaim(Connection connection, long claimId, long ownerId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -200,6 +253,14 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 更新认领。
+     *
+     * @param connection 数据库连接
+     * @param claimId 认领编号
+     * @param status 业务状态
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void updateClaim(Connection connection, long claimId, String status)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -213,6 +274,14 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 驳回`OtherClaims`。
+     *
+     * @param connection 数据库连接
+     * @param lostFoundId `lostFound`编号
+     * @param approvedId `approved`编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void rejectOtherClaims(
             Connection connection,
             long lostFoundId,
@@ -229,6 +298,14 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 判断是否具有`OtherPending`。
+     *
+     * @param connection 数据库连接
+     * @param lostFoundId `lostFound`编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean hasOtherPending(Connection connection, long lostFoundId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -242,6 +319,13 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 处理 `restorePending` 对应的业务流程。
+     *
+     * @param connection 数据库连接
+     * @param lostFoundId `lostFound`编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void restorePending(Connection connection, long lostFoundId)
             throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement("""
@@ -253,6 +337,14 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 更新`LostFoundStatus`。
+     *
+     * @param connection 数据库连接
+     * @param lostFoundId `lostFound`编号
+     * @param status 业务状态
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void updateLostFoundStatus(
             Connection connection,
             long lostFoundId,
@@ -267,6 +359,13 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         }
     }
 
+    /**
+     * 将数据库结果映射为`JdbcClaimRequest`。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ClaimRequest map(ResultSet resultSet) throws SQLException {
         ClaimRequest request = new ClaimRequest();
         request.setId(resultSet.getLong("id"));
@@ -283,13 +382,36 @@ public class JdbcClaimRequestDao implements ClaimRequestDao {
         return request;
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param value 待处理的值
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp value) {
         return value == null ? null : value.toLocalDateTime();
     }
 
+    /**
+     * 根据输入计算并返回 `ClaimTarget` 的处理结果。
+     *
+     * @param ownerId `owner`编号
+     * @param title 标题
+     * @param status 业务状态
+     * @return 方法处理结果
+     */
     private record ClaimTarget(long ownerId, String title, String status) {
     }
 
+    /**
+     * 根据输入计算并返回 `HandleTarget` 的处理结果。
+     *
+     * @param lostFoundId `lostFound`编号
+     * @param applicantId `applicant`编号
+     * @param claimStatus 参数 `claimStatus`
+     * @param title 标题
+     * @return 方法处理结果
+     */
     private record HandleTarget(
             long lostFoundId,
             long applicantId,

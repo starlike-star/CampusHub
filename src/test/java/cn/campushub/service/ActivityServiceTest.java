@@ -18,6 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 验证 活动相关逻辑的正常路径、边界条件和失败场景。
  */
 class ActivityServiceTest {
+    /**
+     * 验证 `listNormalizesFilters` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void listNormalizesFilters() throws SQLException {
         FakeActivityDao dao = new FakeActivityDao();
@@ -30,6 +35,11 @@ class ActivityServiceTest {
         assertEquals("latest", dao.sort);
     }
 
+    /**
+     * 验证 `createValidatesTimeOrderAndPersistsCreator` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void createValidatesTimeOrderAndPersistsCreator() throws SQLException {
         FakeActivityDao dao = new FakeActivityDao();
@@ -64,6 +74,11 @@ class ActivityServiceTest {
         assertEquals(20, dao.created.getMaxMembers());
     }
 
+    /**
+     * 验证 `updateRejectsLimitBelowCurrentMembers` 场景下的业务行为与预期结果一致。
+     *
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Test
     void updateRejectsLimitBelowCurrentMembers() throws SQLException {
         FakeActivityDao dao = new FakeActivityDao();
@@ -100,6 +115,14 @@ class ActivityServiceTest {
         private ActivityVO existing;
         private boolean updated;
 
+        /**
+         * 查询全部模拟活动。
+         *
+         * @param status 业务状态
+         * @param keyword 搜索关键字
+         * @param sort 排序方式
+         * @return 符合条件的数据列表
+         */
         @Override
         public List<ActivityVO> findAll(
                 String status,
@@ -112,23 +135,52 @@ class ActivityServiceTest {
             return List.of();
         }
 
+        /**
+         * 根据编号查询模拟活动。
+         *
+         * @param id 业务数据编号
+         * @return 查询到的数据；不存在时返回空结果
+         */
         @Override
         public Optional<ActivityVO> findById(long id) {
             return Optional.ofNullable(existing);
         }
 
+        /**
+         * 创建模拟活动。
+         *
+         * @param activity 活动数据
+         * @return 新建数据的编号
+         */
         @Override
         public long create(Activity activity) {
             created = activity;
             return 11L;
         }
 
+        /**
+         * 更新模拟活动。
+         *
+         * @param activity 活动数据
+         * @param userId 用户编号
+         * @param admin 是否具有管理员权限
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean update(Activity activity, long userId, boolean admin) {
             updated = true;
             return true;
         }
 
+        /**
+         * 更新状态。
+         *
+         * @param id 业务数据编号
+         * @param userId 用户编号
+         * @param admin 是否具有管理员权限
+         * @param status 业务状态
+         * @return 满足条件或操作成功时返回 true，否则返回 false
+         */
         @Override
         public boolean updateStatus(
                 long id,

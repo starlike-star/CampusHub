@@ -168,6 +168,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>UploadedFileServlet</servlet-name>
+        <servlet-class>cn.campushub.servlet.UploadedFileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UploadedFileServlet</servlet-name>
+        <url-pattern>/uploads/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>MessageUnreadCountServlet</servlet-name>
         <servlet-class>cn.campushub.servlet.MessageUnreadCountServlet</servlet-class>
     </servlet>

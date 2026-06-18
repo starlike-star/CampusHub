@@ -17,6 +17,9 @@ public class MockPayService {
     private final TradeOrderService tradeOrderService;
     private final MessageService messageService;
 
+    /**
+     * 初始化`MockPay`对象及其运行所需依赖。
+     */
     public MockPayService() {
         this(new TradeOrderService(), new MessageService());
     }
@@ -29,10 +32,24 @@ public class MockPayService {
         this.messageService = messageService;
     }
 
+    /**
+     * 根据令牌查询`MockPay`。
+     *
+     * @param token 参数 `token`
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<GoodsOrder> findByToken(String token) throws SQLException {
         return tradeOrderService.findByToken(token);
     }
 
+    /**
+     * 根据输入计算并返回 `confirm` 的处理结果。
+     *
+     * @param token 参数 `token`
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public TradeOrderResult confirm(String token) throws SQLException {
         TradeOrderResult result = tradeOrderService.confirm(token);
         if (result.success() && "模拟支付成功".equals(result.message())) {

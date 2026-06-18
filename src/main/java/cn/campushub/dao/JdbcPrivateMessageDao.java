@@ -17,6 +17,16 @@ import java.util.List;
  * 使用 JDBC 实现私信消息数据的查询与持久化操作。
  */
 public class JdbcPrivateMessageDao implements PrivateMessageDao {
+    /**
+     * 创建`JdbcPrivateMessage`。
+     *
+     * @param conversationId 会话编号
+     * @param senderId `sender`编号
+     * @param receiverId `receiver`编号
+     * @param content 正文内容
+     * @return 新建数据的编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public long create(
             long conversationId,
@@ -54,6 +64,14 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         }
     }
 
+    /**
+     * 根据会话查询`JdbcPrivateMessage`。
+     *
+     * @param conversationId 会话编号
+     * @param userId 用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public List<PrivateMessage> findByConversation(
             long conversationId,
@@ -83,6 +101,14 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         return messages;
     }
 
+    /**
+     * 标记会话已读状态。
+     *
+     * @param conversationId 会话编号
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int markConversationRead(long conversationId, long userId)
             throws SQLException {
@@ -105,6 +131,13 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         }
     }
 
+    /**
+     * 统计未读。
+     *
+     * @param userId 用户编号
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     @Override
     public int countUnread(long userId) throws SQLException {
         String sql = """
@@ -121,6 +154,16 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `conversationMatches` 的处理结果。
+     *
+     * @param connection 数据库连接
+     * @param conversationId 会话编号
+     * @param senderId `sender`编号
+     * @param receiverId `receiver`编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private boolean conversationMatches(
             Connection connection,
             long conversationId,
@@ -147,6 +190,17 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         }
     }
 
+    /**
+     * 新增消息。
+     *
+     * @param connection 数据库连接
+     * @param conversationId 会话编号
+     * @param senderId `sender`编号
+     * @param receiverId `receiver`编号
+     * @param content 正文内容
+     * @return 新建数据的编号
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private long insertMessage(
             Connection connection,
             long conversationId,
@@ -177,6 +231,14 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         throw new SQLException("发送私信后未获得主键");
     }
 
+    /**
+     * 更新会话。
+     *
+     * @param connection 数据库连接
+     * @param conversationId 会话编号
+     * @param content 正文内容
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private void updateConversation(
             Connection connection,
             long conversationId,
@@ -196,6 +258,12 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         }
     }
 
+    /**
+     * 根据输入计算并返回 `summarize` 的处理结果。
+     *
+     * @param content 正文内容
+     * @return 方法处理结果
+     */
     private String summarize(String content) {
         String normalized = content.replaceAll("\\s+", " ");
         int codePoints = normalized.codePointCount(0, normalized.length());
@@ -206,6 +274,13 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         return normalized.substring(0, end);
     }
 
+    /**
+     * 将数据库结果映射为消息。
+     *
+     * @param resultSet 数据库查询结果集
+     * @return 方法处理结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private PrivateMessage mapMessage(ResultSet resultSet) throws SQLException {
         return new PrivateMessage(
                 resultSet.getLong("id"),
@@ -218,6 +293,12 @@ public class JdbcPrivateMessageDao implements PrivateMessageDao {
         );
     }
 
+    /**
+     * 转换为`LocalDateTime`。
+     *
+     * @param timestamp 数据库时间戳
+     * @return 方法处理结果
+     */
     private LocalDateTime toLocalDateTime(Timestamp timestamp) {
         return timestamp == null ? null : timestamp.toLocalDateTime();
     }

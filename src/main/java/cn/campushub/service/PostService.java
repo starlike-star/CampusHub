@@ -19,6 +19,9 @@ import java.util.Optional;
 public class PostService {
     private final PostDao postDao;
 
+    /**
+     * 初始化帖子对象及其运行所需依赖。
+     */
     public PostService() {
         this(new JdbcPostDao());
     }
@@ -27,18 +30,44 @@ public class PostService {
         this.postDao = postDao;
     }
 
+    /**
+     * 查询帖子列表。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Post> listPosts() throws SQLException {
         return listPosts(null);
     }
 
+    /**
+     * 查询帖子列表。
+     *
+     * @param currentUserId 当前用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Post> listPosts(Long currentUserId) throws SQLException {
         return postDao.findActivePosts(currentUserId);
     }
 
+    /**
+     * 查询`Categories`。
+     *
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Category> listCategories() throws SQLException {
         return postDao.findActivePostCategories();
     }
 
+    /**
+     * 查询`viewPost`并返回结果。
+     *
+     * @param postId 帖子编号
+     * @return 查询到的数据；不存在时返回空结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public Optional<Post> viewPost(long postId) throws SQLException {
         if (postId <= 0 || !postDao.incrementViewCount(postId)) {
             return Optional.empty();
@@ -46,19 +75,55 @@ public class PostService {
         return postDao.findActivePostById(postId);
     }
 
+    /**
+     * 查询`Comments`。
+     *
+     * @param postId 帖子编号
+     * @param currentUserId 当前用户编号
+     * @return 符合条件的数据列表
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public List<Comment> listComments(long postId, Long currentUserId)
             throws SQLException {
         return postDao.findActiveComments(postId, currentUserId);
     }
 
+    /**
+     * 判断是否`Liked`。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public boolean isLiked(long postId, long userId) throws SQLException {
         return postDao.hasPostLike(postId, userId);
     }
 
+    /**
+     * 判断是否`Favorited`。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 满足条件或操作成功时返回 true，否则返回 false
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public boolean isFavorited(long postId, long userId) throws SQLException {
         return postDao.hasPostFavorite(postId, userId);
     }
 
+    /**
+     * 根据输入计算并返回 `publish` 的处理结果。
+     *
+     * @param userId 用户编号
+     * @param title 标题
+     * @param content 正文内容
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @param topic 参数 `topic`
+     * @param images 参数 `images`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Long> publish(
             long userId,
             String title,
@@ -98,6 +163,15 @@ public class PostService {
         return ServiceResult.success("发布成功", postId);
     }
 
+    /**
+     * 根据输入计算并返回 `comment` 的处理结果。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @param content 正文内容
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<CommentCreateResult> comment(
             long postId,
             long userId,
@@ -121,6 +195,14 @@ public class PostService {
         return ServiceResult.success("评论成功", result);
     }
 
+    /**
+     * 切换点赞。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<PostToggleResult> toggleLike(long postId, long userId)
             throws SQLException {
         if (postId <= 0) {
@@ -133,6 +215,14 @@ public class PostService {
         );
     }
 
+    /**
+     * 切换收藏。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<PostToggleResult> toggleFavorite(long postId, long userId)
             throws SQLException {
         if (postId <= 0) {
@@ -145,6 +235,14 @@ public class PostService {
         );
     }
 
+    /**
+     * 切换评论点赞。
+     *
+     * @param commentId 评论编号
+     * @param userId 用户编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<PostToggleResult> toggleCommentLike(
             long commentId,
             long userId
@@ -159,6 +257,19 @@ public class PostService {
         );
     }
 
+    /**
+     * 更新帖子。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @param title 标题
+     * @param content 正文内容
+     * @param topic 参数 `topic`
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @param images 参数 `images`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Post> update(
             long postId,
             long userId,
@@ -193,6 +304,14 @@ public class PostService {
                 .orElseGet(() -> ServiceResult.failure("帖子不存在或无权编辑"));
     }
 
+    /**
+     * 删除帖子。
+     *
+     * @param postId 帖子编号
+     * @param userId 用户编号
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     public ServiceResult<Void> delete(long postId, long userId) throws SQLException {
         if (postId <= 0) {
             return ServiceResult.failure("帖子参数无效");
@@ -203,6 +322,16 @@ public class PostService {
         return ServiceResult.success("删除成功", null);
     }
 
+    /**
+     * 校验`PostFields`。
+     *
+     * @param title 标题
+     * @param content 正文内容
+     * @param topic 参数 `topic`
+     * @param categoryIdValue 参数 `categoryIdValue`
+     * @return 包含处理状态、提示信息和业务数据的结果
+     * @throws SQLException 数据库访问失败时抛出
+     */
     private ServiceResult<Void> validatePostFields(
             String title,
             String content,
@@ -225,6 +354,12 @@ public class PostService {
         return ServiceResult.success("验证通过", null);
     }
 
+    /**
+     * 规范化`Topic`。
+     *
+     * @param topic 参数 `topic`
+     * @return 方法处理结果
+     */
     private String normalizeTopic(String topic) {
         topic = ValidationUtils.trimToNull(topic);
         if (topic != null && topic.startsWith("#")) {
@@ -233,6 +368,12 @@ public class PostService {
         return topic;
     }
 
+    /**
+     * 解析`PositiveLong`。
+     *
+     * @param value 待处理的值
+     * @return 解析后的值；输入无效时返回 null
+     */
     private Long parsePositiveLong(String value) {
         try {
             long parsed = Long.parseLong(value);
